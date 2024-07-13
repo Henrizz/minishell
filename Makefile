@@ -11,8 +11,22 @@
 # **************************************************************************** #
 
 NAME = minishell
-CFLAGS = -g -Wall -Wextra -Werror -Isrcs/libft -I/usr/local/opt/readline/include
-LDFLAGS = -L/usr/local/opt/readline/lib -lreadline -lhistory
+CFLAGS = -g -Wall -Wextra -Werror -Isrcs/libft
+LDFLAGS =
+
+# Check for readline in standard Ubuntu path
+ifeq ($(wildcard /usr/include/readline/readline.h),)
+    # If not found, use macOS path (assuming /usr/local/opt/readline/include)
+    CFLAGS += -I/usr/local/opt/readline/include
+    LDFLAGS += -L/usr/local/opt/readline/lib
+else
+    # If found, use Ubuntu path
+    CFLAGS += -I/usr/include/readline
+endif
+
+# Common linker flags for both paths
+LDFLAGS += -lreadline -lhistory
+
 ADFLAG = -fsanitize=address
 LIBFT = srcs/libft/libft.a
 LIB = srcs/libft
@@ -23,22 +37,24 @@ CC = cc
 
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	@if [ ! -f "$(LIBFT)" ]; then \
-		make -C $(LIB); \
-	fi
-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 	chmod +x $(NAME)
 
+$(LIBFT):
+	make -C $(LIB)
+
 %.o : %.c
-	cc $(CFLAGS) -c $< -o $@
-	
+	$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
-	$(RM) srcs/*.o $(LIB)/*.o
+	$(RM) $(OBJS) $(LIB)/*.o
 
 fclean: clean
 	$(RM) $(NAME) $(LIBFT)
 
-re: fclean $(NAME)
+re: fclean all
 
 .PHONY: all clean fclean re
+
+

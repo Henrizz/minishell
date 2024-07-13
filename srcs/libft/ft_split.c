@@ -93,12 +93,12 @@ static void	*ft_loop_outs(char **array, char const *s, char c, int count)
 char	**ft_split(char const *s, char c)
 {
 	char	**array;
-	int		i;
-	int		j;
+//	int		i;
+//	int		j;
 	int		count;
 
-	i = 0;
-	j = 0;
+//	i = 0;
+//	j = 0;
 	if (s == 0)
 		return (0);
 	count = ft_count_words(s, c);

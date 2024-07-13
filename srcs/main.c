@@ -15,9 +15,9 @@
 int	main(int argc, char **argv, char **env)
 {
 	char	*cmd_line;
-	t_input	*command;
+	//t_input	*command;
 	
-	command = NULL;
+	//command = NULL;
 	(void)argv;
 	(void)env;
 	if (argc > 1)
