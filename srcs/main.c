@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: tete <tete@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/13 15:45:21 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/07/17 09:18:02 by tete             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int argc, char **argv, char **env)
 		return (0); // for now, just to silence argc, but later maybe more actions or error handling
 	while(1)
 	{
-		cmd_line = readline("temp_prompt$");
+		cmd_line = readline("temp_prompt$ ");
 		if (!cmd_line) //to check if command line pointer is NULL (in case of ctrl+D or else)
 			return (exit_shell("exit\n", EXIT_SUCCESS));
 		if (*cmd_line) //to check if first char of command line is not nullterminator (so if it's not empty line)
@@ -33,6 +33,9 @@ int	main(int argc, char **argv, char **env)
 			// function to parse command line and initialise and populate input struct 
 					// --> (from there also do syntax error checks and launch expansion function)
 			// function for execution (from there also launch builtin execution)
+			/*Testing builtin functions*/
+			what_builtin(cmd_line);
+			cd(cmd_line);
 		}
 		free(cmd_line);
 	}
