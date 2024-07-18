@@ -6,7 +6,7 @@
 /*   By: tete <tete@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/17 09:18:02 by tete             ###   ########.fr       */
+/*   Updated: 2024/07/18 09:06:25 by tete             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ int	main(int argc, char **argv, char **env)
 					// --> (from there also do syntax error checks and launch expansion function)
 			// function for execution (from there also launch builtin execution)
 			/*Testing builtin functions*/
-			what_builtin(cmd_line);
-			cd(cmd_line);
+			//what_builtin(cmd_line);
+			//cd(cmd_line);
 		}
 		free(cmd_line);
 	}

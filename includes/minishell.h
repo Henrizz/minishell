@@ -6,7 +6,7 @@
 /*   By: tete <tete@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/17 10:22:58 by tete             ###   ########.fr       */
+/*   Updated: 2024/07/17 20:43:35 by tete             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	exit_shell(char *message, int exit_status);
 
 /*Builtin commands*/
 void	what_builtin(char *function_name);
+void	echo(char **argv);
 void	pwd(void);
 void	cd(char *path);
 

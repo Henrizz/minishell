@@ -1,0 +1,24 @@
+#include "../../includes/minishell.h"
+
+void	echo(char **argv)
+{
+	int	i;
+	size_t	len;
+
+	i = 1;
+	if(argv[i])
+	{
+		len = ft_strlen(argv[1]);
+		if(ft_strncmp(argv[1], "-n", len) == 0)
+			i++;
+		while(argv[i])
+			{
+				printf("%s", argv[i]);
+				if(argv[i + 1] != NULL)
+					printf(" ");
+				i++;
+			}
+		if(ft_strncmp(argv[1], "-n", len) != 0)
+			printf("\n");
+	}
+}
