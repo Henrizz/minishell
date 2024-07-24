@@ -19,20 +19,20 @@
 			- words--> done for single command, no pipe yet --> TO DO: several commands divided by pipes
 			- redirections (TO DO) */
 
-int parse_line(char *cmd_line, t_input *command)
+int parse_line(char *cmd_line, t_input **command)
 {	
 	t_elements elmts;
-	int	i;
+	//int	i;
 	
-	i = 0;
+	//i = 0;
 	if (!*cmd_line)
 		return (-1);
 	//syntax error handling here
 	split_for_parsing(cmd_line, &elmts);
-	divi_up_command(&command, &elmts);
-	/*while (command->words[i])
+	divi_up_command(command, &elmts);
+	/*while ((*command)->words[i])
 	{
-		ft_printf("%s\n", command->words[i]);
+		ft_printf("%s\n", (*command)->words[i]);
 		i++;
 	}*/
 	// add redirections, heredoc, and separate commands divided by pipes
@@ -85,4 +85,9 @@ void	init_struct(t_input **command, t_elements *elmts)
 	(*command)->next = NULL;
 	if (!(*command)->words || !(*command)->red_in || !(*command)->red_out || !(*command)->heredoc || !(*command)->app_out)
 		exit_shell("memory allocation failure", EXIT_FAILURE);
+	(*command)->words[0] = NULL;
+	(*command)->red_in[0] = NULL;
+	(*command)->red_out[0] = NULL;
+	(*command)->heredoc[0] = NULL;
+	(*command)->app_out[0] = NULL;
 }

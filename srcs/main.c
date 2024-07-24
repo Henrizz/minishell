@@ -31,11 +31,12 @@ int	main(int argc, char **argv, char **env)
 			add_history(cmd_line);
 		// function to parse command line and initialise and populate input struct 
 				// --> (from there also do syntax error checks and launch expansion function)
-		if (parse_line(cmd_line, command) != -1) //if no syntax errors have been found or line is not empty
+		if (parse_line(cmd_line, &command) != -1) //if no syntax errors have been found or line is not empty
 		{
 			// function for execution (from there also launch builtin execution or seperate function)
 		}
 		free(cmd_line);
+		free_command(&command);
 	}
 	return (0);
 }

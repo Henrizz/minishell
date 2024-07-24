@@ -22,6 +22,25 @@ int	exit_shell(char *message, int exit_status)
 		exit(exit_status);
 }
 
+void	free_command(t_input **command)
+{
+	t_input *temp;
+
+	temp = *command;
+	while (*command != NULL)
+	{
+		temp = *command;
+		*command = (*command)->next;
+		free_array(temp->words);
+		free_array(temp->red_in);
+		free_array(temp->red_out);
+		free_array(temp->heredoc);
+		free_array(temp->app_out);
+		free(temp);
+	}
+	*command = NULL;
+}
+
 /* to free a twodimensional array of strings */
 void	free_array(char **str)
 {

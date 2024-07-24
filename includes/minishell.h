@@ -50,7 +50,7 @@ typedef struct s_elements
 } t_elements;
 
 /* parsing struct */
-int parse_line(char *cmd_line, t_input *command);
+int parse_line(char *cmd_line, t_input **command);
 char **split_for_parsing(char *cmd_line, t_elements *elmts);
 void	count_elements(char *str, t_elements *elmts);
 int	count_characters(char *str, int **inside_quote);
@@ -67,5 +67,6 @@ int	is_redirection(char c);
 /* free and exit functions */
 int	exit_shell(char *message, int exit_status);
 void	free_array(char **str);
+void	free_command(t_input **command);
 
 #endif
