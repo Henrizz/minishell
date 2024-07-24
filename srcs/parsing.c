@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/23 19:59:48 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/07/23 22:35:46 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,19 @@
 int parse_line(char *cmd_line, t_input **command)
 {	
 	t_elements elmts;
-	//int	i;
+	int	i;
 	
-	//i = 0;
+	i = 0;
 	if (!*cmd_line)
 		return (-1);
 	//syntax error handling here
 	split_for_parsing(cmd_line, &elmts);
 	divi_up_command(command, &elmts);
-	/*while ((*command)->words[i])
+	while ((*command)->words[i])
 	{
 		ft_printf("%s\n", (*command)->words[i]);
 		i++;
-	}*/
+	}
 	// add redirections, heredoc, and separate commands divided by pipes
 	return (0);
 }
