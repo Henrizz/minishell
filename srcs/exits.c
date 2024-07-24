@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/13 15:33:40 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/07/23 16:38:37 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,20 @@ int	exit_shell(char *message, int exit_status)
 		if (exit_status == EXIT_FAILURE && message != NULL)
 			perror(message);
 		exit(exit_status);
+}
+
+/* to free a twodimensional array of strings */
+void	free_array(char **str)
+{
+	int	i;
+
+	i = 0;
+	if (str == NULL)
+		return ;
+	while (str[i] != NULL)
+	{
+		free(str[i]);
+		i++;
+	}
+	free(str);
 }
