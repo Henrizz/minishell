@@ -22,9 +22,9 @@
 int parse_line(char *cmd_line, t_input **command)
 {	
 	t_elements elmts;
-	int	i;
+	//int	i;
 	
-	i = 0;
+	//i = 0;
 	if (!*cmd_line)
 		return (-1);
 	//syntax error handling here
