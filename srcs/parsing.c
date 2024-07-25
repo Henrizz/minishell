@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/23 22:35:46 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/07/24 17:21:46 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ int parse_line(char *cmd_line, t_input **command)
 	//syntax error handling here
 	split_for_parsing(cmd_line, &elmts);
 	divi_up_command(command, &elmts);
-	while ((*command)->words[i])
+	/*while ((*command)->words[i])
 	{
 		ft_printf("%s\n", (*command)->words[i]);
 		i++;
-	}
+	}*/
 	// add redirections, heredoc, and separate commands divided by pipes
 	return (0);
 }
@@ -58,7 +58,6 @@ void divi_up_command(t_input **command, t_elements *elmts)
 			exit_shell("failure to duplicate string", EXIT_FAILURE);
 		i++;
 		k++;
-		
 	}
 	(*command)->words[k] = NULL;
 	free_array(elmts->array);

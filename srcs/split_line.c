@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/23 22:39:04 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/07/24 17:21:29 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ char **split_for_parsing(char *cmd_line, t_elements *elmts)
 			inside_quote = 1;
 			elmts->quote_type = *cmd_line;
 		}
-		//else if (*cmd_line == elmts->quote_type && inside_quote == 1)
-			//inside_quote = 0;
-		if (!is_whitespace(*cmd_line) || (is_whitespace(*cmd_line) && inside_quote == 1))
+		else if (*cmd_line == elmts->quote_type && inside_quote == 1)
+			inside_quote = 0;
+		if (*cmd_line && (!is_whitespace(*cmd_line) || (is_whitespace(*cmd_line) && inside_quote == 1)))
 			elmts->array[i++] = ft_strdup_delim(&cmd_line, &inside_quote, elmts);
 	}
 	elmts->array[i] = NULL;
@@ -138,7 +138,7 @@ void	count_elements(char *str, t_elements *elmts)
 
 int	is_whitespace(char c)
 {
-	if (c == ' ' || c == '\n' || c == '\n')
+	if (c == ' ' || c == '\n' || c == '\t')
 		return (1);
 	return (0);
 }

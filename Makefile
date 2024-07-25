@@ -6,7 +6,7 @@
 #    By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/13 14:44:40 by Henriette         #+#    #+#              #
-#    Updated: 2024/07/20 09:59:43 by Henriette        ###   ########.fr        #
+#    Updated: 2024/07/24 17:22:46 by Henriette        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ LDFLAGS += -lreadline -lhistory
 ADDRFLAG = -fsanitize=address
 LIBFT = srcs/libft/libft.a
 LIB = srcs/libft
-SRCS = srcs/main.c srcs/exits.c srcs/parsing.c srcs/split_cmdline.c
+SRCS = srcs/main.c srcs/exits.c srcs/parsing.c srcs/split_line.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -rf
 CC = cc
