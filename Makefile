@@ -6,7 +6,7 @@
 #    By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/13 14:44:40 by Henriette         #+#    #+#              #
-#    Updated: 2024/07/13 15:47:08 by Henriette        ###   ########.fr        #
+#    Updated: 2024/07/24 17:22:46 by Henriette        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,10 +27,10 @@ endif
 # Common linker flags for both paths
 LDFLAGS += -lreadline -lhistory
 
-ADFLAG = -fsanitize=address
+ADDRFLAG = -fsanitize=address
 LIBFT = srcs/libft/libft.a
 LIB = srcs/libft
-SRCS = srcs/main.c srcs/exits.c
+SRCS = srcs/main.c srcs/exits.c srcs/parsing.c srcs/split_line.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -rf
 CC = cc
@@ -38,7 +38,7 @@ CC = cc
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(ADDRFLAG) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 	chmod +x $(NAME)
 
 $(LIBFT):
