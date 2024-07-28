@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: tete <tete@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/24 10:21:01 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/07/28 10:23:01 by tete             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <signal.h>
+# include <limits.h>
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <fcntl.h>
@@ -40,6 +42,12 @@ typedef struct s_input
 	struct s_input *next;
 } t_input;
 
+typedef struct s_env
+{
+	char *key;
+	char *value;
+	struct s_env *next;
+} t_env;
 typedef struct s_elements
 {
 	char **array;
@@ -68,5 +76,14 @@ int	is_redirection(char c);
 int	exit_shell(char *message, int exit_status);
 void	free_array(char **str);
 void	free_command(t_input **command);
+
+/*Builtin commands*/
+void	what_builtin(char **command_words, t_env *env_list);
+void	echo(char **argv);
+void	pwd(void);
+void	cd(char *path);
+void	cmd_env(t_env *list);
+
+void	env_init(char **env, t_env **env_list);
 
 #endif
