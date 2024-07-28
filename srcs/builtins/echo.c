@@ -13,12 +13,12 @@ void	echo(char **argv)
 			i++;
 		while(argv[i])
 			{
-				printf("%s", argv[i]);
+				printf("%s", argv[i]); // OK
 				if(argv[i + 1] != NULL)
-					printf(" ");
+					printf(" "); // OK
 				i++;
 			}
 		if(ft_strncmp(argv[1], "-n", len) != 0)
-			printf("\n");
+			printf("\n"); // OK
 	}
 }

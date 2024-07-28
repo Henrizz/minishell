@@ -7,5 +7,5 @@ void cd(char *path)
 	if(!chdir(path))
 		return;
 	else
-		printf("minishell: cd: %s: %s\n", path, strerror(errno));
+		printf("minishell: cd: %s: %s\n", path, strerror(errno)); //channel 2
 }

@@ -6,7 +6,7 @@
 /*   By: tete <tete@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/24 19:47:46 by tete             ###   ########.fr       */
+/*   Updated: 2024/07/28 09:20:51 by tete             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 int	main(int argc, char **argv, char **env)
 {
 	char	*cmd_line;
-	//t_input	*command;
+	t_input	*command;
 	t_env *env_list;
 	
-	//command = NULL;
+	command = NULL;
 	env_list = NULL;
 	(void)argv;
 	(void)env;
@@ -30,17 +30,20 @@ int	main(int argc, char **argv, char **env)
 		cmd_line = readline("temp_prompt$ ");
 		if (!cmd_line) //to check if command line pointer is NULL (in case of ctrl+D or else)
 			return (exit_shell("exit\n", EXIT_SUCCESS));
-		if (*cmd_line) //to check if first char of command line is not nullterminator (so if it's not empty line)
-		{
+		if (*cmd_line)
 			add_history(cmd_line);
-			// function to parse command line and initialise and populate input struct 
-					// --> (from there also do syntax error checks and launch expansion function)
-			// function for execution (from there also launch builtin execution)
-			/*Testing builtin functions*/
-			what_builtin(cmd_line, env_list);
-			cd(cmd_line);
+
+		// function to parse command line and initialise and populate input struct 
+				// --> (from there also do syntax error checks and launch expansion function)
+		if (parse_line(cmd_line, &command) != -1) //if no syntax errors have been found or line is not empty
+		{
+			// function for execution (from there also launch builtin execution or seperate function)
 		}
+		/*Testing builtin functions*/
+		what_builtin(cmd_line, env_list);
+			cd(cmd_line);
 		free(cmd_line);
+		free_command(&command);
 	}
 	return (0);
 }
