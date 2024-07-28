@@ -1,22 +1,22 @@
 #include "../../includes/minishell.h"
 
-void	what_builtin(char *command_name, t_env *env_list)
+void	what_builtin(char **command_words, t_env *env_list)
 {
     size_t len;
 
-    len = ft_strlen(command_name);
-    // if(!ft_strncmp(command_name, "echo", len))
-	// 	echo();
-	// if(!ft_strncmp(command_name, "cd", len))
-	// 	cd(path);
-	if(!ft_strncmp(command_name, "pwd", len))
+    len = ft_strlen(command_words[0]);
+    if(!ft_strncmp(command_words[0], "echo", len))
+	 	echo(command_words++);
+	if(!ft_strncmp(command_words[0], "cd", len))
+	 	cd(command_words[1]);
+	if(!ft_strncmp(command_words[0], "pwd", len))
 		pwd();
-	// if(!ft_strncmp(command_name, "export", len))
+	// if(!ft_strncmp(command_words, "export", len))
 	// 	export();
-	// if(!ft_strncmp(command_name, "unset", len))
+	// if(!ft_strncmp(command_words, "unset", len))
 	// 	unset();
-	if(!ft_strncmp(command_name, "env", len))
+	if(!ft_strncmp(command_words[0], "env", len))
 	 	cmd_env(env_list);
-	// if(!ft_strncmp(command_name, "exit", len))
+	// if(!ft_strncmp(command_words, "exit", len))
 	// 	exit();
 }

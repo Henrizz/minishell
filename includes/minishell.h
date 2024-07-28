@@ -6,7 +6,7 @@
 /*   By: tete <tete@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/28 09:20:43 by tete             ###   ########.fr       */
+/*   Updated: 2024/07/28 10:23:01 by tete             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	free_array(char **str);
 void	free_command(t_input **command);
 
 /*Builtin commands*/
-void	what_builtin(char *function_name, t_env *env_list);
+void	what_builtin(char **command_words, t_env *env_list);
 void	echo(char **argv);
 void	pwd(void);
 void	cd(char *path);

@@ -9,5 +9,8 @@ void	pwd(void)// TODO: define if is necessary to send success or fail return ins
     if(getcwd(cwd, PATH_MAX))
         printf("%s\n",cwd);
     else
-        printf("pwd: %s", strerror(errno));
+    {
+        printf("pwd: ");
+		perror(strerror(errno));
+    }
 }

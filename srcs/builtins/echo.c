@@ -1,5 +1,5 @@
 #include "../../includes/minishell.h"
-
+//TODO eliminate quotes in the string if any
 void	echo(char **argv)
 {
 	int	i;

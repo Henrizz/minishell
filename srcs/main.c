@@ -6,7 +6,7 @@
 /*   By: tete <tete@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/28 09:20:51 by tete             ###   ########.fr       */
+/*   Updated: 2024/07/28 09:59:03 by tete             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,12 @@ int	main(int argc, char **argv, char **env)
 				// --> (from there also do syntax error checks and launch expansion function)
 		if (parse_line(cmd_line, &command) != -1) //if no syntax errors have been found or line is not empty
 		{
+			/*Testing builtin functions*/
+			what_builtin(command->words, env_list);
+		//cd(cmd_line);
 			// function for execution (from there also launch builtin execution or seperate function)
 		}
-		/*Testing builtin functions*/
-		what_builtin(cmd_line, env_list);
-			cd(cmd_line);
+		
 		free(cmd_line);
 		free_command(&command);
 	}
