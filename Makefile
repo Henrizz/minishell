@@ -6,7 +6,7 @@
 #    By: tete <tete@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/13 14:44:40 by Henriette         #+#    #+#              #
-#    Updated: 2024/07/17 20:43:33 by tete             ###   ########.fr        #
+#    Updated: 2024/07/23 18:30:57 by tete             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,9 @@ LDFLAGS += -lreadline -lhistory
 ADFLAG = -fsanitize=address
 LIBFT = srcs/libft/libft.a
 LIB = srcs/libft
-SRCS = srcs/main.c srcs/exits.c srcs/builtins/pwd.c srcs/builtins/what_builtin.c srcs/builtins/cd.c srcs/builtins/echo.c
+SRCS = srcs/main.c srcs/exits.c srcs/builtins/pwd.c \
+		srcs/builtins/what_builtin.c srcs/builtins/cd.c srcs/builtins/echo.c \
+		srcs/builtins/env.c srcs/env_init.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -rf
 CC = cc

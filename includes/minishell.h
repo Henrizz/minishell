@@ -6,7 +6,7 @@
 /*   By: tete <tete@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/17 20:43:35 by tete             ###   ########.fr       */
+/*   Updated: 2024/07/24 12:49:51 by tete             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,23 @@ typedef struct s_input
 	struct s_input *next;
 } t_input;
 
+typedef struct s_env
+{
+	char *key;
+	char *value;
+	struct s_env *next;
+} t_env;
+
 /* free and exit functions */
 int	exit_shell(char *message, int exit_status);
 
 /*Builtin commands*/
-void	what_builtin(char *function_name);
+void	what_builtin(char *function_name, t_env *env_list);
 void	echo(char **argv);
 void	pwd(void);
 void	cd(char *path);
+void	cmd_env(t_env *list);
+
+void	env_init(char **env, t_env **env_list);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: tete <tete@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/18 09:06:25 by tete             ###   ########.fr       */
+/*   Updated: 2024/07/24 19:47:46 by tete             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@ int	main(int argc, char **argv, char **env)
 {
 	char	*cmd_line;
 	//t_input	*command;
+	t_env *env_list;
 	
 	//command = NULL;
+	env_list = NULL;
 	(void)argv;
 	(void)env;
 	if (argc > 1)
 		return (0); // for now, just to silence argc, but later maybe more actions or error handling
+	env_init(env, &env_list); // it can be part of a global initialization function
 	while(1)
 	{
 		cmd_line = readline("temp_prompt$ ");
@@ -34,8 +37,8 @@ int	main(int argc, char **argv, char **env)
 					// --> (from there also do syntax error checks and launch expansion function)
 			// function for execution (from there also launch builtin execution)
 			/*Testing builtin functions*/
-			//what_builtin(cmd_line);
-			//cd(cmd_line);
+			what_builtin(cmd_line, env_list);
+			cd(cmd_line);
 		}
 		free(cmd_line);
 	}
