@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tete <tete@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/28 09:59:03 by tete             ###   ########.fr       */
+/*   Updated: 2024/08/02 13:24:47 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,11 @@ int	main(int argc, char **argv, char **env)
 		//cd(cmd_line);
 			// function for execution (from there also launch builtin execution or seperate function)
 		}
-		
+		/*printf("words 0: %s\n", command->words[0]);
+		printf("words 1: %s\n", command->words[1]);
+		command = command->next;
+		printf("words next 0: %s\n", command->words[0]);
+		printf("words next 1: %s\n", command->words[1]);*/
 		free(cmd_line);
 		free_command(&command);
 	}
