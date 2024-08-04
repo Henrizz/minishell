@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/04 14:49:44 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/04 15:29:53 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,14 +22,14 @@
 int parse_line(char *cmd_line, t_input **command)
 {	
 	t_elements elmts;
-	t_input *temp;
+	//t_input *temp;
 	
 	if (!*cmd_line)
 		return (-1);
 	//syntax error handling here
 	split_for_parsing(cmd_line, &elmts);
 	divi_up_command(command, &elmts);
-	temp = *command;
+	/*temp = *command;
 	while (temp)
 	{
 		int	i = 0;
@@ -45,7 +45,7 @@ int parse_line(char *cmd_line, t_input **command)
 			j++;
 		}
 		temp = temp->next;
-	}
+	}*/
 	// add redirections, heredoc, and separate commands divided by pipes
 	return (0);
 }
@@ -85,15 +85,19 @@ void	distribute_elements(t_input **command, t_elements *elmts, int *i)
 	k = 0;
 	while (elmts->array[*i] && ft_strncmp_ed(elmts->array[*i], "|", 2))
 	{
+		printf("array before: %s\n", elmts->array[*i]);
 		redirect_type = is_redirection(elmts->array[*i]);
 		if (redirect_type)
 			distribute_redirections(command, elmts, i, redirect_type);
 		else
-		(*command)->words[k] = ft_strdup(elmts->array[*i]);
-		if (!(*command)->words[k])
-			exit_shell("failure to duplicate string", EXIT_FAILURE);
-		(*i)++;
-		k++;
+		{
+			(*command)->words[k] = ft_strdup(elmts->array[*i]);
+			if (!(*command)->words[k])
+				exit_shell("words: failure to duplicate string", EXIT_FAILURE);
+			(*i)++;
+			k++;
+		}
+		printf("%d, array after: %s\n", redirect_type, elmts->array[*i]);
 		(*command)->red_in[(*command)->j] = NULL;
 		(*command)->red_out[(*command)->o] = NULL;
 		(*command)->heredoc[(*command)->h] = NULL;
@@ -107,24 +111,24 @@ void	distribute_redirections(t_input **command, t_elements *elmts, int *i, int r
 	if (redirect_type == IN_DETACHED)
 		(*command)->red_in[(*command)->j++] = ft_strdup(elmts->array[++(*i)]);
 	else if (redirect_type == IN_ATTACHED)
-		(*command)->red_in[(*command)->j++] = ft_strdup(elmts->array[(*i) + 1]);
+		(*command)->red_in[(*command)->j++] = ft_strdup(elmts->array[(*i)] + 1);
 	else if (redirect_type == OUT_DETACHED)
 		(*command)->red_out[(*command)->o++] = ft_strdup(elmts->array[++(*i)]);
 	else if (redirect_type == OUT_ATTACHED)
-		(*command)->red_out[(*command)->o++] = ft_strdup(elmts->array[(*i) + 1]);
+		(*command)->red_out[(*command)->o++] = ft_strdup(elmts->array[(*i)] + 1);
 	else if (redirect_type == HERE_DETACHED)
 		(*command)->heredoc[(*command)->h++] = ft_strdup(elmts->array[++(*i)]);
 	else if (redirect_type == HERE_ATTACHED)
-		(*command)->heredoc[(*command)->h++] = ft_strdup(elmts->array[(*i) + 2]);
+		(*command)->heredoc[(*command)->h++] = ft_strdup(elmts->array[(*i)] + 2);
 	else if (redirect_type == APP_DETACHED)
 		(*command)->app_out[(*command)->p++] = ft_strdup(elmts->array[++(*i)]);
 	else if (redirect_type == APP_ATTACHED)
-		(*command)->app_out[(*command)->p++] = ft_strdup(elmts->array[(*i) + 2]);
+		(*command)->app_out[(*command)->p++] = ft_strdup(elmts->array[(*i)] + 2);
 	if (((redirect_type == 1 || redirect_type == 2) && !(*command)->red_in[(*command)->j - 1])
 		|| ((redirect_type == 3 || redirect_type == 4) && !(*command)->red_out[(*command)->o - 1])
 		|| ((redirect_type == 5 || redirect_type == 6) && !(*command)->heredoc[(*command)->h - 1])
 		|| ((redirect_type == 7 || redirect_type == 8) && !(*command)->app_out[(*command)->p - 1]))
-		exit_shell("failure to duplicate string", EXIT_FAILURE);
+		exit_shell("redirections: failure to duplicate string", EXIT_FAILURE);
 	(*i)++;
 }
 
@@ -173,34 +177,3 @@ void	init_struct(t_input **command, t_elements *elmts)
 	(*command)->h = 0;
 	(*command)->p = 0;
 }
-
-
-
-/*void	distribute_redirections(t_input **command, t_elements *elmts, int *i, int redirect_type)
-{
-	if (redirect_type == IN_DETACHED)
-		(*command)->red_in[(*command)->j] = ft_strdup(elmts->array[++(*i)]);
-	else if (redirect_type == IN_ATTACHED)
-		(*command)->red_in[(*command)->j] = ft_strdup(elmts->array[(*i) + 1]);
-	if (!(*command)->red_in[(*command)->j++])
-		exit_shell("failure to duplicate string", EXIT_FAILURE);
-	if (redirect_type == OUT_DETACHED)
-		(*command)->red_out[(*command)->o] = ft_strdup(elmts->array[++(*i)]);
-	else if (redirect_type == OUT_ATTACHED)
-		(*command)->red_out[(*command)->o] = ft_strdup(elmts->array[(*i) + 1]);
-	if (!(*command)->red_out[(*command)->o++])
-		exit_shell("failure to duplicate string", EXIT_FAILURE);
-	if (redirect_type == HERE_DETACHED)
-		(*command)->heredoc[(*command)->h] = ft_strdup(elmts->array[++(*i)]);
-	else if (redirect_type == HERE_ATTACHED)
-		(*command)->heredoc[(*command)->h] = ft_strdup(elmts->array[(*i) + 2]);
-	if (!(*command)->heredoc[(*command)->h++])
-		exit_shell("failure to duplicate string", EXIT_FAILURE);
-	if (redirect_type == APP_DETACHED)
-		(*command)->app_out[(*command)->p] = ft_strdup(elmts->array[++(*i)]);
-	else if (redirect_type == APP_ATTACHED)
-		(*command)->app_out[(*command)->p] = ft_strdup(elmts->array[(*i) + 2]);
-	if (!(*command)->app_out[(*command)->p++])
-		exit_shell("failure to duplicate string", EXIT_FAILURE);
-	(*i)++;
-}*/
