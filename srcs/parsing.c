@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/04 15:29:53 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/05 00:58:40 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 	-- checks for syntax errors (TO DO)
 	-- splits command line into seperate elements by whitespace but only if not inside quotes (still needs adjustment for elevated case of nested quote with same quote type)
 	-- distributes all separates elements into their corresponding command arrays 
-			- words--> done for single command, no pipe yet --> TO DO: several commands divided by pipes
-			- redirections (TO DO) */
+			- words
+			- redirections
+	-- launches expansion to replace environmental virables if needed */
 
 int parse_line(char *cmd_line, t_input **command)
 {	
@@ -46,7 +47,6 @@ int parse_line(char *cmd_line, t_input **command)
 		}
 		temp = temp->next;
 	}*/
-	// add redirections, heredoc, and separate commands divided by pipes
 	return (0);
 }
 
@@ -85,7 +85,6 @@ void	distribute_elements(t_input **command, t_elements *elmts, int *i)
 	k = 0;
 	while (elmts->array[*i] && ft_strncmp_ed(elmts->array[*i], "|", 2))
 	{
-		printf("array before: %s\n", elmts->array[*i]);
 		redirect_type = is_redirection(elmts->array[*i]);
 		if (redirect_type)
 			distribute_redirections(command, elmts, i, redirect_type);
@@ -94,14 +93,13 @@ void	distribute_elements(t_input **command, t_elements *elmts, int *i)
 			(*command)->words[k] = ft_strdup(elmts->array[*i]);
 			if (!(*command)->words[k])
 				exit_shell("words: failure to duplicate string", EXIT_FAILURE);
-			(*i)++;
 			k++;
 		}
-		printf("%d, array after: %s\n", redirect_type, elmts->array[*i]);
 		(*command)->red_in[(*command)->j] = NULL;
 		(*command)->red_out[(*command)->o] = NULL;
 		(*command)->heredoc[(*command)->h] = NULL;
 		(*command)->app_out[(*command)->p] = NULL;
+		(*i)++;
 	}
 	(*command)->words[k] = NULL;
 }
@@ -129,7 +127,7 @@ void	distribute_redirections(t_input **command, t_elements *elmts, int *i, int r
 		|| ((redirect_type == 5 || redirect_type == 6) && !(*command)->heredoc[(*command)->h - 1])
 		|| ((redirect_type == 7 || redirect_type == 8) && !(*command)->app_out[(*command)->p - 1]))
 		exit_shell("redirections: failure to duplicate string", EXIT_FAILURE);
-	(*i)++;
+	//(*i)++;
 }
 
 int	is_redirection(char *str)
