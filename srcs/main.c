@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/02 13:24:47 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/04 17:20:45 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	main(int argc, char **argv, char **env)
 	char	*cmd_line;
 	t_input	*command;
 	t_env *env_list;
-	
+
 	command = NULL;
 	env_list = NULL;
 	(void)argv;
@@ -33,13 +33,12 @@ int	main(int argc, char **argv, char **env)
 		if (*cmd_line)
 			add_history(cmd_line);
 
-		// function to parse command line and initialise and populate input struct 
+		// function to parse command line and initialise and populate input struct
 				// --> (from there also do syntax error checks and launch expansion function)
-		if (parse_line(cmd_line, &command) != -1) //if no syntax errors have been found or line is not empty
+		if (parse_line(cmd_line, &command, env_list) != -1) //if no syntax errors have been found or line is not empty
 		{
 			/*Testing builtin functions*/
 			what_builtin(command->words, env_list);
-		//cd(cmd_line);
 			// function for execution (from there also launch builtin execution or seperate function)
 		}
 		/*printf("words 0: %s\n", command->words[0]);
