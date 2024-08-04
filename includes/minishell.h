@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/04 16:54:11 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/04 17:21:01 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_env
 	char *value;
 	struct s_env *next;
 } t_env;
+
 typedef struct s_elements
 {
 	char **array;
@@ -66,6 +67,7 @@ char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts);
 int	is_whitespace(char c);
 int	is_redirection(char c);
 void	set_elements(t_elements *elmts);
+void	distribute_elements(t_input **command, t_elements *elmts, int *i);
 
 /* populating struct */
 void	init_struct(t_input **command, t_elements *elmts);

@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/03 12:32:59 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/04 17:20:45 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,11 @@ int	main(int argc, char **argv, char **env)
 			what_builtin(command->words, env_list);
 			// function for execution (from there also launch builtin execution or seperate function)
 		}
-
+		/*printf("words 0: %s\n", command->words[0]);
+		printf("words 1: %s\n", command->words[1]);
+		command = command->next;
+		printf("words next 0: %s\n", command->words[0]);
+		printf("words next 1: %s\n", command->words[1]);*/
 		free(cmd_line);
 		free_command(&command);
 	}
