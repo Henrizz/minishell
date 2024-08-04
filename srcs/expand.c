@@ -12,7 +12,9 @@ char *extract_var_name(const char *str, int i)
 		i++;
 	var_name = ft_substr(str, j, i - j);
 	if (var_name == NULL)
-		return NULL;
+	{
+		return (free(var_name), NULL);
+	}
 	return var_name;
 }
 
@@ -32,7 +34,7 @@ char	*get_value(char *var_name, t_env *env_list)
 	return ("");
 }
 
-size_t	calcu_expanded_len(char *str, t_env *env_list)
+size_t	calc_expanded_len(char *str, t_env *env_list)
 {
 	size_t expanded_len;
 	int i;
@@ -91,8 +93,8 @@ char	*expand_str(size_t expanded_len, char *str, t_env *env_list)
 				return (free(expanded), NULL);
 			while (*value)
 				expanded[k++] = *value++;
-			//free(var_name);
-			i += ft_strlen(var_name) ;
+			i += ft_strlen(var_name);
+			free(var_name);
 		}
 		else
 			expanded[k++] = str[i++];
@@ -106,7 +108,7 @@ char	*expanding_var(char *str, t_env *env_list)
 	size_t	expanded_len;
 	char	*expanded;
 
-	expanded_len = calcu_expanded_len(str, env_list);
+	expanded_len = calc_expanded_len(str, env_list);
 	expanded = expand_str(expanded_len, str, env_list);
 	if (!expanded)
 		return (NULL);
@@ -115,18 +117,22 @@ char	*expanding_var(char *str, t_env *env_list)
 
 char	*handle_quoting(char *str, t_env *env_list)
 {
-	size_t len;
-	char *quote_free;
-	char *temp;
+	char	*quote_free;
+	char	*temp;
+	char	*expanded;
 
-	len = ft_strlen(str);
 	quote_free = ft_strdup(str);
-	if (str[0] == '\'' && str[len - 1] == '\'')
+	if (str[0] == '\'' && str[ft_strlen(str) - 1] == '\'')
 		temp = ft_substr(str, 1, ft_strlen(str) - 2);
-    else if (str[0] == '"' && str[len - 1] == '"')
+    else if (str[0] == '"' && str[ft_strlen(str) - 1] == '"')
 	{
 		temp = ft_substr(str, 1, ft_strlen(str) - 2);
-		temp = expanding_var(temp, env_list);
+		if (temp)
+		{
+        	expanded = expanding_var(temp, env_list);
+            free(temp);
+            temp = expanded;
+        }
 	}
     else
 		temp = expanding_var(quote_free, env_list);
@@ -135,6 +141,7 @@ char	*handle_quoting(char *str, t_env *env_list)
 		free(quote_free);
 		quote_free = temp;
 	}
+	free(str);
 	return (quote_free);
 }
 
