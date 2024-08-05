@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/05 19:43:07 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/05 20:19:52 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,10 @@ char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
 	while (**str && ((*inside_quote == 0 && !is_whitespace(**str)) || *inside_quote == 1))
 	{
 		if (*inside_quote == 0 && (**str == '"' || **str == '\''))
+		{
+			elmts->quote_type = **str;
 			*inside_quote = 1;
+		}
 		else if (*inside_quote == 1 && (**str == '"' || **str == '\''))
 		{
 			if (elmts->quote_type == '\0')
