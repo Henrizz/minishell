@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/05 13:39:12 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/05 19:36:10 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ typedef struct s_elements
 int parse_line(char *cmd_line, t_input **command, t_env *env_list);
 char **split_for_parsing(char *cmd_line, t_elements *elmts);
 void	count_elements(char *str, t_elements *elmts);
-int	count_characters(char *str, int **inside_quote);
+int	count_characters(char *str, int *inside_quote);
 char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts);
 int	is_whitespace(char c);
 void	set_elements(t_elements *elmts);
