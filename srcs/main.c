@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/05 13:23:12 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/05 16:54:00 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	main(int argc, char **argv, char **env)
 	command = NULL;
 	env_list = NULL;
 	(void)argv;
-	(void)env;
+	//(void)env;
 	if (argc > 1)
 		return (0); // for now, just to silence argc, but later maybe more actions or error handling
 	env_init(env, &env_list); // it can be part of a global initialization function
@@ -38,7 +38,8 @@ int	main(int argc, char **argv, char **env)
 		if (parse_line(cmd_line, &command, env_list) != -1) //if no syntax errors have been found or line is not empty
 		{
 			/*Testing builtin functions*/
-			what_builtin(command->words, env_list);
+			if (command->words[0])
+				what_builtin(command->words, env_list);
 			// function for execution (from there also launch builtin execution or seperate function)
 		}
 		free(cmd_line);

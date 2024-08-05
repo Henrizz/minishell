@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/02 11:39:38 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/05 17:12:23 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 int	exit_shell(char *message, int exit_status)
 {
 		if (exit_status == EXIT_SUCCESS && message != NULL)
-			ft_putstr_fd(message, 1);
+			ft_putstr_fd(message, 2);
 		if (exit_status == EXIT_FAILURE && message != NULL)
 			perror(message);
+			
 		exit(exit_status);
 }
 

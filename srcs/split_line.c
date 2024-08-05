@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split_cmdline.c                                    :+:      :+:    :+:   */
+/*   split_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/24 17:21:29 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/05 17:13:31 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ char **split_for_parsing(char *cmd_line, t_elements *elmts)
 		if (*cmd_line && (!is_whitespace(*cmd_line) || (is_whitespace(*cmd_line) && inside_quote == 1)))
 			elmts->array[i++] = ft_strdup_delim(&cmd_line, &inside_quote, elmts);
 	}
+	if (inside_quote == 1)
+		exit_shell("minishell: error: unclosed quote\n", EXIT_SUCCESS);
 	elmts->array[i] = NULL;
 	return (elmts->array);
 }
