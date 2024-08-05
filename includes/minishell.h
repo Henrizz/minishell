@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/04 14:37:40 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/05 13:22:54 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ typedef struct s_elements
 } t_elements;
 
 /* parsing struct */
-int parse_line(char *cmd_line, t_input **command);
+int parse_line(char *cmd_line, t_input **command, t_env *env_list);
 char **split_for_parsing(char *cmd_line, t_elements *elmts);
 void	count_elements(char *str, t_elements *elmts);
 int	count_characters(char *str, int **inside_quote);
@@ -95,11 +95,12 @@ void	free_command(t_input **command);
 
 /*Builtin commands*/
 void	what_builtin(char **command_words, t_env *env_list);
-void	echo(char **argv);
+void	echo(char **str);
 void	pwd(void);
 void	cd(char *path);
 void	cmd_env(t_env *list);
 
 void	env_init(char **env, t_env **env_list);
+void	expand_var_words(t_input *input, t_env *env_list);
 
 #endif

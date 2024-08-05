@@ -6,13 +6,13 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/05 00:58:40 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/05 13:22:25 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-/* parses the command line in several steps: 
+/* parses the command line in several steps:
 	-- checks for syntax errors (TO DO)
 	-- splits command line into seperate elements by whitespace but only if not inside quotes (still needs adjustment for elevated case of nested quote with same quote type)
 	-- distributes all separates elements into their corresponding command arrays 
@@ -20,11 +20,11 @@
 			- redirections
 	-- launches expansion to replace environmental virables if needed */
 
-int parse_line(char *cmd_line, t_input **command)
-{	
+int parse_line(char *cmd_line, t_input **command, t_env *env_list)
+{
 	t_elements elmts;
 	//t_input *temp;
-	
+
 	if (!*cmd_line)
 		return (-1);
 	//syntax error handling here
@@ -47,6 +47,7 @@ int parse_line(char *cmd_line, t_input **command)
 		}
 		temp = temp->next;
 	}*/
+	expand_var_words(*command, env_list);
 	return (0);
 }
 
