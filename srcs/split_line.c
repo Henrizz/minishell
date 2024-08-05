@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/05 20:19:52 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/05 20:33:18 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,12 @@ int	count_characters(char *str, int *inside_quote)
 	quote_type = '\0';
 	while (str[i] && ((*inside_quote == 0 && !is_whitespace(str[i])) || *inside_quote == 1))
 	{
-		if (*inside_quote == 1 && (str[i] == '"' || str[i] == '\''))
+		if (*inside_quote == 0 && (str[i] == '"' || str[i] == '\''))
+		{
+			quote_type = str[i];
+			*inside_quote = 1;
+		}
+		else if (*inside_quote == 1 && (str[i] == '"' || str[i] == '\''))
 		{
 			if (quote_type == '\0')
 				quote_type = str[i];
