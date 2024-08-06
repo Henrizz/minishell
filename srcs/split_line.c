@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   split_cmdline.c                                    :+:      :+:    :+:   */
+/*   split_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/07/24 17:21:29 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/05 20:33:18 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,12 @@ char **split_for_parsing(char *cmd_line, t_elements *elmts)
 			elmts->array[i++] = ft_strdup_delim(&cmd_line, &inside_quote, elmts);
 	}
 	elmts->array[i] = NULL;
+	if (inside_quote == 1)
+	{
+		ft_putstr_fd("minishell: error: unclosed quote\n", 2);
+		free_array(elmts->array);
+		return (NULL);
+	}
 	return (elmts->array);
 }
 
@@ -53,13 +59,18 @@ char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
 
 	i = 0;
 	elmts->quote_type = '\0';
-	elmts->char_count = count_characters(*str, &inside_quote);
+	elmts->char_count = count_characters(*str, inside_quote);
 	dup = (char *)malloc((elmts->char_count + 1) * sizeof(char));
 	if (!dup)
 		return (NULL);
 	while (**str && ((*inside_quote == 0 && !is_whitespace(**str)) || *inside_quote == 1))
 	{
-		if (*inside_quote == 1 && (**str == '"' || **str == '\''))
+		if (*inside_quote == 0 && (**str == '"' || **str == '\''))
+		{
+			elmts->quote_type = **str;
+			*inside_quote = 1;
+		}
+		else if (*inside_quote == 1 && (**str == '"' || **str == '\''))
 		{
 			if (elmts->quote_type == '\0')
 				elmts->quote_type = **str;
@@ -78,7 +89,7 @@ char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
 	return (dup);
 }
 
-int	count_characters(char *str, int **inside_quote)
+int	count_characters(char *str, int *inside_quote)
 {
 	int	i;
 	int	count;
@@ -87,9 +98,14 @@ int	count_characters(char *str, int **inside_quote)
 	i = 0;
 	count = 0;
 	quote_type = '\0';
-	while (str[i] && ((**inside_quote == 0 && !is_whitespace(str[i])) || **inside_quote == 1))
+	while (str[i] && ((*inside_quote == 0 && !is_whitespace(str[i])) || *inside_quote == 1))
 	{
-		if (**inside_quote == 1 && (str[i] == '"' || str[i] == '\''))
+		if (*inside_quote == 0 && (str[i] == '"' || str[i] == '\''))
+		{
+			quote_type = str[i];
+			*inside_quote = 1;
+		}
+		else if (*inside_quote == 1 && (str[i] == '"' || str[i] == '\''))
 		{
 			if (quote_type == '\0')
 				quote_type = str[i];

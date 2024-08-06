@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/04 17:20:45 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/05 19:51:29 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	main(int argc, char **argv, char **env)
 	command = NULL;
 	env_list = NULL;
 	(void)argv;
-	(void)env;
 	if (argc > 1)
 		return (0); // for now, just to silence argc, but later maybe more actions or error handling
 	env_init(env, &env_list); // it can be part of a global initialization function
@@ -32,20 +31,12 @@ int	main(int argc, char **argv, char **env)
 			return (exit_shell("exit\n", EXIT_SUCCESS));
 		if (*cmd_line)
 			add_history(cmd_line);
-
-		// function to parse command line and initialise and populate input struct
-				// --> (from there also do syntax error checks and launch expansion function)
 		if (parse_line(cmd_line, &command, env_list) != -1) //if no syntax errors have been found or line is not empty
 		{
 			/*Testing builtin functions*/
-			what_builtin(command->words, env_list);
-			// function for execution (from there also launch builtin execution or seperate function)
+			if (command->words[0])
+				what_builtin(command->words, env_list);
 		}
-		/*printf("words 0: %s\n", command->words[0]);
-		printf("words 1: %s\n", command->words[1]);
-		command = command->next;
-		printf("words next 0: %s\n", command->words[0]);
-		printf("words next 1: %s\n", command->words[1]);*/
 		free(cmd_line);
 		free_command(&command);
 	}

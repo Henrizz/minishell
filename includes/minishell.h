@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/04 17:21:01 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/05 19:36:10 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,19 @@
 # include <fcntl.h>
 # include "../libft/libft.h"
 
-/* proposal for structure to hold the different variables of each command (every command node separated by pipe from the next one)
-potentially will be adjusted or expanded according to our needs
---> words stores all commands and command arguments / red_in and red_out store the input (<) and
+# define IN_DETACHED 1
+# define IN_ATTACHED 2
+# define OUT_DETACHED 3
+# define OUT_ATTACHED 4
+# define HERE_DETACHED 5
+# define HERE_ATTACHED 6
+# define APP_DETACHED 7
+# define APP_ATTACHED 8
+
+
+/* proposal for structure to hold the different variables of each command (every command node separated by pipe from the next one) 
+potentially will be adjusted or expanded according to our needs 
+--> words stores all commands and command arguments / red_in and red_out store the input (<) and 
 output (>) redirections, heredoc stores heredoc (<<), app_out stores append output redirection (>>) */
 typedef struct s_input
 {
@@ -39,6 +49,10 @@ typedef struct s_input
 	char **heredoc;
 	char **app_out;
 	int cmd_ind;
+	int	j;
+	int	o;
+	int	h;
+	int	p;
 	struct s_input *next;
 } t_input;
 
@@ -62,17 +76,17 @@ typedef struct s_elements
 int parse_line(char *cmd_line, t_input **command, t_env *env_list);
 char **split_for_parsing(char *cmd_line, t_elements *elmts);
 void	count_elements(char *str, t_elements *elmts);
-int	count_characters(char *str, int **inside_quote);
+int	count_characters(char *str, int *inside_quote);
 char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts);
 int	is_whitespace(char c);
-int	is_redirection(char c);
 void	set_elements(t_elements *elmts);
 void	distribute_elements(t_input **command, t_elements *elmts, int *i);
 
 /* populating struct */
 void	init_struct(t_input **command, t_elements *elmts);
 void divi_up_command(t_input **command, t_elements *elmts);
-int	is_redirection(char c);
+int	is_redirection(char *str);
+void	distribute_redirections(t_input **command, t_elements *elmts, int *i, int redirect_type);
 
 /* free and exit functions */
 int	exit_shell(char *message, int exit_status);
@@ -88,5 +102,8 @@ void	cmd_env(t_env *list);
 
 void	env_init(char **env, t_env **env_list);
 void	expand_var_words(t_input *input, t_env *env_list);
+
+/* utils - to be deleted later */
+void print_arrays_testing(t_input **command);
 
 #endif
