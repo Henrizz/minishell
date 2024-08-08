@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/08 16:03:21 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/08 16:51:30 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,19 +31,44 @@ int set_up_and_run_processes(t_input **command, char **env)
 {
 	int	pid;
 	char	*cmd_file;
+	char *temp;
 
+	cmd_file = NULL;
 	pid = fork();
 	if (pid == -1)
 		return (error_return("minishell: fork error"));
 	if (pid == 0)
 	{
-		cmd_file = find_cmd_file((*command)->words, env);
-		if (cmd_file == NULL)
+		if (ft_strrchr((*command)->words[0], '/'))
 		{
-			free(cmd_file);
-			exit(EXIT_FAILURE);
+			cmd_file = ft_strdup((*command)->words[0]);
+			if (cmd_file == NULL)
+				error_return("minishell: error ft_strdup");
+			if (access(cmd_file, X_OK) != 0)
+			{
+				ft_putstr_fd("minishell: ", 2);
+				ft_putstr_fd(cmd_file, 2);
+				ft_putstr_fd(": command not found\n", 2);
+				return (0);
+			}
+			temp = ft_strrchr((*command)->words[0], '/') + 1;
+			free((*command)->words[0]);
+			(*command)->words[0] = ft_strdup(temp);
+			if ((*command)->words[0] == NULL)
+				error_return("minishell: error ft_strdup");
+		}
+		else
+		{
+			cmd_file = find_cmd_file((*command)->words, env);
+			if (cmd_file == NULL)
+			{
+				free(cmd_file);
+				exit(EXIT_FAILURE);
+			}
 		}
 		execve(cmd_file, (*command)->words, env);
+		printf("execve fail\n");
+		return (-1);
 	}
 	else 
 		waitpid(pid, NULL, 0);

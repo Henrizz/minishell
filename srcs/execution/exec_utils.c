@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/08 15:50:32 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/08 16:14:59 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ char	*find_cmd_file(char **cmd, char **env)
 	free_array(paths);
 	return (NULL);
 }
-
 
 int	get_cmd_index(t_input **command)
 {
