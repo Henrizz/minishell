@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/05 19:36:10 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/08 12:40:24 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,11 @@ void	cmd_env(t_env *list);
 
 void	env_init(char **env, t_env **env_list);
 void	expand_var_words(t_input *input, t_env *env_list);
+
+/* execution */
+int execute(t_input **command, t_env *env_list);
+void set_up_pipes_redirections(t_input **command);
+int	get_cmd_index(t_input **command);
 
 /* utils - to be deleted later */
 void print_arrays_testing(t_input **command);

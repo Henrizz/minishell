@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/05 19:51:29 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/08 12:39:47 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	main(int argc, char **argv, char **env)
 			/*Testing builtin functions*/
 			if (command->words[0])
 				what_builtin(command->words, env_list);
+			execute(&command, env_list);
 		}
 		free(cmd_line);
 		free_command(&command);
