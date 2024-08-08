@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/08 12:40:24 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/08 15:50:39 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void	distribute_redirections(t_input **command, t_elements *elmts, int *i, int r
 int	exit_shell(char *message, int exit_status);
 void	free_array(char **str);
 void	free_command(t_input **command);
+int	error_return(char *message);
 
 /*Builtin commands*/
 void	what_builtin(char **command_words, t_env *env_list);
@@ -104,9 +105,15 @@ void	env_init(char **env, t_env **env_list);
 void	expand_var_words(t_input *input, t_env *env_list);
 
 /* execution */
-int execute(t_input **command, t_env *env_list);
-void set_up_pipes_redirections(t_input **command);
+void execute(t_input **command, t_env *env_list, char **env);
+int set_up_pipes_redirections(t_input **command);
+int set_up_and_run_processes(t_input **command, char **env);
+
+/* execution utils */
 int	get_cmd_index(t_input **command);
+int	is_builtin(t_input **command);
+char	*find_cmd_file(char **cmd, char **env);
+char	*get_paths(char **env, char *name);
 
 /* utils - to be deleted later */
 void print_arrays_testing(t_input **command);

@@ -30,7 +30,7 @@ LIBFT = srcs/libft/libft.a
 LIB = srcs/libft
 SRCS = srcs/main.c srcs/exits.c srcs/parsing.c srcs/split_line.c srcs/builtins/pwd.c \
        srcs/builtins/what_builtin.c srcs/builtins/cd.c srcs/builtins/echo.c srcs/expand.c\
-       srcs/builtins/env.c srcs/env_init.c srcs/execution.c
+       srcs/builtins/env.c srcs/env_init.c srcs/execution/execution.c srcs/execution/exec_utils.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -rf
 CC = cc
@@ -38,7 +38,7 @@ CC = cc
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(ADDRFLAG) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 	chmod +x $(NAME)
 
 $(LIBFT):

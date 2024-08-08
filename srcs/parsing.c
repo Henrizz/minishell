@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/05 20:33:28 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/08 14:14:15 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int parse_line(char *cmd_line, t_input **command, t_env *env_list)
 	divi_up_command(command, &elmts);
 	expand_var_words(*command, env_list);
 	//print_arrays_testing(command);
+	if (!(*command)->words[0])
+		return (-1);
 	return (0);
 }
 

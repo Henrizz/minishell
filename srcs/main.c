@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/08 12:39:47 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/08 15:56:58 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,13 @@ int	main(int argc, char **argv, char **env)
 		if (parse_line(cmd_line, &command, env_list) != -1) //if no syntax errors have been found or line is not empty
 		{
 			/*Testing builtin functions*/
-			if (command->words[0])
-				what_builtin(command->words, env_list);
-			execute(&command, env_list);
+			//what_builtin(command->words, env_list);
+			execute(&command, env_list, env);
 		}
 		free(cmd_line);
+		rl_clear_history();
 		free_command(&command);
+		//free environment list? --> check still reachables with valgrind
 	}
 	return (0);
 }
