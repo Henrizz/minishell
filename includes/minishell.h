@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/09 16:45:51 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:32:56 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	env_init(char **env, t_env **env_list);
 void	expand_var_words(t_input *input, t_env *env_list);
 
 /* execution */
-void execute(t_input **command, t_env *env_list, char **env);
+void execute(t_input **command, t_env *env_list, char **env, char *pwd);
 int set_up_pipes_redirections(t_input **command, t_pipe *exec);
 int set_up_and_run_processes(t_input **command, char **env);
 
@@ -137,9 +137,10 @@ int	redirection_out(t_input **command, int i);
 int	redirection_in(t_input **command, int i);
 
 /* heredocs */
-int	get_input_heredoc(t_input **command, char **env);
-int	make_heredoc_directory(char **env);
-char *make_heredoc_filename(t_input **command, int i);
+int	get_input_heredoc(t_input **command, char **env, char *pwd);
+int	make_heredoc_directory(char **env, char *pwd);
+char *make_heredoc_filename(t_input **command, int i, char *pwd);
+int remove_heredoc(char **env, char *pwd);
 
 /* utils - to be deleted later */
 void print_arrays_testing(t_input **command);

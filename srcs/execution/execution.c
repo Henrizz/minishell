@@ -6,13 +6,13 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/09 16:13:46 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:26:38 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void execute(t_input **command, t_env *env_list, char **env)
+void execute(t_input **command, t_env *env_list, char **env, char *pwd)
 {
 	t_pipe	*exec;
 	int	stdin_copy;
@@ -22,7 +22,7 @@ void execute(t_input **command, t_env *env_list, char **env)
 	if (save_in_out(&stdin_copy, &stdout_copy) == -1) //save stdin and stdout to restore later
 		return;
 	// here get heredoc input, from all heredocs and save fds in separate array (or replace heredoc array)
-	if (get_input_heredoc(command, env) == -1)
+	if (get_input_heredoc(command, env, pwd) == -1)
 		return;
 	if (!(*command)->next && is_builtin(command)) //this means if there is only one command (so no pipe) and it's a builtin
 	{
