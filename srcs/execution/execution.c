@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/09 17:26:38 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/09 17:56:12 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 void execute(t_input **command, t_env *env_list, char **env, char *pwd)
 {
-	t_pipe	*exec;
+	//t_pipe	*exec;
 	int	stdin_copy;
 	int	stdout_copy;
 	
-	exec = NULL;
+	//exec = NULL;
 	if (save_in_out(&stdin_copy, &stdout_copy) == -1) //save stdin and stdout to restore later
 		return;
 	// here get heredoc input, from all heredocs and save fds in separate array (or replace heredoc array)
