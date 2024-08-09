@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/09 17:50:59 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/09 19:19:02 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,14 @@ int	get_input_heredoc(t_input **command, char **env, char *pwd)
 		free(filepath);
 		while (1)
 		{
-			line = get_next_line_new(0);
+			line = readline("<");
 			if (line == NULL || !ft_strncmp(line, (*command)->heredoc[i], ft_strlen((*command)->heredoc[i])))
 			{
 				free(line);
 				break ;
 			}
 			ft_putstr_fd(line, fd);
+			ft_putstr_fd("\n", fd);
 			free(line);
 		}
 		i++;
