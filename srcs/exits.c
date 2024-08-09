@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/08 15:29:55 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/08 18:14:34 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,5 +61,5 @@ void	free_array(char **str)
 int	error_return(char *message)
 {
 	perror(message);
-	return (0);
+	return (-1);
 }

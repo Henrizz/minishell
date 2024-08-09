@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/08 16:14:59 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/09 15:29:58 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,28 @@ char	*find_cmd_file(char **cmd, char **env)
 	return (NULL);
 }
 
-int	get_cmd_index(t_input **command)
+int	get_cmd_index(t_input **command, t_pipe *exec)
 {
 	t_input *temp;
 	int	i;
 
 	temp = *command;
 	i = 0;
+	exec->cmd_i = 0;
+	exec->inf_fd = -1;
+	exec->outf_fd = -1;
+	exec->curr = 0;
+	exec->prev = 0;
+	//int	here_doc;
+	//int	denied_acc;
 	while (temp)
 	{
 		if (temp->next)
 			i++;
 		temp = temp->next;
 	}
+	exec->pipe_qty = i;
+	exec->pipe_fd = malloc((exec->pipe_qty) * sizeof(int *));
 	return (i);
 }
 

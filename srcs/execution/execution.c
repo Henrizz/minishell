@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/08 16:51:30 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/09 16:13:46 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,36 @@
 
 void execute(t_input **command, t_env *env_list, char **env)
 {
-	int	pipe_qty;
+	t_pipe	*exec;
+	int	stdin_copy;
+	int	stdout_copy;
 	
-	(void)env_list;
-	pipe_qty = set_up_pipes_redirections(command);
-	if (pipe_qty == -1)
+	exec = NULL;
+	if (save_in_out(&stdin_copy, &stdout_copy) == -1) //save stdin and stdout to restore later
 		return;
-	// later make more complex execution setup with various amount of child processes, this is only to test for one simple command
+	// here get heredoc input, from all heredocs and save fds in separate array (or replace heredoc array)
+	if (get_input_heredoc(command, env) == -1)
+		return;
 	if (!(*command)->next && is_builtin(command)) //this means if there is only one command (so no pipe) and it's a builtin
-		what_builtin((*command)->words, env_list);		
+	{
+		if (make_redirections(command) == -1)
+			return;
+		what_builtin((*command)->words, env_list);
+	}	
 	else
-		set_up_and_run_processes(command, env);
+	{
+		//setup_and_run(command, exec, env);
+		simple_set_up_and_run_processes(command, env); //for testing
+	}	
+	restore_in_out(&stdin_copy, &stdout_copy); //restore stdin and stdout
+	// here remove heredocs, if any
 }
 
-int set_up_and_run_processes(t_input **command, char **env)
+int simple_set_up_and_run_processes(t_input **command, char **env) //simple command without pipe layout
 {
 	int	pid;
 	char	*cmd_file;
-	char *temp;
+	//char *temp;
 
 	cmd_file = NULL;
 	pid = fork();
@@ -51,11 +63,11 @@ int set_up_and_run_processes(t_input **command, char **env)
 				ft_putstr_fd(": command not found\n", 2);
 				return (0);
 			}
-			temp = ft_strrchr((*command)->words[0], '/') + 1;
+			/*temp = ft_strrchr((*command)->words[0], '/') + 1;
 			free((*command)->words[0]);
 			(*command)->words[0] = ft_strdup(temp);
 			if ((*command)->words[0] == NULL)
-				error_return("minishell: error ft_strdup");
+				error_return("minishell: error ft_strdup");*/
 		}
 		else
 		{
@@ -67,22 +79,11 @@ int set_up_and_run_processes(t_input **command, char **env)
 			}
 		}
 		execve(cmd_file, (*command)->words, env);
-		printf("execve fail\n");
+		//printf("execve fail\n"); --> make better error catch
 		return (-1);
 	}
 	else 
 		waitpid(pid, NULL, 0);
 	return (0);
-}
-
-int set_up_pipes_redirections(t_input **command)
-{
-	int	pipe_qty;
-
-	pipe_qty = get_cmd_index(command);
-	//printf("%d\n", pipe_qty);
-	
-	//set up pipes and redirections - if error, return -1
-	return (pipe_qty);
 }
 

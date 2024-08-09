@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/08 16:52:29 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/09 14:09:26 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	main(int argc, char **argv, char **env)
 		}
 		free(cmd_line);
 		free_command(&command);
-		//free environment list? --> check still reachables with valgrind
 	}
+	//free environment list? --> check still reachables with valgrind
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/08 15:50:39 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/09 16:45:51 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,19 @@ typedef struct s_elements
 	char quote_type;
 } t_elements;
 
+typedef struct s_pipe
+{
+	int	pipe_qty;
+	int	cmd_i;
+	int	**pipe_fd;
+	int	inf_fd;
+	int	outf_fd;
+	int	curr;
+	int	prev;
+	//int	here_doc;
+	//int	denied_acc;
+}	t_pipe;
+
 /* parsing struct */
 int parse_line(char *cmd_line, t_input **command, t_env *env_list);
 char **split_for_parsing(char *cmd_line, t_elements *elmts);
@@ -106,16 +119,30 @@ void	expand_var_words(t_input *input, t_env *env_list);
 
 /* execution */
 void execute(t_input **command, t_env *env_list, char **env);
-int set_up_pipes_redirections(t_input **command);
+int set_up_pipes_redirections(t_input **command, t_pipe *exec);
 int set_up_and_run_processes(t_input **command, char **env);
 
 /* execution utils */
-int	get_cmd_index(t_input **command);
+int	get_cmd_index(t_input **command, t_pipe *exec);
 int	is_builtin(t_input **command);
 char	*find_cmd_file(char **cmd, char **env);
 char	*get_paths(char **env, char *name);
 
+/* redirections */
+int	save_in_out(int	*stdin_copy, int *stdout_copy);
+int	restore_in_out(int	*stdin_copy, int *stdout_copy);
+int	make_redirections(t_input **command);
+int	redirect_in_out(t_input **command);
+int	redirection_out(t_input **command, int i);
+int	redirection_in(t_input **command, int i);
+
+/* heredocs */
+int	get_input_heredoc(t_input **command, char **env);
+int	make_heredoc_directory(char **env);
+char *make_heredoc_filename(t_input **command, int i);
+
 /* utils - to be deleted later */
 void print_arrays_testing(t_input **command);
+int simple_set_up_and_run_processes(t_input **command, char **env);
 
 #endif
