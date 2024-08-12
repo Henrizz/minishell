@@ -1,14 +1,21 @@
 #include "../../includes/minishell.h"
 
 //int chdir(const char *path);
-
-
 void	cd(char *path, t_env *env_list)
 {
-	char old_pwd[PATH_MAX];
-	char pwd[PATH_MAX];
 	//TODO too many arguments
 	//TODO exit status?
+	char old_pwd[PATH_MAX];
+	char pwd[PATH_MAX];
+	if(!path)
+	{
+		path = get_env_value("HOME", env_list);
+		if(!path)
+		{
+			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+			return;
+		}
+	}
 	getcwd(old_pwd, PATH_MAX);
 	if(!chdir(path))
 	{

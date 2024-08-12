@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/12 15:35:03 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/12 19:14:55 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,28 @@ void	pwd(void);
 void	cd(char *path, t_env *env_list);
 void	cmd_env(t_env *list, char **command_words);
 void	export(char **arg, t_env *env_list);
+void	unset(char **args, t_env *env_list);
+void	error_identifier(char *str, char *command);
 
+/* env */
 void	env_init(char **env, t_env **env_list);
-void	expand_var_words(t_input *input, t_env *env_list);
-void set_env(char *key, char *value, t_env *env_list, int export_flag);
+void	set_env(char *key, char *value, t_env *env_list, int export_flag);
+char	*get_env_value(char *var_name, t_env *env_list);
 void	free_env_var(t_env *env_var);
 t_env	*new_env_var(char *str, int export);
+
+/* env utils */
+t_env	*allocate_env_var(void);
+void	free_env_list(t_env **env_list);
+void	print_env_list(t_env *env_list);
+char	*get_env_value(char *var_name, t_env *env_list);
+
+/*expand*/
+void	expand_var_words(t_input *input, t_env *env_list);
+
+/*expand utils*/
+size_t	calc_expanded_len(char *str, t_env *env_list);
+char	*extract_var_name(const char *str, int i);
 
 /* execution */
 void execute(t_input **command, t_env *env_list, char **env, char *pwd);

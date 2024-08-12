@@ -15,10 +15,10 @@ void	what_builtin(char **command_words, t_env *env_list)
 		pwd();
 	if(!ft_strncmp(command_words[0], "export", len))
 		export(command_words, env_list);
-	// if(!ft_strncmp(command_words, "unset", len))
-	// 	unset();
+	if(!ft_strncmp(command_words[0], "unset", len))
+		unset(command_words, env_list);
 	if(!ft_strncmp(command_words[0], "env", len))
 	 	cmd_env(env_list, command_words);
-	// if(!ft_strncmp(command_words, "exit", len))
+	// if(!ft_strncmp(command_words[0], "exit", len))
 	// 	exit();
 }
