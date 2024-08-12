@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/09 17:32:56 by hzimmerm         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2024/08/12 19:14:55 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -37,9 +38,9 @@
 # define APP_ATTACHED 8
 
 
-/* proposal for structure to hold the different variables of each command (every command node separated by pipe from the next one) 
-potentially will be adjusted or expanded according to our needs 
---> words stores all commands and command arguments / red_in and red_out store the input (<) and 
+/* proposal for structure to hold the different variables of each command (every command node separated by pipe from the next one)
+potentially will be adjusted or expanded according to our needs
+--> words stores all commands and command arguments / red_in and red_out store the input (<) and
 output (>) redirections, heredoc stores heredoc (<<), app_out stores append output redirection (>>) */
 typedef struct s_input
 {
@@ -60,6 +61,7 @@ typedef struct s_env
 {
 	char *key;
 	char *value;
+	int	export;
 	struct s_env *next;
 } t_env;
 
@@ -111,11 +113,31 @@ int	error_return(char *message);
 void	what_builtin(char **command_words, t_env *env_list);
 void	echo(char **str);
 void	pwd(void);
-void	cd(char *path);
-void	cmd_env(t_env *list);
+void	cd(char *path, t_env *env_list);
+void	cmd_env(t_env *list, char **command_words);
+void	export(char **arg, t_env *env_list);
+void	unset(char **args, t_env *env_list);
+void	error_identifier(char *str, char *command);
 
+/* env */
 void	env_init(char **env, t_env **env_list);
+void	set_env(char *key, char *value, t_env *env_list, int export_flag);
+char	*get_env_value(char *var_name, t_env *env_list);
+void	free_env_var(t_env *env_var);
+t_env	*new_env_var(char *str, int export);
+
+/* env utils */
+t_env	*allocate_env_var(void);
+void	free_env_list(t_env **env_list);
+void	print_env_list(t_env *env_list);
+char	*get_env_value(char *var_name, t_env *env_list);
+
+/*expand*/
 void	expand_var_words(t_input *input, t_env *env_list);
+
+/*expand utils*/
+size_t	calc_expanded_len(char *str, t_env *env_list);
+char	*extract_var_name(const char *str, int i);
 
 /* execution */
 void execute(t_input **command, t_env *env_list, char **env, char *pwd);

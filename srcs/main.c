@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/09 17:37:26 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/12 15:37:05 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	main(int argc, char **argv, char **env)
 	char	*cmd_line;
 	t_input	*command;
 	t_env *env_list;
-	char *pwd; //placeholder for now, to save the initial project folder to make heredoc directory inside and be able to locate later 
+	char *pwd; //placeholder for now, to save the initial project folder to make heredoc directory inside and be able to locate later
 			//--> maybe we can add it to env_list structure ?
 	command = NULL;
 	env_list = NULL;
