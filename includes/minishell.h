@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/05 19:36:10 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/11 21:28:24 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@
 # define APP_ATTACHED 8
 
 
-/* proposal for structure to hold the different variables of each command (every command node separated by pipe from the next one) 
-potentially will be adjusted or expanded according to our needs 
---> words stores all commands and command arguments / red_in and red_out store the input (<) and 
+/* proposal for structure to hold the different variables of each command (every command node separated by pipe from the next one)
+potentially will be adjusted or expanded according to our needs
+--> words stores all commands and command arguments / red_in and red_out store the input (<) and
 output (>) redirections, heredoc stores heredoc (<<), app_out stores append output redirection (>>) */
 typedef struct s_input
 {
@@ -60,6 +60,7 @@ typedef struct s_env
 {
 	char *key;
 	char *value;
+	int	export;
 	struct s_env *next;
 } t_env;
 
@@ -97,11 +98,15 @@ void	free_command(t_input **command);
 void	what_builtin(char **command_words, t_env *env_list);
 void	echo(char **str);
 void	pwd(void);
-void	cd(char *path);
-void	cmd_env(t_env *list);
+void	cd(char *path, t_env *env_list);
+void	cmd_env(t_env *list, char **command_words);
+void	export(char **arg, t_env *env_list);
 
 void	env_init(char **env, t_env **env_list);
 void	expand_var_words(t_input *input, t_env *env_list);
+void set_env(char *key, char *value, t_env *env_list, int export_flag);
+void	free_env_var(t_env *env_var);
+t_env	*new_env_var(char *str, int export);
 
 /* utils - to be deleted later */
 void print_arrays_testing(t_input **command);

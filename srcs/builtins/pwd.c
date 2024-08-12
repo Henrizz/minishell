@@ -2,15 +2,18 @@
 
 //char *getcwd(char *buffer, size_t size);
 
-void	pwd(void)// TODO: define if is necessary to send success or fail return instead of void
+void	pwd(void)// TODO: exit_status??
 {
-    char cwd[PATH_MAX];
+	char cwd[PATH_MAX];
 
-    if(getcwd(cwd, PATH_MAX))
-        printf("%s\n",cwd);
-    else
-    {
-        printf("pwd: ");
-		perror(strerror(errno));
-    }
+	if(getcwd(cwd, PATH_MAX))
+	{
+		ft_putstr_fd(cwd, 1);
+		ft_putstr_fd("\n", 1);
+	}
+	else
+	{
+		ft_putstr_fd("pwd: ", 2);
+		ft_putstr_fd(strerror(errno), 2);
+	}
 }
