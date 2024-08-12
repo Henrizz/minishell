@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/05 17:12:23 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/08 18:14:34 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	exit_shell(char *message, int exit_status)
 			ft_putstr_fd(message, 2);
 		if (exit_status == EXIT_FAILURE && message != NULL)
 			perror(message);
-			
+		rl_clear_history();	
 		exit(exit_status);
 }
 
@@ -56,4 +56,10 @@ void	free_array(char **str)
 		i++;
 	}
 	free(str);
+}
+
+int	error_return(char *message)
+{
+	perror(message);
+	return (-1);
 }

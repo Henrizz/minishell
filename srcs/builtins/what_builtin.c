@@ -4,6 +4,8 @@ void	what_builtin(char **command_words, t_env *env_list)
 {
     size_t len;
 
+    if (!command_words[0])
+		return;
     len = ft_strlen(command_words[0]);
     if(!ft_strncmp(command_words[0], "echo", len))
 	 	echo(command_words);

@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/09 00:33:24 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/12 15:37:05 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@ int	main(int argc, char **argv, char **env)
 	char	*cmd_line;
 	t_input	*command;
 	t_env *env_list;
-
+	char *pwd; //placeholder for now, to save the initial project folder to make heredoc directory inside and be able to locate later
+			//--> maybe we can add it to env_list structure ?
 	command = NULL;
 	env_list = NULL;
+	pwd = getenv("PWD"); //same here, just placeholder, maybe this can happen where env_list is made ?
 	(void)argv;
 	if (argc > 1)
 		return (0); // for now, just to silence argc, but later maybe more actions or error handling
@@ -34,11 +36,13 @@ int	main(int argc, char **argv, char **env)
 		if (parse_line(cmd_line, &command, env_list) != -1) //if no syntax errors have been found or line is not empty
 		{
 			/*Testing builtin functions*/
-			if (command->words[0])
-				what_builtin(command->words, env_list);
+			//what_builtin(command->words, env_list); // this just commented out for now if you still need it to test
+			execute(&command, env_list, env, pwd);
+			remove_heredoc(env, pwd);
 		}
 		free(cmd_line);
 		free_command(&command);
 	}
+	//free environment list? --> check still reachables with valgrind
 	return (0);
 }

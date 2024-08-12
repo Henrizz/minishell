@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/05 20:33:18 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/08 14:19:21 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ char **split_for_parsing(char *cmd_line, t_elements *elmts)
 	i = 0;
 	inside_quote = 0;
 	elmts->is_word = 0;
+	elmts->quote_type = '\0';
 	count_elements(cmd_line, elmts);
 	elmts->array = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
 	if (!elmts->array)
 		return (NULL);
 	while (*cmd_line)
 	{
-		elmts->quote_type = '\0';
 		while (is_whitespace(*cmd_line) && inside_quote == 0)
 			cmd_line++;
 		if ((*cmd_line == '"' || *cmd_line == '\'') && inside_quote == 0)
@@ -41,6 +41,7 @@ char **split_for_parsing(char *cmd_line, t_elements *elmts)
 			inside_quote = 0;
 		if (*cmd_line && (!is_whitespace(*cmd_line) || (is_whitespace(*cmd_line) && inside_quote == 1)))
 			elmts->array[i++] = ft_strdup_delim(&cmd_line, &inside_quote, elmts);
+		elmts->quote_type = '\0';
 	}
 	elmts->array[i] = NULL;
 	if (inside_quote == 1)
