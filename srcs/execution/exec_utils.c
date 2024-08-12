@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/09 15:29:58 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/10 00:05:49 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,6 @@ int	get_cmd_index(t_input **command, t_pipe *exec)
 
 	temp = *command;
 	i = 0;
-	exec->cmd_i = 0;
-	exec->inf_fd = -1;
-	exec->outf_fd = -1;
-	exec->curr = 0;
-	exec->prev = 0;
-	//int	here_doc;
-	//int	denied_acc;
 	while (temp)
 	{
 		if (temp->next)
@@ -63,6 +56,7 @@ int	get_cmd_index(t_input **command, t_pipe *exec)
 		temp = temp->next;
 	}
 	exec->pipe_qty = i;
+	//printf("i: %d\n", i);
 	exec->pipe_fd = malloc((exec->pipe_qty) * sizeof(int *));
 	return (i);
 }

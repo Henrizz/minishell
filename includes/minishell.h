@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:58 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/09 17:32:56 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/12 16:04:43 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,12 @@ typedef struct s_elements
 typedef struct s_pipe
 {
 	int	pipe_qty;
-	int	cmd_i;
+	//int	cmd_i;
 	int	**pipe_fd;
-	int	inf_fd;
-	int	outf_fd;
-	int	curr;
-	int	prev;
+	//int	inf_fd;
+	//int	outf_fd;
+	//int	curr;
+	//int	prev;
 	//int	here_doc;
 	//int	denied_acc;
 }	t_pipe;
@@ -120,7 +120,7 @@ void	expand_var_words(t_input *input, t_env *env_list);
 /* execution */
 void execute(t_input **command, t_env *env_list, char **env, char *pwd);
 int set_up_pipes_redirections(t_input **command, t_pipe *exec);
-int set_up_and_run_processes(t_input **command, char **env);
+int set_up_and_run_processes(t_input **command, char **env, t_env *env_list);
 
 /* execution utils */
 int	get_cmd_index(t_input **command, t_pipe *exec);
@@ -131,16 +131,26 @@ char	*get_paths(char **env, char *name);
 /* redirections */
 int	save_in_out(int	*stdin_copy, int *stdout_copy);
 int	restore_in_out(int	*stdin_copy, int *stdout_copy);
-int	make_redirections(t_input **command);
+int	make_redirections(t_input **command, char *pwd);
 int	redirect_in_out(t_input **command);
 int	redirection_out(t_input **command, int i);
 int	redirection_in(t_input **command, int i);
+int	redirect_heredoc(t_input **command, char *pwd);
+int	redirect_append(t_input **command);
 
 /* heredocs */
 int	get_input_heredoc(t_input **command, char **env, char *pwd);
 int	make_heredoc_directory(char **env, char *pwd);
 char *make_heredoc_filename(t_input **command, int i, char *pwd);
 int remove_heredoc(char **env, char *pwd);
+
+/* pipes + processes */
+int	create_pipes(t_pipe *exec);
+int	replace_pipes(t_input *command, t_pipe *exec);
+void	close_all_pipes(t_pipe *exec);
+void	wait_loop(t_pipe *exec);
+int	child_process_exec(t_input *command, t_pipe *exec, char **env, t_env *env_list);
+int setup_and_run(t_input **command, t_pipe *exec, char **env, char *pwd, t_env *env_list);
 
 /* utils - to be deleted later */
 void print_arrays_testing(t_input **command);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/09 17:37:26 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/11 14:05:43 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ int	main(int argc, char **argv, char **env)
 	{
 		cmd_line = readline("temp_prompt$ ");
 		if (!cmd_line) //to check if command line pointer is NULL (in case of ctrl+D or else)
+		{
+			remove_heredoc(env, pwd);
 			return (exit_shell("exit\n", EXIT_SUCCESS));
+		}
 		if (*cmd_line)
 			add_history(cmd_line);
 		if (parse_line(cmd_line, &command, env_list) != -1) //if no syntax errors have been found or line is not empty

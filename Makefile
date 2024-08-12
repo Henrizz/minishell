@@ -31,7 +31,8 @@ LIB = srcs/libft
 SRCS = srcs/main.c srcs/exits.c srcs/parsing.c srcs/split_line.c srcs/builtins/pwd.c \
        srcs/builtins/what_builtin.c srcs/builtins/cd.c srcs/builtins/echo.c srcs/expand.c \
        srcs/builtins/env.c srcs/env_init.c srcs/execution/execution.c srcs/execution/exec_utils.c \
-       srcs/execution/redir_utils.c srcs/execution/redirection.c srcs/execution/heredoc.c
+       srcs/execution/redir_utils.c srcs/execution/redirection.c srcs/execution/heredoc.c \
+       srcs/execution/pipes.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -rf
 CC = cc
