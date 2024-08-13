@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/12 19:14:55 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/13 16:51:56 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,13 @@ typedef struct s_env
 	int	export;
 	struct s_env *next;
 } t_env;
-
+typedef struct s_global
+{
+	t_env	*env_list;
+	char **env;
+	char *pwd;
+	int exit_status;
+} t_global;
 typedef struct s_elements
 {
 	char **array;
@@ -110,14 +116,18 @@ void	free_command(t_input **command);
 int	error_return(char *message);
 
 /*Builtin commands*/
-void	what_builtin(char **command_words, t_env *env_list);
+void	what_builtin(char **command_words, t_global *global);
 void	echo(char **str);
 void	pwd(void);
-void	cd(char *path, t_env *env_list);
+void	cd(char *path, t_env *env_list, char ***env);
 void	cmd_env(t_env *list, char **command_words);
-void	export(char **arg, t_env *env_list);
-void	unset(char **args, t_env *env_list);
+void	export(char **words, t_env *env_list, char ***env);
+void	unset(char **args, t_env *env_list, char ***env);
 void	error_identifier(char *str, char *command);
+
+/* global */
+void	global_init(t_global **global, char **env);
+void print_array(char **array);
 
 /* env */
 void	env_init(char **env, t_env **env_list);
@@ -131,6 +141,7 @@ t_env	*allocate_env_var(void);
 void	free_env_list(t_env **env_list);
 void	print_env_list(t_env *env_list);
 char	*get_env_value(char *var_name, t_env *env_list);
+void	set_env_array(t_env *env_list, char ***env_array);
 
 /*expand*/
 void	expand_var_words(t_input *input, t_env *env_list);
@@ -140,7 +151,8 @@ size_t	calc_expanded_len(char *str, t_env *env_list);
 char	*extract_var_name(const char *str, int i);
 
 /* execution */
-void execute(t_input **command, t_env *env_list, char **env, char *pwd);
+//void execute(t_input **command, t_env *env_list, char **env, char *pwd);
+void execute(t_input **command, t_global *global);
 int set_up_pipes_redirections(t_input **command, t_pipe *exec);
 int set_up_and_run_processes(t_input **command, char **env);
 

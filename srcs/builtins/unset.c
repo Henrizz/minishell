@@ -50,7 +50,7 @@ void	unset_env(char *key, t_env *env_list)
 	}
 }
 
-void	unset(char **args, t_env *env_list)
+void	unset(char **args, t_env *env_list, char ***env)
 {
 	int i;
 
@@ -58,7 +58,10 @@ void	unset(char **args, t_env *env_list)
 	while (args[i])
 	{
 		if (is_syntax_ok(args[i]))
+		{
 			unset_env(args[i], env_list);
+			set_env_array(env_list, env);
+		}
 		else
 			error_identifier(args[i], "unset");
 		i++;
