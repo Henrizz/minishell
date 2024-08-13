@@ -3,38 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/09 17:56:12 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/13 15:39:55 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void execute(t_input **command, t_env *env_list, char **env, char *pwd)
+//void execute(t_input **command, t_env *env_list, char **env, char *pwd)
+void execute(t_input **command, t_global *global)
 {
 	//t_pipe	*exec;
 	int	stdin_copy;
 	int	stdout_copy;
-	
+
 	//exec = NULL;
 	if (save_in_out(&stdin_copy, &stdout_copy) == -1) //save stdin and stdout to restore later
 		return;
 	// here get heredoc input, from all heredocs and save fds in separate array (or replace heredoc array)
-	if (get_input_heredoc(command, env, pwd) == -1)
+	if (get_input_heredoc(command, global->env, global->pwd) == -1)
 		return;
 	if (!(*command)->next && is_builtin(command)) //this means if there is only one command (so no pipe) and it's a builtin
 	{
 		if (make_redirections(command) == -1)
 			return;
-		what_builtin((*command)->words, env_list);
-	}	
+		what_builtin((*command)->words, global);
+	}
 	else
 	{
 		//setup_and_run(command, exec, env);
-		simple_set_up_and_run_processes(command, env); //for testing
-	}	
+		simple_set_up_and_run_processes(command, global->env); //for testing
+	}
 	restore_in_out(&stdin_copy, &stdout_copy); //restore stdin and stdout
 	// here remove heredocs, if any
 }
@@ -82,7 +83,7 @@ int simple_set_up_and_run_processes(t_input **command, char **env) //simple comm
 		//printf("execve fail\n"); --> make better error catch
 		return (-1);
 	}
-	else 
+	else
 		waitpid(pid, NULL, 0);
 	return (0);
 }

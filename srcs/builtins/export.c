@@ -61,7 +61,7 @@ void	set_exported_var(t_env *env_list, char *word)
 	free(value);
 }
 
-void	export(char **words, t_env *env_list)
+void	export(char **words, t_env *env_list, char ***env)
 {
 	int i;
 
@@ -76,6 +76,7 @@ void	export(char **words, t_env *env_list)
 		if(!syntax_error(words[i]))//Arreglar para cuando la variable fue expanded
 		{
 			set_exported_var(env_list, words[i]);
+			set_env_array(env_list, env);
 		} else
 			error_identifier(words[i], "export");
 		i++;
