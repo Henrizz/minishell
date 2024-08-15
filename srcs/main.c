@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/15 12:47:40 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/15 19:46:12 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,16 @@ int	main(int argc, char **argv, char **env)
 		if (!cmd_line) //to check if command line pointer is NULL (in case of ctrl+D or else)
 		{
 			remove_heredoc(env, global->pwd);
+			close(global->history_fd);
 			return (exit_shell("exit\n", EXIT_SUCCESS));
 		}
 		if (*cmd_line)
+		{
 			add_history(cmd_line);
-		if (parse_line(cmd_line, &command, (global)->env_list) != -1) //if no syntax errors have been found or line is not empty
+			ft_putstr_fd(cmd_line, global->history_fd);
+			ft_putstr_fd("\n", global->history_fd);
+		}	
+		if (parse_line(cmd_line, &command, (global)->env_list) != 1) //if no syntax errors have been found or line is not empty
 		{
 			//execute(&command, global->env_list, global->env, global->pwd);
 			execute(&command, global);

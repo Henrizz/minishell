@@ -54,7 +54,7 @@ clean:
 	$(RM) $(OBJS) $(LIB)/*.o
 
 fclean: clean
-	$(RM) $(NAME) $(LIBFT)
+	$(RM) $(NAME) $(LIBFT) .history.txt
 
 re: fclean all
 

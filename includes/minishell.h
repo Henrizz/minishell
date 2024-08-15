@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/15 17:49:29 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/15 19:30:29 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_global
 	char **env;
 	char *pwd;
 	int exit_status;
+	int	history_fd;
 } t_global;
 typedef struct s_elements
 {
@@ -97,6 +98,7 @@ char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts);
 int	is_whitespace(char c);
 void	set_elements(t_elements *elmts);
 void	distribute_elements(t_input **command, t_elements *elmts, int *i);
+int	make_history_file(t_global **global);
 
 /* populating struct */
 void	init_struct(t_input **command, t_elements *elmts);

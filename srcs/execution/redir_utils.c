@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:13:42 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/08 18:14:53 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/15 20:01:36 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,34 @@ int	restore_in_out(int	*stdin_copy, int *stdout_copy)
 	}
 	close(*stdin_copy);
 	close(*stdout_copy);
+	return (0);
+}
+
+int	make_history_file(t_global **global)
+{
+	char *filepath;
+	char *line;
+	int	flag;
+
+	//rl_clear_history();
+	flag = 0;
+	filepath = ft_strjoin((*global)->pwd, "/.history.txt");
+	if (!filepath)
+		return (error_return("history file join error"));
+	if (access(filepath, F_OK) == -1)
+		flag = 1;
+	(*global)->history_fd = open(filepath, O_RDWR | O_CREAT | O_APPEND, 0644);
+	if ((*global)->history_fd == -1)
+		return (error_return("history file"));
+	free(filepath);
+	line = get_next_line_new((*global)->history_fd);
+	while(line)
+	{
+		if (line[ft_strlen(line) - 1] == '\n')
+			line[ft_strlen(line) - 1] = '\0';
+		add_history(line);
+		free(line);
+		line = get_next_line_new((*global)->history_fd);
+	}
 	return (0);
 }

@@ -95,4 +95,5 @@ void	global_init(t_global **global, char **env)
 	set_env_array((*global)->env_list, &env_array);
 	(*global)->env = env_array;
 	//print_array(env_array);
+	make_history_file(global);
 }
