@@ -49,6 +49,7 @@ int	main(int argc, char **argv, char **env)
 		free_command(&command);
 	}
 	free_env_list(&global->env_list);
+	free_env_array(global->env);
 	free(global);
 	return (0);
 }

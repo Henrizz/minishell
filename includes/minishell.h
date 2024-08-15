@@ -124,10 +124,10 @@ void	error_identifier(char *str, char *command);
 
 /* global */
 void	global_init(t_global **global, char **env);
-void print_array(char **array);
+void	print_array(char **array);
 
 /* env */
-void	env_init(char **env, t_env **env_list);
+int		env_init(char **env, t_env **env_list);
 void	set_env(char *key, char *value, t_env *env_list, int export_flag);
 char	*get_env_value(char *var_name, t_env *env_list);
 void	free_env_var(t_env *env_var);
@@ -138,8 +138,8 @@ t_env	*allocate_env_var(void);
 void	free_env_list(t_env **env_list);
 void	print_env_list(t_env *env_list);
 char	*get_env_value(char *var_name, t_env *env_list);
-void	set_env_array(t_env *env_list, char ***env_array);
-void free_env_array(char **array);
+int		set_env_array(t_env *env_list, char ***env_array);
+void	free_env_array(char **array);
 
 /*expand*/
 void	expand_var_words(t_input *input, t_env *env_list);
