@@ -14,12 +14,12 @@ void	echo(char **str)
 			i++;
 		while(str[i])
 		{
-			printf("%s", str[i]);
+			ft_putstr_fd(str[i], 1);
 			if(str[i + 1] != NULL)
-				printf(" ");
+				ft_putstr_fd(" ", 1);
 			i++;
 		}
 		if(ft_strncmp(str[1], "-n", len) != 0)
-			printf("\n");
+			ft_putstr_fd("\n", 1);
 	}
 }

@@ -29,10 +29,11 @@ ADDRFLAG = -fsanitize=address
 LIBFT = srcs/libft/libft.a
 LIB = srcs/libft
 SRCS = srcs/main.c srcs/exits.c srcs/parsing.c srcs/split_line.c srcs/builtins/pwd.c \
-       srcs/builtins/what_builtin.c srcs/builtins/cd.c srcs/builtins/echo.c srcs/expand.c \
-       srcs/builtins/env.c srcs/env_init.c srcs/execution/execution.c srcs/execution/exec_utils.c \
+       srcs/builtins/what_builtin.c srcs/builtins/cd.c srcs/builtins/echo.c srcs/expand/expand.c \
+       srcs/builtins/env.c srcs/global/env_init.c srcs/execution/execution.c srcs/execution/exec_utils.c \
        srcs/execution/redir_utils.c srcs/execution/redirection.c srcs/execution/heredoc.c \
-       srcs/execution/pipes.c
+       srcs/builtins/export.c srcs/builtins/unset.c srcs/global/env_utils.c srcs/expand/expand_utils.c \
+       srcs/global/global_init.c srcs/execution/pipes.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -rf
 CC = cc

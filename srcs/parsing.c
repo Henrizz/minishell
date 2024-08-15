@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/11 14:04:55 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/15 12:54:02 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /* parses the command line in several steps:
 	-- checks for syntax errors (TO DO)
 	-- splits command line into seperate elements by whitespace but only if not inside quotes (still needs adjustment for elevated case of nested quote with same quote type)
-	-- distributes all separates elements into their corresponding command arrays 
+	-- distributes all separates elements into their corresponding command arrays
 			- words
 			- redirections
 	-- launches expansion to replace environmental virables if needed */
@@ -31,7 +31,7 @@ int parse_line(char *cmd_line, t_input **command, t_env *env_list)
 		return (-1);
 	divi_up_command(command, &elmts);
 	expand_var_words(*command, env_list);
-	print_arrays_testing(command);
+	//print_arrays_testing(command);
 	return (0);
 }
 
@@ -168,7 +168,7 @@ void print_arrays_testing(t_input **command)
 	int k;
 	int o;
 	int p;
-	
+
 	temp = *command;
 	while (temp)
 	{
@@ -179,27 +179,27 @@ void print_arrays_testing(t_input **command)
 		p = 0;
 		while (temp->words[i])
 		{
-			ft_printf("cmd_i: %d - words: %s\n", temp->cmd_ind, temp->words[i]);
+			printf("cmd_i: %d - words: %s\n", temp->cmd_ind, temp->words[i]);
 			i++;
 		}
 		while (temp->red_in[j])
 		{
-			ft_printf("cmd_i: %d - red in: %s\n", temp->cmd_ind, temp->red_in[j]);
+			printf("cmd_i: %d - red in: %s\n", temp->cmd_ind, temp->red_in[j]);
 			j++;
 		}
 			while (temp->red_out[o])
 		{
-			ft_printf("cmd_i: %d - red out: %s\n", temp->cmd_ind, temp->red_out[o]);
+			printf("cmd_i: %d - red out: %s\n", temp->cmd_ind, temp->red_out[o]);
 			o++;
 		}
 			while (temp->heredoc[k])
 		{
-			ft_printf("cmd_i: %d - heredoc: %s\n", temp->cmd_ind, temp->heredoc[k]);
+			printf("cmd_i: %d - heredoc: %s\n", temp->cmd_ind, temp->heredoc[k]);
 			k++;
 		}
 			while (temp->app_out[p])
 		{
-			ft_printf("cmd_i: %d - append out: %s\n", temp->cmd_ind, temp->app_out[p]);
+			printf("cmd_i: %d - append out: %s\n", temp->cmd_ind, temp->app_out[p]);
 			p++;
 		}
 		temp = temp->next;

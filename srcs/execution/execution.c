@@ -6,13 +6,14 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/12 17:20:04 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/15 12:51:01 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void execute(t_input **command, t_env *env_list, char **env, char *pwd)
+//void execute(t_input **command, t_env *env_list, char **env, char *pwd)
+void execute(t_input **command, t_global *global)
 {
 	t_pipe	*exec;
 	int	stdin_copy;
@@ -21,27 +22,26 @@ void execute(t_input **command, t_env *env_list, char **env, char *pwd)
 	exec = malloc(sizeof(t_pipe));
 	if (!exec)
 		return;
-	if (save_in_out(&stdin_copy, &stdout_copy) == -1 || get_input_heredoc(command, env, pwd) == -1) //save stdin and stdout to restore later
+	if (save_in_out(&stdin_copy, &stdout_copy) == -1 || get_input_heredoc(command, global->env, global->pwd) == -1) //save stdin and stdout to restore later
 	{
 		free(exec);
 		return;
 	}
 	if (!(*command)->next && is_builtin(command)) //this means if there is only one command (so no pipe) and it's a builtin
 	{
-		if (make_redirections(command, pwd) == -1)
+		if (make_redirections(command, global->pwd) == -1)
 			return;
-		what_builtin((*command)->words, env_list);
-	}	
+		what_builtin((*command)->words, global);
+	}
 	else
 	{
-		setup_and_run(command, exec, env, pwd, env_list);
-		//simple_set_up_and_run_processes(command, env); //for testing
-	}	
-	restore_in_out(&stdin_copy, &stdout_copy); //restore stdin and stdout
-	// here remove heredocs, if any
+		setup_and_run(command, exec, global);
+		//simple_set_up_and_run_processes(command, global->env); //for testing
+	}
+	restore_in_out(&stdin_copy, &stdout_copy);
 }
 
-int setup_and_run(t_input **command, t_pipe *exec, char **env, char *pwd,  t_env *env_list) //will have less parameters later
+int setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 {
 	int	pid;
 	t_input *current;
@@ -58,8 +58,8 @@ int setup_and_run(t_input **command, t_pipe *exec, char **env, char *pwd,  t_env
 				return (error_return("fork error"));
 			if (pid == 0)
 			{
-				if (make_redirections(&current, pwd) != -1 && current->words[0])
-					child_process_exec(current, exec, env, env_list);
+				if (make_redirections(&current, global->pwd) != -1 && current->words[0])
+					child_process_exec(current, exec, global);
 				else
 					exit(EXIT_SUCCESS);
 			}
@@ -71,7 +71,7 @@ int setup_and_run(t_input **command, t_pipe *exec, char **env, char *pwd,  t_env
 	return (0);
 }
 
-int	child_process_exec(t_input *command, t_pipe *exec, char **env, t_env *env_list)
+int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 {
 	char	*cmd_file;
 	char	**cmd;
@@ -81,7 +81,7 @@ int	child_process_exec(t_input *command, t_pipe *exec, char **env, t_env *env_li
 	//printf("command ind: %d\n", command->cmd_ind);
 	if (is_builtin(&command))
 	{
-		what_builtin(command->words, env_list); //double check cases, for example cd after pipe should not execute? 
+		what_builtin(command->words, global); //double check cases, for example cd after pipe should not execute? 
 		exit(EXIT_SUCCESS);
 	}
 	replace_pipes(command, exec);
@@ -101,14 +101,14 @@ int	child_process_exec(t_input *command, t_pipe *exec, char **env, t_env *env_li
 	}
 	else
 	{
-		cmd_file = find_cmd_file(command->words, env);
+		cmd_file = find_cmd_file(command->words, global->env);
 		if (cmd_file == NULL)
 		{
 			free(cmd_file);
 			exit(EXIT_FAILURE);
 		}
 	}
-	execve(cmd_file, command->words, env);
+	execve(cmd_file, command->words, global->env);
 	ft_putstr_fd("execve fail\n", 2);
 	exit(EXIT_FAILURE);
 }
@@ -151,7 +151,7 @@ int	child_process_exec(t_input *command, t_pipe *exec, char **env, t_env *env_li
 		//printf("execve fail\n"); --> make better error catch
 		return (-1);
 	}
-	else 
+	else
 		waitpid(pid, NULL, 0);
 	return (0);
 }*/
