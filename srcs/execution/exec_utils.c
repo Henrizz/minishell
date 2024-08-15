@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/10 00:05:49 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/15 14:46:47 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,24 +21,27 @@ char	*find_cmd_file(char **cmd, char **env)
 
 	i = 0;
 	paths = ft_split(get_paths(env, "PATH"), ':');
-	while (paths[i])
+	if (paths)
 	{
-		temp = ft_strjoin(paths[i], "/");
-		cmd_file = ft_strjoin(temp, cmd[0]);
-		free(temp);
-		if (access(cmd_file, X_OK) == 0)
+		while (paths[i])
 		{
-			free_array(paths);
-			return (cmd_file);
+			temp = ft_strjoin(paths[i], "/");
+			cmd_file = ft_strjoin(temp, cmd[0]);
+			free(temp);
+			if (access(cmd_file, X_OK) == 0)
+			{
+				free_array(paths);
+				return (cmd_file);
+			}
+			else
+				free(cmd_file);
+			i++;
 		}
-		else
-			free(cmd_file);
-		i++;
 	}
+	free_array(paths);
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(cmd[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
-	free_array(paths);
 	return (NULL);
 }
 
@@ -57,7 +60,8 @@ int	get_cmd_index(t_input **command, t_pipe *exec)
 	}
 	exec->pipe_qty = i;
 	//printf("i: %d\n", i);
-	exec->pipe_fd = malloc((exec->pipe_qty) * sizeof(int *));
+	if (i != 0)
+		exec->pipe_fd = malloc((exec->pipe_qty) * sizeof(int *));
 	return (i);
 }
 

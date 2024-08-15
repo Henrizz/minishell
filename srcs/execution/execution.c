@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/15 12:51:01 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/15 14:51:12 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-//void execute(t_input **command, t_env *env_list, char **env, char *pwd)
 void execute(t_input **command, t_global *global)
 {
 	t_pipe	*exec;
@@ -22,20 +21,22 @@ void execute(t_input **command, t_global *global)
 	exec = malloc(sizeof(t_pipe));
 	if (!exec)
 		return;
-	if (save_in_out(&stdin_copy, &stdout_copy) == -1 || get_input_heredoc(command, global->env, global->pwd) == -1) //save stdin and stdout to restore later
+	if (save_in_out(&stdin_copy, &stdout_copy) == -1 || get_input_heredoc(command, global->env, global->pwd) == -1)
 	{
 		free(exec);
 		return;
 	}
-	if (!(*command)->next && is_builtin(command)) //this means if there is only one command (so no pipe) and it's a builtin
+	if (!(*command)->next && is_builtin(command))
 	{
 		if (make_redirections(command, global->pwd) == -1)
 			return;
 		what_builtin((*command)->words, global);
+		free(exec);
 	}
 	else
 	{
 		setup_and_run(command, exec, global);
+		free(exec);
 		//simple_set_up_and_run_processes(command, global->env); //for testing
 	}
 	restore_in_out(&stdin_copy, &stdout_copy);
@@ -51,19 +52,16 @@ int setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 	create_pipes(exec);
 	while (current)
 	{
-		//if (make_redirections(&current, pwd) != -1)
-		//{
-			pid = fork();
-			if (pid == -1)
-				return (error_return("fork error"));
-			if (pid == 0)
-			{
-				if (make_redirections(&current, global->pwd) != -1 && current->words[0])
-					child_process_exec(current, exec, global);
-				else
-					exit(EXIT_SUCCESS);
-			}
-		//}
+		pid = fork();
+		if (pid == -1)
+			return (error_return("fork error"));
+		if (pid == 0)
+		{
+			if (make_redirections(&current, global->pwd) != -1 && current->words[0])
+				child_process_exec(current, exec, global);
+			else
+				exit(EXIT_SUCCESS);
+		}
 		current = current->next;
 	}
 	close_all_pipes(exec);
@@ -82,6 +80,9 @@ int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 	if (is_builtin(&command))
 	{
 		what_builtin(command->words, global); //double check cases, for example cd after pipe should not execute? 
+		//free_env_list(&global->env_list);
+		//free(global);
+		//close_all_pipes(exec);
 		exit(EXIT_SUCCESS);
 	}
 	replace_pipes(command, exec);
@@ -104,7 +105,6 @@ int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 		cmd_file = find_cmd_file(command->words, global->env);
 		if (cmd_file == NULL)
 		{
-			free(cmd_file);
 			exit(EXIT_FAILURE);
 		}
 	}
