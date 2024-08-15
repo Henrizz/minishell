@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/09 17:56:12 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/09 20:02:28 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int simple_set_up_and_run_processes(t_input **command, char **env) //simple comm
 {
 	int	pid;
 	char	*cmd_file;
-	//char *temp;
 
 	cmd_file = NULL;
 	pid = fork();
@@ -63,11 +62,6 @@ int simple_set_up_and_run_processes(t_input **command, char **env) //simple comm
 				ft_putstr_fd(": command not found\n", 2);
 				return (0);
 			}
-			/*temp = ft_strrchr((*command)->words[0], '/') + 1;
-			free((*command)->words[0]);
-			(*command)->words[0] = ft_strdup(temp);
-			if ((*command)->words[0] == NULL)
-				error_return("minishell: error ft_strdup");*/
 		}
 		else
 		{
