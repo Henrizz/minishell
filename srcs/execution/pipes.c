@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 22:38:51 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/15 14:05:38 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/15 17:55:24 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ int	create_pipes(t_pipe *exec)
 	{
 		exec->pipe_fd[i] = malloc(2 * sizeof(int));
 		if (exec->pipe_fd[i] == NULL)
-			error_return("minishell: malloc error");
+			error_return("malloc error");
 		if (pipe(exec->pipe_fd[i]) == -1)
-			error_return("minishell: pipe error");
+			error_return("pipe error");
 		i++;
 	}
 	return (0);
@@ -93,14 +93,20 @@ void	close_all_pipes(t_pipe *exec)
 }
 
 
-void	wait_loop(t_pipe *exec)
+void	wait_loop(t_input **command)
 {
-	int	i;
+	t_input *current;
+	int	status;
 
-	i = 0;
-	while (i <= exec->pipe_qty)
+	current = *command;
+	while (current)
 	{
-		wait(NULL);
-		i++;
+		//wait(NULL);
+		waitpid(current->pid, &status, 0);
+		if (WIFEXITED(status))
+			current->exit_status = WEXITSTATUS(status);
+   		//ft_putnbr_fd(current->exit_status, 2);
+   	 	//ft_putstr_fd("\n", 2);
+		current = current->next;
 	}
 }

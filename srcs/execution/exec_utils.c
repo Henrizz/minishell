@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/15 14:46:47 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/15 17:50:12 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int	get_cmd_index(t_input **command, t_pipe *exec)
 		temp = temp->next;
 	}
 	exec->pipe_qty = i;
-	//printf("i: %d\n", i);
 	if (i != 0)
 		exec->pipe_fd = malloc((exec->pipe_qty) * sizeof(int *));
 	return (i);
@@ -68,7 +67,7 @@ int	get_cmd_index(t_input **command, t_pipe *exec)
 int	is_builtin(t_input **command)
 {
 	int	len;
-	len = ft_strlen((*command)->words[0]);
+	len = ft_strlen((*command)->words[0]) + 1;
 	if(!ft_strncmp((*command)->words[0], "echo", len) || !ft_strncmp((*command)->words[0], "cd", len)
 		|| !ft_strncmp((*command)->words[0], "pwd", len) || !ft_strncmp((*command)->words[0], "export", len)
 		|| !ft_strncmp((*command)->words[0], "unset", len) || !ft_strncmp((*command)->words[0], "env", len)

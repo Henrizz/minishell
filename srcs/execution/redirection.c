@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 16:55:54 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/11 14:14:39 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/15 17:25:28 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,21 @@
 
 int	make_redirections(t_input **command, char *pwd)
 {
-	if (redirect_in_out(command) == -1)
-		return (-1);
-	if (redirect_heredoc(command, pwd) == -1)
-		return (-1);
-	if (redirect_append(command) == -1)
-		return (-1);
+	if (redirect_in_out(command) == 1)
+	{
+		(*command)->exit_status = 1;
+		return (1);
+	}
+	if (redirect_heredoc(command, pwd) == 1)
+	{
+		(*command)->exit_status = 1;
+		return (1);
+	}
+	if (redirect_append(command) == 1)
+	{
+		(*command)->exit_status = 1;
+		return (1);
+	}
 	return (0);
 }
 
@@ -83,8 +92,8 @@ int	redirect_in_out(t_input **command)
 		i = 0;
 		while ((*command)->red_in[i])
 		{
-			if (redirection_in(command, i) == -1)
-				return (-1);
+			if (redirection_in(command, i) == 1)
+				return (1);
 			i++;
 		}
 	}
@@ -93,8 +102,8 @@ int	redirect_in_out(t_input **command)
 		i = 0;
 		while ((*command)->red_out[i])
 		{
-			if (redirection_out(command, i) == -1)
-				return (-1);
+			if (redirection_out(command, i) == 1)
+				return (1);
 			i++;
 		}
 	}

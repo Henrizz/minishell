@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/15 12:50:26 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/15 17:49:29 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ typedef struct s_input
 	int	h;
 	int	p;
 	struct s_input *next;
+	int	pid;
+	int exit_status;
 } t_input;
 
 typedef struct s_env
@@ -83,14 +85,7 @@ typedef struct s_elements
 typedef struct s_pipe
 {
 	int	pipe_qty;
-	//int	cmd_i;
 	int	**pipe_fd;
-	//int	inf_fd;
-	//int	outf_fd;
-	//int	curr;
-	//int	prev;
-	//int	here_doc;
-	//int	denied_acc;
 }	t_pipe;
 
 /* parsing struct */
@@ -142,6 +137,7 @@ void	free_env_list(t_env **env_list);
 void	print_env_list(t_env *env_list);
 char	*get_env_value(char *var_name, t_env *env_list);
 void	set_env_array(t_env *env_list, char ***env_array);
+void free_env_array(char **array);
 
 /*expand*/
 void	expand_var_words(t_input *input, t_env *env_list);
@@ -182,12 +178,11 @@ int remove_heredoc(char **env, char *pwd);
 int	create_pipes(t_pipe *exec);
 int	replace_pipes(t_input *command, t_pipe *exec);
 void	close_all_pipes(t_pipe *exec);
-void	wait_loop(t_pipe *exec);
+void	wait_loop(t_input **command);
 int	child_process_exec(t_input *command, t_pipe *exec, t_global *global);
 int setup_and_run(t_input **command, t_pipe *exec, t_global *global);
 
 /* utils - to be deleted later */
 void print_arrays_testing(t_input **command);
-int simple_set_up_and_run_processes(t_input **command, char **env);
 
 #endif
