@@ -6,11 +6,11 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/15 19:38:36 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/16 13:17:07 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 /* parses the command line in several steps:
 	-- checks for syntax errors (TO DO)
@@ -26,7 +26,11 @@ int parse_line(char *cmd_line, t_input **command, t_env *env_list)
 
 	if (!*cmd_line)
 		return (1);
-	//syntax error handling here
+	if (syntax_check(cmd_line) == 1)
+	{
+		(*command)->exit_status = 2;
+		return (1);
+	}	
 	if (!split_for_parsing(cmd_line, &elmts))
 		return (1);
 	divi_up_command(command, &elmts);
@@ -157,6 +161,8 @@ void	init_struct(t_input **command, t_elements *elmts)
 	(*command)->o = 0;
 	(*command)->h = 0;
 	(*command)->p = 0;
+	(*command)->exit_status = 0;
+	(*command)->pid = -1;
 }
 
 

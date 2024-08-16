@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/15 19:30:29 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/16 15:05:50 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,19 @@ typedef struct s_pipe
 	int	**pipe_fd;
 }	t_pipe;
 
+typedef struct s_heredoc
+{
+	int	fd;
+	char	*filepath;
+	char *line;
+	char *temp;
+	int	count;
+	char *expand;
+	int	quoted;
+}	t_heredoc;
+
 /* parsing struct */
+int	syntax_check(char *str);
 int parse_line(char *cmd_line, t_input **command, t_env *env_list);
 char **split_for_parsing(char *cmd_line, t_elements *elmts);
 void	count_elements(char *str, t_elements *elmts);
@@ -143,6 +155,7 @@ void	free_env_array(char **array);
 
 /*expand*/
 void	expand_var_words(t_input *input, t_env *env_list);
+char	*expanding_var(char *str, t_env *env_list);
 
 /*expand utils*/
 size_t	calc_expanded_len(char *str, t_env *env_list);
@@ -171,10 +184,11 @@ int	redirect_heredoc(t_input **command, char *pwd);
 int	redirect_append(t_input **command);
 
 /* heredocs */
-int	get_input_heredoc(t_input **command, char **env, char *pwd);
+int	get_input_heredoc(t_input **command, t_global *global);
 int	make_heredoc_directory(char **env, char *pwd);
 char *make_heredoc_filename(t_input **command, int i, char *pwd);
 int remove_heredoc(char **env, char *pwd);
+int here_expand(t_heredoc *here, char *name);
 
 /* pipes + processes */
 int	create_pipes(t_pipe *exec);

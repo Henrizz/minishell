@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/15 18:55:08 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/16 13:36:33 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void execute(t_input **command, t_global *global)
 	exec = malloc(sizeof(t_pipe));
 	if (!exec)
 		return;
-	if (save_in_out(&stdin_copy, &stdout_copy) == -1 || get_input_heredoc(command, global->env, global->pwd) == -1)
+	if (save_in_out(&stdin_copy, &stdout_copy) == -1 || get_input_heredoc(command, global) == -1)
 	{
 		free(exec);
 		return;
@@ -90,7 +90,6 @@ int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 			error_return("error duplicating command->words[0]");
 		if (access(cmd_file, X_OK) != 0)
 		{
-			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(cmd_file, 2);
 			ft_putstr_fd(": command not found\n", 2);
 			free(cmd_file);

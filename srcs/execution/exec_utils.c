@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/15 17:50:12 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/16 11:59:07 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ char	*find_cmd_file(char **cmd, char **env)
 		}
 	}
 	free_array(paths);
-	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(cmd[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
 	return (NULL);
