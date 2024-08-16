@@ -33,7 +33,7 @@ SRCS = srcs/main.c srcs/exits.c srcs/parsing.c srcs/split_line.c srcs/builtins/p
        srcs/builtins/env.c srcs/global/env_init.c srcs/execution/execution.c srcs/execution/exec_utils.c \
        srcs/execution/redir_utils.c srcs/execution/redirection.c srcs/execution/heredoc.c \
        srcs/builtins/export.c srcs/builtins/unset.c srcs/global/env_utils.c srcs/expand/expand_utils.c \
-       srcs/global/global_init.c
+       srcs/global/global_init.c srcs/execution/pipes.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -rf
 CC = cc
@@ -54,7 +54,7 @@ clean:
 	$(RM) $(OBJS) $(LIB)/*.o
 
 fclean: clean
-	$(RM) $(NAME) $(LIBFT)
+	$(RM) $(NAME) $(LIBFT) .history.txt
 
 re: fclean all
 

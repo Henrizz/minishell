@@ -99,20 +99,21 @@ t_env	*new_env_var(char *str, int export)
 	return (new_var);
 }
 
-void	env_init(char **env, t_env **env_list)
+int	env_init(char **env, t_env **env_list)
 {
-	t_env	*new_var;
+    t_env	*new_var;
 
-	while (*env)
-	{
-		new_var = new_env_var(*env, 1);
-		if (!new_var)
-		{
-			free_env_list(env_list);
-			exit_shell("env_init: failure to initialize env_list", EXIT_FAILURE);
-			return;
-		}
-		append_new_var(env_list, new_var);
-		env++;
-	}
+    while (*env)
+    {
+        new_var = new_env_var(*env, 1);
+        if (!new_var)
+        {
+            free_env_list(env_list);
+            return (0); // Indicate failure
+        }
+        append_new_var(env_list, new_var);
+        env++;
+    }
+    return (1); // Indicate success
 }
+

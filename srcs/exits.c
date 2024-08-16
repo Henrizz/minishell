@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/08 18:14:34 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/15 17:22:09 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	exit_shell(char *message, int exit_status)
 			ft_putstr_fd(message, 2);
 		if (exit_status == EXIT_FAILURE && message != NULL)
 			perror(message);
-		rl_clear_history();	
+		rl_clear_history();
 		exit(exit_status);
 }
 
@@ -60,6 +60,7 @@ void	free_array(char **str)
 
 int	error_return(char *message)
 {
+	ft_putstr_fd("minishell: ", 2);
 	perror(message);
-	return (-1);
+	return (1);
 }

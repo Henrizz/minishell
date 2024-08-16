@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/09 19:19:02 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/15 17:19:46 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,18 @@ int	get_input_heredoc(t_input **command, char **env, char *pwd)
 	i = 0;
 	if (!(*command)->heredoc[0])
 		return (0);
-	if (make_heredoc_directory(env, pwd) == -1)
-		return (-1);
-	
+	if (make_heredoc_directory(env, pwd) == 1)
+		return (1);
 	while ((*command)->heredoc[i])
 	{
 		filepath = make_heredoc_filename(command, i, pwd);
 		fd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
-			return (error_return("minishell: error making here_doc file"));
+			return (error_return("error making here_doc file"));
 		free(filepath);
 		while (1)
 		{
-			line = readline("<");
+			line = readline(">");
 			if (line == NULL || !ft_strncmp(line, (*command)->heredoc[i], ft_strlen((*command)->heredoc[i])))
 			{
 				free(line);
@@ -58,10 +57,10 @@ char *make_heredoc_filename(t_input **command, int i, char *pwd)
 	filepath = ft_strjoin(directory, (*command)->heredoc[i]);
 	if (!filepath)
 	{
-		ft_putstr_fd("minishell: error making heredoc filepath", 2);
+		perror("minishell: ");
+		(*command)->exit_status = 1;
 		return (NULL);
 	}
-	//printf("%s\n", filepath);
 	i++;
 	free(directory);
 	return (filepath);
@@ -72,25 +71,26 @@ int	make_heredoc_directory(char **env, char *pwd)
 	int	pid;
 	char	*cmd_file;
 	char	*cmd[3];
+	int	status;
 
 	cmd_file = NULL;
 	cmd[0] = "mkdir";
 	cmd[1] = ft_strjoin(pwd, "/.heredocs");
 	if (!cmd[1])
-		return (-1);
+		return (error_return("error allocating heredoc path"));
 	cmd[2] = NULL;
 	pid = fork();
 	if (pid == -1)
-		return (error_return("minishell: fork error"));
+		return (error_return("fork error"));
 	if (pid == 0)
 	{
 		cmd_file = find_cmd_file(cmd, env);
 		execve(cmd_file, cmd, env);
-		//printf("execve fail\n"); make better error catch
-		return (-1);
+		ft_putstr_fd("execve fail\n", 2);
+		exit(EXIT_FAILURE);
 	}
 	else 
-		waitpid(pid, NULL, 0);
+		waitpid(pid, &status, 0);
 	free(cmd[1]);
 	return (0);
 }
@@ -100,13 +100,14 @@ int remove_heredoc(char **env, char *pwd)
 	int	pid;
 	char *cmd[4];
 	char	*cmd_file;
+	int	status;
 
 	cmd_file = NULL;
 	cmd[0] = "rm";
 	cmd[1] = "-rf";
 	cmd[2] = ft_strjoin(pwd, "/.heredocs");
 	if (!cmd[2])
-		return (-1);
+		return (error_return("error allocating heredoc path"));
 	cmd[3] = NULL;
 	if (access(cmd[2], F_OK) == 0)
 	{
@@ -114,18 +115,18 @@ int remove_heredoc(char **env, char *pwd)
 		if (pid == -1)
 		{
 			free(cmd[2]);
-			return (error_return("minishell: fork error"));
+			return (error_return("fork error"));
 		}
 		if (pid == 0)
 		{
 		
 			cmd_file = find_cmd_file(cmd, env);
 			execve(cmd_file, cmd, env);
-			//printf("execve fail\n"); make better error catch
-			return (-1);
+			ft_putstr_fd("execve fail\n", 2);
+			exit(EXIT_FAILURE);
 		}
 		else 
-			waitpid(pid, NULL, 0);
+			waitpid(pid, &status, 0);
 	}
 	free(cmd[2]);
 	return (0);
