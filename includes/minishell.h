@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/15 19:30:29 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/16 16:47:04 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,19 +127,19 @@ void	global_init(t_global **global, char **env);
 void	print_array(char **array);
 
 /* env */
-int		env_init(char **env, t_env **env_list);
+int	env_init(char **env, t_env **env_list);
 void	set_env(char *key, char *value, t_env *env_list, int export_flag);
-char	*get_env_value(char *var_name, t_env *env_list);
-void	free_env_var(t_env *env_var);
 t_env	*new_env_var(char *str, int export);
+void append_new_var(t_env **env_list, t_env *new_var);
 
-/* env utils */
+/* env and global utils */
 t_env	*allocate_env_var(void);
 void	free_env_list(t_env **env_list);
-void	print_env_list(t_env *env_list);
+void	free_env_var(t_env *env_var);
+void	print_env_list(t_env *env_list); //
 char	*get_env_value(char *var_name, t_env *env_list);
-int		set_env_array(t_env *env_list, char ***env_array);
-void	free_env_array(char **array);
+int		set_env_array(t_env *env_list, char ***env_array); //?
+t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
 /*expand*/
 void	expand_var_words(t_input *input, t_env *env_list);

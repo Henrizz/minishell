@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/15 19:46:12 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/16 16:02:49 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	main(int argc, char **argv, char **env)
 			add_history(cmd_line);
 			ft_putstr_fd(cmd_line, global->history_fd);
 			ft_putstr_fd("\n", global->history_fd);
-		}	
+		}
 		if (parse_line(cmd_line, &command, (global)->env_list) != 1) //if no syntax errors have been found or line is not empty
 		{
 			//execute(&command, global->env_list, global->env, global->pwd);
@@ -49,7 +49,7 @@ int	main(int argc, char **argv, char **env)
 		free_command(&command);
 	}
 	free_env_list(&global->env_list);
-	free_env_array(global->env);
+	free_array(global->env);
 	free(global);
 	return (0);
 }
