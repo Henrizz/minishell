@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/16 13:10:17 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/16 15:49:11 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
 		(*str)++;
 	}
 	dup[i] = '\0';
-	//printf("dup: %s\n", dup);
+	printf("dup: %s\n", dup);
 	return (dup);
 }
 
