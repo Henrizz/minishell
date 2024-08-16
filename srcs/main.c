@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/16 16:02:49 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/16 17:26:52 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	main(int argc, char **argv, char **env)
 			ft_putstr_fd(cmd_line, global->history_fd);
 			ft_putstr_fd("\n", global->history_fd);
 		}
-		if (parse_line(cmd_line, &command, (global)->env_list) != 1) //if no syntax errors have been found or line is not empty
+		if (parse_line(cmd_line, &command, global) != 1) //if no syntax errors have been found or line is not empty
 		{
 			//execute(&command, global->env_list, global->env, global->pwd);
 			execute(&command, global);

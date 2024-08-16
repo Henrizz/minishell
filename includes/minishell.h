@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/16 16:47:04 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/16 17:39:27 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ typedef struct s_pipe
 }	t_pipe;
 
 /* parsing struct */
-int parse_line(char *cmd_line, t_input **command, t_env *env_list);
+int parse_line(char *cmd_line, t_input **command, t_global *global);
 char **split_for_parsing(char *cmd_line, t_elements *elmts);
 void	count_elements(char *str, t_elements *elmts);
 int	count_characters(char *str, int *inside_quote);
@@ -142,10 +142,10 @@ int		set_env_array(t_env *env_list, char ***env_array); //?
 t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
 /*expand*/
-void	expand_var_words(t_input *input, t_env *env_list);
+void	expand_var_words(t_input *input, t_env *env_list, int exit_status);
 
 /*expand utils*/
-size_t	calc_expanded_len(char *str, t_env *env_list);
+size_t	calc_expanded_len(char *str, t_env *env_list, int exit_status);
 char	*extract_var_name(const char *str, int i);
 
 /* execution */

@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-size_t	calc_expanded_len(char *str, t_env *env_list)
+size_t	calc_expanded_len(char *str, t_env *env_list, int exit_status)
 {
 	size_t expanded_len;
 	int i;
@@ -11,6 +11,12 @@ size_t	calc_expanded_len(char *str, t_env *env_list)
 	i = 0;
 	while (str[i])
 	{
+		if(str[i] == '$' && str[i + 1] == '?')
+		{
+			expanded_len += ft_strlen(ft_itoa(exit_status));
+			i += 2;
+		}
+		else
 		if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
 		{
 			i++;

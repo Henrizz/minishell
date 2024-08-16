@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/15 18:55:08 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/16 17:15:32 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void execute(t_input **command, t_global *global)
 	t_pipe	*exec;
 	int	stdin_copy;
 	int	stdout_copy;
-	
+
 	exec = malloc(sizeof(t_pipe));
 	if (!exec)
 		return;
@@ -44,10 +44,10 @@ void execute(t_input **command, t_global *global)
 int setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 {
 	t_input *current;
-	int	i;
-	
+	//int	i;
+
 	current = *command;
-	i = 0;
+	//i = 0;
 	get_cmd_index(command, exec);
 	create_pipes(exec);
 	while (current)
@@ -72,10 +72,10 @@ int setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 {
 	char	*cmd_file;
-	char	**cmd;
+	//char	**cmd;
 
 	cmd_file = NULL;
-	cmd = NULL;
+	//cmd = NULL;
 	if (is_builtin(&command))
 	{
 		what_builtin(command->words, global);
