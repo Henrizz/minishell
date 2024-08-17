@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/17 22:28:46 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/17 23:09:37 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char **split_for_parsing(char *cmd_line, t_elements *elmts)
 		return (NULL);
 	while (*cmd_line)
 	{
-		while (is_whitespace(*cmd_line) && inside_quote == 0)
+		/*while (is_whitespace(*cmd_line) && inside_quote == 0)
 			cmd_line++;
 		if ((*cmd_line == '"' || *cmd_line == '\'') && inside_quote == 0)
 		{
@@ -39,7 +39,8 @@ char **split_for_parsing(char *cmd_line, t_elements *elmts)
 			elmts->quote_type = *cmd_line;
 		}
 		else if (*cmd_line == elmts->quote_type && inside_quote == 1)
-			inside_quote = 0;
+			inside_quote = 0;*/
+		advance_line(&cmd_line, &inside_quote, elmts);
 		if (*cmd_line && (!is_whitespace(*cmd_line) || (is_whitespace(*cmd_line) && inside_quote == 1)))
 			elmts->array[i++] = ft_strdup_delim(&cmd_line, &inside_quote, elmts);
 		elmts->quote_type = '\0';
@@ -52,6 +53,19 @@ char **split_for_parsing(char *cmd_line, t_elements *elmts)
 		return (NULL);
 	}
 	return (elmts->array);
+}
+
+void	advance_line(char **cmd_line, int *inside_quote, t_elements *elmts)
+{
+	while (is_whitespace(**cmd_line) && *inside_quote == 0)
+			(*cmd_line)++;
+		if ((**cmd_line == '"' || **cmd_line == '\'') && *inside_quote == 0)
+		{
+			*inside_quote = 1;
+			elmts->quote_type = **cmd_line;
+		}
+		else if (**cmd_line == elmts->quote_type && *inside_quote == 1)
+			*inside_quote = 0;
 }
 
 char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
@@ -116,7 +130,7 @@ int	count_characters(char *str, int *inside_quote)
 	quote_type = '\0';
 	if (str[i] == '|')
 		count = 1;
-	while (str[i] && ((*inside_quote == 0 && !is_whitespace(str[i]) && str[i] != '|') || *inside_quote == 1))
+	while (str[i] && ((*inside_quote == 0 && !is_whitespace(str[i]) && str[i] != '|' && str[i] != '>' && str[i] != '<') || ((str[i] == '>' || str[i] == '<') && was_before(str, i, str[i])) || *inside_quote == 1))
 	{
 		if (*inside_quote == 0 && (str[i] == '"' || str[i] == '\''))
 		{
@@ -156,13 +170,14 @@ void	count_elements(char *str, t_elements *elmts)
 			inside_quote = 0;
 		if (!is_whitespace(str[i]))
 			elmts->is_word = 1;
-		if ((is_whitespace(str[i]) && elmts->is_word == 1 && inside_quote == 0) || (str[i] == '|' && inside_quote == 0))
+		if ((is_whitespace(str[i]) && elmts->is_word == 1 && inside_quote == 0) || (inside_quote == 0 && (str[i] == '|' || ((str[i] == '<' || str[i] == '>') && !was_before(str, i, str[i])))))
 		{
-			if ((str[i] == '|' && !was_before(str, i, ' ')) || ((str[i] == '<' || str[i] == '>') && !was_before(str, i, str[i])))
+			if ((str[i] == '|' && !was_before(str, i, ' ')))
 				elmts->elmt_count++;
 			elmts->elmt_count++;
 			elmts->is_word = 0;
 		}
+		//printf("letter: %c, inside quote: %d, inside word: %d\n", str[i], inside_quote, elmts->is_word);
 		i++;
 	}
 	if (elmts->is_word == 1)
