@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 22:38:51 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/15 17:55:24 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/17 11:55:50 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,18 +93,18 @@ void	close_all_pipes(t_pipe *exec)
 }
 
 
-void	wait_loop(t_input **command)
+void	wait_loop(t_input **command, int exit_status)
 {
 	t_input *current;
-	int	status;
+	//int	status;
 
 	current = *command;
 	while (current)
 	{
 		//wait(NULL);
-		waitpid(current->pid, &status, 0);
-		if (WIFEXITED(status))
-			current->exit_status = WEXITSTATUS(status);
+		waitpid(current->pid, &exit_status, 0);
+		if (WIFEXITED(exit_status))
+			current->exit_status = WEXITSTATUS(exit_status);
    		//ft_putnbr_fd(current->exit_status, 2);
    	 	//ft_putstr_fd("\n", 2);
 		current = current->next;

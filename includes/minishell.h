@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/16 16:47:04 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/17 12:02:09 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ typedef struct s_pipe
 }	t_pipe;
 
 /* parsing struct */
-int parse_line(char *cmd_line, t_input **command, t_env *env_list);
+int parse_line(char *cmd_line, t_input **command, t_global *global);
 char **split_for_parsing(char *cmd_line, t_elements *elmts);
 void	count_elements(char *str, t_elements *elmts);
 int	count_characters(char *str, int *inside_quote);
@@ -114,12 +114,12 @@ int	error_return(char *message);
 
 /*Builtin commands*/
 void	what_builtin(char **command_words, t_global *global);
-void	echo(char **str);
-void	pwd(void);
-void	cd(char *path, t_env *env_list, char ***env);
-void	cmd_env(t_env *list, char **command_words);
-void	export(char **words, t_env *env_list, char ***env);
-void	unset(char **args, t_env *env_list, char ***env);
+void	echo(char **str, t_global *global);
+void	pwd(t_global *global);
+void	cd(char *path, t_global *global);
+void	cmd_env(char **command_words, t_global *global);
+void	export(char **words, t_global *global);
+void	unset(char **args, t_global *global);
 void	error_identifier(char *str, char *command);
 
 /* global */
@@ -142,10 +142,10 @@ int		set_env_array(t_env *env_list, char ***env_array); //?
 t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
 /*expand*/
-void	expand_var_words(t_input *input, t_env *env_list);
+void	expand_var_words(t_input *input, t_env *env_list, int exit_status);
 
 /*expand utils*/
-size_t	calc_expanded_len(char *str, t_env *env_list);
+size_t	calc_expanded_len(char *str, t_env *env_list, int exit_status);
 char	*extract_var_name(const char *str, int i);
 
 /* execution */
@@ -171,16 +171,16 @@ int	redirect_heredoc(t_input **command, char *pwd);
 int	redirect_append(t_input **command);
 
 /* heredocs */
-int	get_input_heredoc(t_input **command, char **env, char *pwd);
-int	make_heredoc_directory(char **env, char *pwd);
+int	get_input_heredoc(t_input **command, char **env, char *pwd, int exit_status);
+int	make_heredoc_directory(char **env, char *pwd, int exit_status);
 char *make_heredoc_filename(t_input **command, int i, char *pwd);
-int remove_heredoc(char **env, char *pwd);
+int remove_heredoc(char **env, char *pwd, int exit_status);
 
 /* pipes + processes */
 int	create_pipes(t_pipe *exec);
 int	replace_pipes(t_input *command, t_pipe *exec);
 void	close_all_pipes(t_pipe *exec);
-void	wait_loop(t_input **command);
+void	wait_loop(t_input **command, int exit_status);
 int	child_process_exec(t_input *command, t_pipe *exec, t_global *global);
 int setup_and_run(t_input **command, t_pipe *exec, t_global *global);
 

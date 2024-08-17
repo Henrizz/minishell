@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/15 17:19:46 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/17 11:51:45 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	get_input_heredoc(t_input **command, char **env, char *pwd)
+int	get_input_heredoc(t_input **command, char **env, char *pwd, int exit_status)
 {
 	int	i;
 	int	fd;
@@ -22,7 +22,7 @@ int	get_input_heredoc(t_input **command, char **env, char *pwd)
 	i = 0;
 	if (!(*command)->heredoc[0])
 		return (0);
-	if (make_heredoc_directory(env, pwd) == 1)
+	if (make_heredoc_directory(env, pwd, exit_status) == 1)
 		return (1);
 	while ((*command)->heredoc[i])
 	{
@@ -66,12 +66,12 @@ char *make_heredoc_filename(t_input **command, int i, char *pwd)
 	return (filepath);
 }
 
-int	make_heredoc_directory(char **env, char *pwd)
+int	make_heredoc_directory(char **env, char *pwd, int exit_status)
 {
 	int	pid;
 	char	*cmd_file;
 	char	*cmd[3];
-	int	status;
+	//int	status;
 
 	cmd_file = NULL;
 	cmd[0] = "mkdir";
@@ -89,18 +89,18 @@ int	make_heredoc_directory(char **env, char *pwd)
 		ft_putstr_fd("execve fail\n", 2);
 		exit(EXIT_FAILURE);
 	}
-	else 
-		waitpid(pid, &status, 0);
+	else
+		waitpid(pid, &exit_status, 0);
 	free(cmd[1]);
 	return (0);
 }
 
-int remove_heredoc(char **env, char *pwd)
+int remove_heredoc(char **env, char *pwd, int exit_status)
 {
 	int	pid;
 	char *cmd[4];
 	char	*cmd_file;
-	int	status;
+	//int	status;
 
 	cmd_file = NULL;
 	cmd[0] = "rm";
@@ -119,14 +119,14 @@ int remove_heredoc(char **env, char *pwd)
 		}
 		if (pid == 0)
 		{
-		
+
 			cmd_file = find_cmd_file(cmd, env);
 			execve(cmd_file, cmd, env);
 			ft_putstr_fd("execve fail\n", 2);
 			exit(EXIT_FAILURE);
 		}
-		else 
-			waitpid(pid, &status, 0);
+		else
+			waitpid(pid, &exit_status, 0);
 	}
 	free(cmd[2]);
 	return (0);
