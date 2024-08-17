@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/16 11:59:07 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/17 16:27:40 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ int	get_cmd_index(t_input **command, t_pipe *exec)
 int	is_builtin(t_input **command)
 {
 	int	len;
+	if (!(*command)->words[0])
+		return (0);
 	len = ft_strlen((*command)->words[0]) + 1;
 	if(!ft_strncmp((*command)->words[0], "echo", len) || !ft_strncmp((*command)->words[0], "cd", len)
 		|| !ft_strncmp((*command)->words[0], "pwd", len) || !ft_strncmp((*command)->words[0], "export", len)

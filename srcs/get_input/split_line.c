@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/16 15:49:11 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/17 16:54:41 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,18 +85,13 @@ char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
 			if (elmts->quote_type == '\0')
 				elmts->quote_type = **str;
 			else if (**str == elmts->quote_type)
-			{
-				dup[i++] = **str;
-				(*str)++;
 				*inside_quote = 0;
-				break;
-			}
 		}
 		dup[i++] = **str;
 		(*str)++;
 	}
 	dup[i] = '\0';
-	printf("dup: %s\n", dup);
+	//printf("dup: %s\n", dup);
 	return (dup);
 }
 
@@ -123,10 +118,7 @@ int	count_characters(char *str, int *inside_quote)
 			if (quote_type == '\0')
 				quote_type = str[i];
 			else if(str[i] == quote_type)
-			{
-				count++;
-				break;
-			}
+				*inside_quote = 0;
 		}
 		count++;
 		i++;

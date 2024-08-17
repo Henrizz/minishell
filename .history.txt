@@ -1,0 +1,16 @@
+ls | kc
+hi
+ls | hi
+hi'hi'hi
+hi'hi'hi
+hi'hi'hi
+hi'hi'hi
+hi'hi'hi
+<<EOF"'"''aa
+<<EOF
+hi+
+<<EOF
+ls | wc -l
+ls|wc -l
+ls | wc -l
+ls|wc -l
