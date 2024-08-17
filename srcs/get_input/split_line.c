@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/17 16:54:41 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/17 22:28:46 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
 
 	i = 0;
 	elmts->quote_type = '\0';
-	elmts->char_count = count_characters(*str, inside_quote);
+	//elmts->char_count = count_characters(*str, inside_quote);
 	//printf("characters qty: %d\n", elmts->char_count);
-	dup = (char *)malloc((elmts->char_count + 1) * sizeof(char));
+	dup = (char *)malloc((count_characters(*str, inside_quote) + 1) * sizeof(char));
 	if (!dup)
 		return (NULL);
 	if (*inside_quote == 0 && **str == '|')
@@ -73,9 +73,25 @@ char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
 		dup[i] = '\0';
 		return (dup);
 	}
-	while (**str && ((*inside_quote == 0 && !is_whitespace(**str) && **str != '|') || *inside_quote == 1))
+	while (*inside_quote == 0 && (**str == '<' || **str == '>'))
 	{
-		if (*inside_quote == 0 && (**str == '"' || **str == '\''))
+		dup[i++] = **str;
+		(*str)++;
+	}
+	while (**str && ((*inside_quote == 0 && !is_whitespace(**str) && **str != '|' && **str != '<' && **str != '>') || *inside_quote == 1))
+	{
+		set_quotes(str, inside_quote, elmts);
+		dup[i++] = **str;
+		(*str)++;
+	}
+	dup[i] = '\0';
+	//printf("dup: %s\n", dup);
+	return (dup);
+}
+
+void set_quotes(char **str, int *inside_quote, t_elements *elmts)
+{
+	if (*inside_quote == 0 && (**str == '"' || **str == '\''))
 		{
 			elmts->quote_type = **str;
 			*inside_quote = 1;
@@ -87,12 +103,6 @@ char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
 			else if (**str == elmts->quote_type)
 				*inside_quote = 0;
 		}
-		dup[i++] = **str;
-		(*str)++;
-	}
-	dup[i] = '\0';
-	//printf("dup: %s\n", dup);
-	return (dup);
 }
 
 int	count_characters(char *str, int *inside_quote)
@@ -148,7 +158,7 @@ void	count_elements(char *str, t_elements *elmts)
 			elmts->is_word = 1;
 		if ((is_whitespace(str[i]) && elmts->is_word == 1 && inside_quote == 0) || (str[i] == '|' && inside_quote == 0))
 		{
-			if (str[i] == '|')
+			if ((str[i] == '|' && !was_before(str, i, ' ')) || ((str[i] == '<' || str[i] == '>') && !was_before(str, i, str[i])))
 				elmts->elmt_count++;
 			elmts->elmt_count++;
 			elmts->is_word = 0;
@@ -157,6 +167,15 @@ void	count_elements(char *str, t_elements *elmts)
 	}
 	if (elmts->is_word == 1)
 		elmts->elmt_count++;
+}
+
+int	was_before(char *str, int i, char c)
+{
+	if (i == 0)
+		return (1);
+	if (str[i - 1] == c)
+		return (1);
+	return (0);
 }
 
 int	is_whitespace(char c)

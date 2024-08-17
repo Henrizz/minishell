@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/16 15:05:50 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/17 22:28:52 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ int	is_whitespace(char c);
 void	set_elements(t_elements *elmts);
 void	distribute_elements(t_input **command, t_elements *elmts, int *i);
 int	make_history_file(t_global **global);
+int	was_before(char *str, int i, char c);
+void set_quotes(char **str, int *inside_quote, t_elements *elmts);
 
 /* populating struct */
 void	init_struct(t_input **command, t_elements *elmts);

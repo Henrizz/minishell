@@ -14,3 +14,48 @@ ls | wc -l
 ls|wc -l
 ls | wc -l
 ls|wc -l
+echo hi l
+echo hi l>file
+ls|wc
+ls | wc
+ls
+ls |wc 
+echo hi
+echo hi>file1
+echo hi>file1
+echo hi>file1
+echo hi>>file1
+hi
+echo hi >file1
+echo hi>file1
+echo hi>file1
+rm file1 
+echo hello>file1
+hi
+hi
+hi
+hi
+hi
+ls | wc
+ls | wc
+ls | wc
+ls|wc
+hi
+ls|wc
+ls|wc
+ls|wc
+ls | wc
+echo hello>file1
+echo yes>file1
+echo yes >file1
+echo s >file1
+echo a > file1
+hi
+ls
+ls|wc
+ls | wc
+ls "| wc"
+echo '>hi'
+echo fil'ehi'hi
+echo fil'ehi"hi
+echo fil'ehi"hi"'
