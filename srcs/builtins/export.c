@@ -61,24 +61,29 @@ void	set_exported_var(t_env *env_list, char *word)
 	free(value);
 }
 
-void	export(char **words, t_env *env_list, char ***env)
+void	export(char **words, t_global *global)
 {
 	int i;
 
 	i = 1;
 	if (!words[1])
 	{
-		print_exported_vars(env_list);
+		print_exported_vars(global->env_list);
+		global->exit_status = 0;
 		return;
 	}
 	while(words[i])
 	{
 		if(!syntax_error(words[i]))//Arreglar para cuando la variable fue expanded
 		{
-			set_exported_var(env_list, words[i]);
-			set_env_array(env_list, env);
+			set_exported_var(global->env_list, words[i]);
+			set_env_array(global->env_list, &global->env);
+			global->exit_status = 0;
 		} else
+		{
 			error_identifier(words[i], "export");
-		i++;
+			global->exit_status = 1;
 		}
+		i++;
+	}
 }

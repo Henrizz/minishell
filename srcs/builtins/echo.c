@@ -1,7 +1,7 @@
 #include "../../includes/minishell.h"
 //TODO eliminate quotes in the string if any
 //TODO handle escape characters
-void	echo(char **str)
+void	echo(char **str, t_global *global)
 {
 	int	i;
 	size_t	len;
@@ -22,4 +22,5 @@ void	echo(char **str)
 		if(ft_strncmp(str[1], "-n", len) != 0)
 			ft_putstr_fd("\n", 1);
 	}
+	global->exit_status = 0;
 }
