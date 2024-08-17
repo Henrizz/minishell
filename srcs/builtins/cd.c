@@ -18,29 +18,22 @@ static void	update_pwd_and_env(char *old_pwd, t_env *env_list, char ***env)
 	set_env_array(env_list, env);
 }
 
-void	cd(char *path, t_global *global)
+void	cd(char *path, t_env *env_list, char ***env)
 {
 	char old_pwd[PATH_MAX];
 	if(!path)
 	{
-		path = get_env_value("HOME", global->env_list);
+		path = get_env_value("HOME", env_list);
 		if(!path)
 		{
 			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-			global->exit_status = 1;
 			return;
 		}
 	}
 	getcwd(old_pwd, PATH_MAX);
 	if(!chdir(path))
-	{
-		update_pwd_and_env(old_pwd, global->env_list, &global->env);
-		global->exit_status = 0;
-	}
+		update_pwd_and_env(old_pwd, env_list, env);
 	else
-	{
 		print_error(path);
-		global->exit_status = 1;
-	}
 }
 

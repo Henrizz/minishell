@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/17 11:54:48 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/15 18:55:08 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ void execute(t_input **command, t_global *global)
 	t_pipe	*exec;
 	int	stdin_copy;
 	int	stdout_copy;
-
+	
 	exec = malloc(sizeof(t_pipe));
 	if (!exec)
 		return;
-	if (save_in_out(&stdin_copy, &stdout_copy) == -1 || get_input_heredoc(command, global->env, global->pwd, global->exit_status) == -1)
+	if (save_in_out(&stdin_copy, &stdout_copy) == -1 || get_input_heredoc(command, global->env, global->pwd) == -1)
 	{
 		free(exec);
 		return;
@@ -44,10 +44,10 @@ void execute(t_input **command, t_global *global)
 int setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 {
 	t_input *current;
-	//int	i;
-
+	int	i;
+	
 	current = *command;
-	//i = 0;
+	i = 0;
 	get_cmd_index(command, exec);
 	create_pipes(exec);
 	while (current)
@@ -65,17 +65,17 @@ int setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 		current = current->next;
 	}
 	close_all_pipes(exec);
-	wait_loop(command, global->exit_status);
+	wait_loop(command);
 	return (0);
 }
 
 int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 {
 	char	*cmd_file;
-	//char	**cmd;
+	char	**cmd;
 
 	cmd_file = NULL;
-	//cmd = NULL;
+	cmd = NULL;
 	if (is_builtin(&command))
 	{
 		what_builtin(command->words, global);

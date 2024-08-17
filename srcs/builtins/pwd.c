@@ -2,7 +2,7 @@
 
 //char *getcwd(char *buffer, size_t size);
 
-void	pwd(t_global *global)
+void	pwd(void)// TODO: exit_status??
 {
 	char cwd[PATH_MAX];
 
@@ -10,13 +10,10 @@ void	pwd(t_global *global)
 	{
 		ft_putstr_fd(cwd, 1);
 		ft_putstr_fd("\n", 1);
-		global->exit_status = 0;
 	}
 	else
 	{
 		ft_putstr_fd("pwd: ", 2);
 		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
-		global->exit_status = 1;
 	}
 }

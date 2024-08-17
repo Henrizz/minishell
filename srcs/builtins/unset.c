@@ -50,7 +50,7 @@ void	unset_env(char *key, t_env *env_list)
 	}
 }
 
-void	unset(char **args, t_global *global)
+void	unset(char **args, t_env *env_list, char ***env)
 {
 	int i;
 
@@ -59,15 +59,11 @@ void	unset(char **args, t_global *global)
 	{
 		if (is_syntax_ok(args[i]))
 		{
-			unset_env(args[i], global->env_list);
-			set_env_array(global->env_list, &global->env);
-			global->exit_status = 0;
+			unset_env(args[i], env_list);
+			set_env_array(env_list, env);
 		}
 		else
-		{
 			error_identifier(args[i], "unset");
-			global->exit_status = 1;
-		}
 		i++;
 	}
 }
