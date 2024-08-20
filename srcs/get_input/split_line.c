@@ -6,14 +6,13 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/17 23:09:37 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/20 16:09:30 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-/* splits the entire command line into separate elements ("tokens"), delimited by whitesppace and taking into account when inside quotes 
-	-- still missing: feature to handle nested quotes when quotes inside and outside have same quote type -- */
+/* splits the entire command line into separate elements ("tokens"), delimited by whitesppace and taking into account when inside quotes */
 
 char **split_for_parsing(char *cmd_line, t_elements *elmts)
 {
@@ -31,15 +30,6 @@ char **split_for_parsing(char *cmd_line, t_elements *elmts)
 		return (NULL);
 	while (*cmd_line)
 	{
-		/*while (is_whitespace(*cmd_line) && inside_quote == 0)
-			cmd_line++;
-		if ((*cmd_line == '"' || *cmd_line == '\'') && inside_quote == 0)
-		{
-			inside_quote = 1;
-			elmts->quote_type = *cmd_line;
-		}
-		else if (*cmd_line == elmts->quote_type && inside_quote == 1)
-			inside_quote = 0;*/
 		advance_line(&cmd_line, &inside_quote, elmts);
 		if (*cmd_line && (!is_whitespace(*cmd_line) || (is_whitespace(*cmd_line) && inside_quote == 1)))
 			elmts->array[i++] = ft_strdup_delim(&cmd_line, &inside_quote, elmts);
