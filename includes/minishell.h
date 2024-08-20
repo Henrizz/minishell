@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/17 12:02:09 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/20 16:13:46 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,8 +171,8 @@ int	redirect_heredoc(t_input **command, char *pwd);
 int	redirect_append(t_input **command);
 
 /* heredocs */
-int	get_input_heredoc(t_input **command, char **env, char *pwd, int exit_status);
-int	make_heredoc_directory(char **env, char *pwd, int exit_status);
+int	get_input_heredoc(t_input **command, t_global *global);
+int	make_heredoc_directory(t_global *global);
 char *make_heredoc_filename(t_input **command, int i, char *pwd);
 int remove_heredoc(char **env, char *pwd, int exit_status);
 
@@ -180,7 +180,7 @@ int remove_heredoc(char **env, char *pwd, int exit_status);
 int	create_pipes(t_pipe *exec);
 int	replace_pipes(t_input *command, t_pipe *exec);
 void	close_all_pipes(t_pipe *exec);
-void	wait_loop(t_input **command, int exit_status);
+void	wait_loop(t_input **command, t_global *global);
 int	child_process_exec(t_input *command, t_pipe *exec, t_global *global);
 int setup_and_run(t_input **command, t_pipe *exec, t_global *global);
 

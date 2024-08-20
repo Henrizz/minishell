@@ -6,13 +6,13 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/17 11:51:45 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/20 16:14:30 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	get_input_heredoc(t_input **command, char **env, char *pwd, int exit_status)
+int	get_input_heredoc(t_input **command, t_global *global)
 {
 	int	i;
 	int	fd;
@@ -22,11 +22,11 @@ int	get_input_heredoc(t_input **command, char **env, char *pwd, int exit_status)
 	i = 0;
 	if (!(*command)->heredoc[0])
 		return (0);
-	if (make_heredoc_directory(env, pwd, exit_status) == 1)
+	if (make_heredoc_directory(global) == 1)
 		return (1);
 	while ((*command)->heredoc[i])
 	{
-		filepath = make_heredoc_filename(command, i, pwd);
+		filepath = make_heredoc_filename(command, i, global->pwd);
 		fd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd == -1)
 			return (error_return("error making here_doc file"));
@@ -66,16 +66,16 @@ char *make_heredoc_filename(t_input **command, int i, char *pwd)
 	return (filepath);
 }
 
-int	make_heredoc_directory(char **env, char *pwd, int exit_status)
+int	make_heredoc_directory(t_global *global)
 {
 	int	pid;
 	char	*cmd_file;
 	char	*cmd[3];
-	//int	status;
+	int	status;
 
 	cmd_file = NULL;
 	cmd[0] = "mkdir";
-	cmd[1] = ft_strjoin(pwd, "/.heredocs");
+	cmd[1] = ft_strjoin(global->pwd, "/.heredocs");
 	if (!cmd[1])
 		return (error_return("error allocating heredoc path"));
 	cmd[2] = NULL;
@@ -84,13 +84,17 @@ int	make_heredoc_directory(char **env, char *pwd, int exit_status)
 		return (error_return("fork error"));
 	if (pid == 0)
 	{
-		cmd_file = find_cmd_file(cmd, env);
-		execve(cmd_file, cmd, env);
+		cmd_file = find_cmd_file(cmd, global->env);
+		execve(cmd_file, cmd, global->env);
 		ft_putstr_fd("execve fail\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	else
-		waitpid(pid, &exit_status, 0);
+	{
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			global->exit_status = WEXITSTATUS(status);
+	}
 	free(cmd[1]);
 	return (0);
 }
