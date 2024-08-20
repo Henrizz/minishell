@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/16 15:44:22 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/20 17:07:46 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 			- redirections
 	-- launches expansion to replace environmental virables if needed */
 
-int parse_line(char *cmd_line, t_input **command, t_env *env_list)
+int parse_line(char *cmd_line, t_input **command, t_global *global)
 {
 	t_elements elmts;
 
@@ -34,7 +34,7 @@ int parse_line(char *cmd_line, t_input **command, t_env *env_list)
 	if (!split_for_parsing(cmd_line, &elmts))
 		return (1);
 	divi_up_command(command, &elmts);
-	expand_var_words(*command, env_list);
+	expand_var_words(*command, global->env_list, global->exit_status);
 	//print_arrays_testing(command);
 	return (0);
 }

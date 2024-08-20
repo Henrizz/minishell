@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 22:38:51 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/17 16:20:13 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/20 16:45:07 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	close_all_pipes(t_pipe *exec)
 }
 
 
-void	wait_loop(t_input **command)
+void	wait_loop(t_input **command, t_global *global)
 {
 	t_input *current;
 	int	status;
@@ -103,8 +103,8 @@ void	wait_loop(t_input **command)
 	{
 		//wait(NULL);
 		waitpid(current->pid, &status, 0);
-		if (WIFEXITED(status))
-			current->exit_status = WEXITSTATUS(status);
+		 if (WIFEXITED(status))
+			global->exit_status = WEXITSTATUS(status);
    		//ft_putnbr_fd(current->exit_status, 2);
    	 	//ft_putstr_fd("\n", 2);
 		current = current->next;

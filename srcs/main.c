@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/15 19:46:12 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/17 11:52:39 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	main(int argc, char **argv, char **env)
 		cmd_line = readline("temp_prompt$ ");
 		if (!cmd_line) //to check if command line pointer is NULL (in case of ctrl+D or else)
 		{
-			remove_heredoc(env, global->pwd);
+			remove_heredoc(env, global->pwd, global->exit_status);
 			close(global->history_fd);
 			return (exit_shell("exit\n", EXIT_SUCCESS));
 		}
@@ -37,19 +37,19 @@ int	main(int argc, char **argv, char **env)
 			add_history(cmd_line);
 			ft_putstr_fd(cmd_line, global->history_fd);
 			ft_putstr_fd("\n", global->history_fd);
-		}	
-		if (parse_line(cmd_line, &command, (global)->env_list) != 1) //if no syntax errors have been found or line is not empty
+		}
+		if (parse_line(cmd_line, &command, global) != 1) //if no syntax errors have been found or line is not empty
 		{
 			//execute(&command, global->env_list, global->env, global->pwd);
 			execute(&command, global);
-			remove_heredoc(global->env, global->pwd); //to remove heredoc files after execution
+			remove_heredoc(global->env, global->pwd, global->exit_status); //to remove heredoc files after execution
 			//print_array(global->env); //to check if env is being updated correctly
 		}
 		free(cmd_line);
 		free_command(&command);
 	}
 	free_env_list(&global->env_list);
-	free_env_array(global->env);
+	free_array(global->env);
 	free(global);
 	return (0);
 }

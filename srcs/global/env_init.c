@@ -1,64 +1,39 @@
 
 #include "../../includes/minishell.h"
 
-void set_env(char *key, char *value, t_env *env_list, int export_flag)
+void	update_existing_env(t_env *current, char *value, int export_flag)
 {
-    t_env *current = env_list;
-    t_env *prev = NULL;
-    size_t key_len;
-
-    key_len = ft_strlen(key);
-    while (current)
-    {
-        // Check if the key already exists
-        if (!ft_strncmp(current->key, key, key_len) && ft_strlen(current->key) == key_len)
-        {
-            // Update the value of the existing key
-            free(current->value);
-            current->value = ft_strdup(value);
-            if (!current->value)
-                return;  // Handle error
-            current->export = export_flag; // Update export flag if necessary
-            return;
-        }
-        prev = current;
-        current = current->next;
-    }
-
-    // Key doesn't exist, create a new variable
-    t_env *new_var = new_env_var(key, export_flag);
-    if (!new_var)
-        return;  // Handle error
-
-    // Assign the value to the new variable
-    free(new_var->value); // Free the value allocated by new_env_var
-    new_var->value = ft_strdup(value);
-    if (!new_var->value)
-    {
-        free_env_var(new_var);  // Clean up in case of error
-        return;
-    }
-
-    // Add the new variable to the end of the list
-    if (prev)
-        prev->next = new_var;
-    else
-        env_list = new_var;  // If the list was empty
+	free(current->value);
+	current->value = ft_strdup(value);
+	if (!current->value)
+		return;
+	current->export = export_flag;
 }
 
-void append_new_var(t_env **env_list, t_env *new_var)
+void	set_env(char *key, char *value, t_env *env_list, int export_flag)
 {
-	t_env *last;
+	size_t key_len;
+	t_env *existing_env;
+	t_env *new_var;
 
-	if(*env_list == NULL)
-		*env_list = new_var;
-	else
+	key_len = ft_strlen(key);
+	existing_env = find_existing_env(env_list, key, key_len);
+	if (existing_env)
 	{
-		last = *env_list;
-		while(last->next != NULL)
-			last = last->next;
-		last->next = new_var;
+		update_existing_env(existing_env, value, export_flag);
+		return;
 	}
+	new_var = new_env_var(key, export_flag);
+	if (!new_var)
+		return;
+	free(new_var->value);
+	new_var->value = ft_strdup(value);
+	if (!new_var->value)
+	{
+		free_env_var(new_var);
+		return;
+	}
+	append_new_var(&env_list, new_var);
 }
 
 // Sets the key and value for the t_env struct based on the input string
@@ -77,7 +52,7 @@ int	set_key_value(t_env *env_var, char *str)
 	else
 	{
 		env_var->key = ft_strdup(str);
-		env_var->value = ft_strdup(""); //TODO IMPORTANTE REVISAR
+		env_var->value = ft_strdup("");
 	}
 	return (env_var->key && env_var->value);
 }
@@ -101,19 +76,19 @@ t_env	*new_env_var(char *str, int export)
 
 int	env_init(char **env, t_env **env_list)
 {
-    t_env	*new_var;
+	t_env	*new_var;
 
-    while (*env)
-    {
-        new_var = new_env_var(*env, 1);
-        if (!new_var)
-        {
-            free_env_list(env_list);
-            return (0); // Indicate failure
-        }
-        append_new_var(env_list, new_var);
-        env++;
-    }
-    return (1); // Indicate success
+	while (*env)
+	{
+		new_var = new_env_var(*env, 1);
+		if (!new_var)
+		{
+			free_env_list(env_list);
+			return (0);
+		}
+		append_new_var(env_list, new_var);
+		env++;
+	}
+	return (1);
 }
 

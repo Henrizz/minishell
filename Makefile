@@ -33,7 +33,8 @@ SRCS = srcs/main.c srcs/exits.c srcs/get_input/parsing.c srcs/get_input/split_li
        srcs/builtins/env.c srcs/global/env_init.c srcs/execution/execution.c srcs/execution/exec_utils.c \
        srcs/execution/redir_utils.c srcs/execution/redirection.c srcs/execution/heredoc.c \
        srcs/builtins/export.c srcs/builtins/unset.c srcs/global/env_utils.c srcs/expand/expand_utils.c \
-       srcs/global/global_init.c srcs/execution/pipes.c srcs/get_input/parse_syntax_utils.c
+       srcs/global/global_init.c srcs/execution/pipes.c srcs/get_input/parse_syntax_utils.c \
+       srcs/global/init_utils.c srcs/get_input/split_utils.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -rf
 CC = cc

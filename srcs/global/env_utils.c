@@ -55,3 +55,17 @@ char	*get_env_value(char *var_name, t_env *env_list)
 	}
 	return ("");
 }
+
+t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len)
+{
+	t_env	*current;
+
+	current = env_list;
+	while (current)
+	{
+		if (!ft_strncmp(current->key, key, key_len) && ft_strlen(current->key) == key_len)
+			return (current);
+		current = current->next;
+	}
+	return NULL;
+}

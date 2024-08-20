@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/16 13:36:33 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/20 17:00:57 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void execute(t_input **command, t_global *global)
 	t_pipe	*exec;
 	int	stdin_copy;
 	int	stdout_copy;
-	
+
 	exec = malloc(sizeof(t_pipe));
 	if (!exec)
 		return;
@@ -28,7 +28,7 @@ void execute(t_input **command, t_global *global)
 	}
 	if (!(*command)->next && is_builtin(command))
 	{
-		if (make_redirections(command, global->pwd) == 1)
+		if (make_redirections(command, global) == 1)
 		{
 			free(exec);
 			return;
@@ -44,10 +44,8 @@ void execute(t_input **command, t_global *global)
 int setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 {
 	t_input *current;
-	int	i;
-	
+
 	current = *command;
-	i = 0;
 	get_cmd_index(command, exec);
 	create_pipes(exec);
 	while (current)
@@ -57,7 +55,7 @@ int setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 			return (error_return("fork error"));
 		if (current->pid == 0)
 		{
-			if (make_redirections(&current, global->pwd) != 1 && current->words[0])
+			if (make_redirections(&current, global) != 1 && current->words[0])
 				child_process_exec(current, exec, global);
 			else
 				exit(EXIT_SUCCESS);
@@ -65,17 +63,15 @@ int setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 		current = current->next;
 	}
 	close_all_pipes(exec);
-	wait_loop(command);
+	wait_loop(command, global);
 	return (0);
 }
 
 int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 {
 	char	*cmd_file;
-	char	**cmd;
 
 	cmd_file = NULL;
-	cmd = NULL;
 	if (is_builtin(&command))
 	{
 		what_builtin(command->words, global);

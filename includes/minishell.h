@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/17 22:35:00 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/20 17:00:42 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ typedef struct s_heredoc
 
 /* parsing struct */
 int	syntax_check(char *str);
-int parse_line(char *cmd_line, t_input **command, t_env *env_list);
+int parse_line(char *cmd_line, t_input **command, t_global *global);
 char **split_for_parsing(char *cmd_line, t_elements *elmts);
 void	count_elements(char *str, t_elements *elmts);
 int	count_characters(char *str, int *inside_quote);
@@ -129,12 +129,12 @@ int	error_return(char *message);
 
 /*Builtin commands*/
 void	what_builtin(char **command_words, t_global *global);
-void	echo(char **str);
-void	pwd(void);
-void	cd(char *path, t_env *env_list, char ***env);
-void	cmd_env(t_env *list, char **command_words);
-void	export(char **words, t_env *env_list, char ***env);
-void	unset(char **args, t_env *env_list, char ***env);
+void	echo(char **str, t_global *global);
+void	pwd(t_global *global);
+void	cd(char *path, t_global *global);
+void	cmd_env(char **command_words, t_global *global);
+void	export(char **words, t_global *global);
+void	unset(char **args, t_global *global);
 void	error_identifier(char *str, char *command);
 
 /* global */
@@ -142,26 +142,27 @@ void	global_init(t_global **global, char **env);
 void	print_array(char **array);
 
 /* env */
-int		env_init(char **env, t_env **env_list);
+int	env_init(char **env, t_env **env_list);
 void	set_env(char *key, char *value, t_env *env_list, int export_flag);
-char	*get_env_value(char *var_name, t_env *env_list);
-void	free_env_var(t_env *env_var);
 t_env	*new_env_var(char *str, int export);
+void append_new_var(t_env **env_list, t_env *new_var);
 
-/* env utils */
+/* env and global utils */
 t_env	*allocate_env_var(void);
 void	free_env_list(t_env **env_list);
-void	print_env_list(t_env *env_list);
+void	free_env_var(t_env *env_var);
+void	print_env_list(t_env *env_list); //
 char	*get_env_value(char *var_name, t_env *env_list);
-int		set_env_array(t_env *env_list, char ***env_array);
-void	free_env_array(char **array);
+int		set_env_array(t_env *env_list, char ***env_array); //?
+t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
 /*expand*/
-void	expand_var_words(t_input *input, t_env *env_list);
-char	*expanding_var(char *str, t_env *env_list);
+
+void	expand_var_words(t_input *input, t_env *env_list, int exit_status);
+char	*expanding_var(char *str, t_env *env_list, int exit_status);
 
 /*expand utils*/
-size_t	calc_expanded_len(char *str, t_env *env_list);
+size_t	calc_expanded_len(char *str, t_env *env_list, int exit_status);
 char	*extract_var_name(const char *str, int i);
 
 /* execution */
@@ -179,7 +180,7 @@ char	*get_paths(char **env, char *name);
 /* redirections */
 int	save_in_out(int	*stdin_copy, int *stdout_copy);
 int	restore_in_out(int	*stdin_copy, int *stdout_copy);
-int	make_redirections(t_input **command, char *pwd);
+int	make_redirections(t_input **command, t_global *global);
 int	redirect_in_out(t_input **command);
 int	redirection_out(t_input **command, int i);
 int	redirection_in(t_input **command, int i);
@@ -188,16 +189,16 @@ int	redirect_append(t_input **command);
 
 /* heredocs */
 int	get_input_heredoc(t_input **command, t_global *global);
-int	make_heredoc_directory(char **env, char *pwd);
+int	make_heredoc_directory(t_global *global);
 char *make_heredoc_filename(t_input **command, int i, char *pwd);
-int remove_heredoc(char **env, char *pwd);
+int remove_heredoc(char **env, char *pwd, int exit_status);
 int here_expand(t_heredoc *here, char *name);
 
 /* pipes + processes */
 int	create_pipes(t_pipe *exec);
 int	replace_pipes(t_input *command, t_pipe *exec);
 void	close_all_pipes(t_pipe *exec);
-void	wait_loop(t_input **command);
+void	wait_loop(t_input **command, t_global *global);
 int	child_process_exec(t_input *command, t_pipe *exec, t_global *global);
 int setup_and_run(t_input **command, t_pipe *exec, t_global *global);
 

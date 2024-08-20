@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/16 15:16:43 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/20 16:53:01 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	get_input_heredoc(t_input **command, t_global *global)
 	i = 0;
 	if (!(*command)->heredoc[0])
 		return (0);
-	if (make_heredoc_directory(global->env, global->pwd) == 1)
+	if (make_heredoc_directory(global) == 1)
 		return (1);
 	while ((*command)->heredoc[i])
 	{
@@ -45,7 +45,7 @@ int	get_input_heredoc(t_input **command, t_global *global)
 				break ;
 			}
 			if (here.quoted == 0)
-				here.temp = expanding_var(here.line, global->env_list);
+				here.temp = expanding_var(here.line, global->env_list, global->exit_status);
 			else
 				here.temp = ft_strdup(here.line);
 			if (!here.temp)
@@ -83,7 +83,7 @@ char *make_heredoc_filename(t_input **command, int i, char *pwd)
 	return (filepath);
 }
 
-int	make_heredoc_directory(char **env, char *pwd)
+int	make_heredoc_directory(t_global *global)
 {
 	int	pid;
 	char	*cmd_file;
@@ -92,7 +92,7 @@ int	make_heredoc_directory(char **env, char *pwd)
 
 	cmd_file = NULL;
 	cmd[0] = "mkdir";
-	cmd[1] = ft_strjoin(pwd, "/.heredocs");
+	cmd[1] = ft_strjoin(global->pwd, "/.heredocs");
 	if (!cmd[1])
 		return (error_return("error allocating heredoc path"));
 	cmd[2] = NULL;
@@ -101,23 +101,27 @@ int	make_heredoc_directory(char **env, char *pwd)
 		return (error_return("fork error"));
 	if (pid == 0)
 	{
-		cmd_file = find_cmd_file(cmd, env);
-		execve(cmd_file, cmd, env);
+		cmd_file = find_cmd_file(cmd, global->env);
+		execve(cmd_file, cmd, global->env);
 		ft_putstr_fd("execve fail\n", 2);
 		exit(EXIT_FAILURE);
 	}
-	else 
+	else
+	{
 		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			global->exit_status = WEXITSTATUS(status);
+	}
 	free(cmd[1]);
 	return (0);
 }
 
-int remove_heredoc(char **env, char *pwd)
+int remove_heredoc(char **env, char *pwd, int exit_status)
 {
 	int	pid;
 	char *cmd[4];
 	char	*cmd_file;
-	int	status;
+	//int	status;
 
 	cmd_file = NULL;
 	cmd[0] = "rm";
@@ -136,14 +140,14 @@ int remove_heredoc(char **env, char *pwd)
 		}
 		if (pid == 0)
 		{
-		
+
 			cmd_file = find_cmd_file(cmd, env);
 			execve(cmd_file, cmd, env);
 			ft_putstr_fd("execve fail\n", 2);
 			exit(EXIT_FAILURE);
 		}
-		else 
-			waitpid(pid, &status, 0);
+		else
+			waitpid(pid, &exit_status, 0);
 	}
 	free(cmd[2]);
 	return (0);
