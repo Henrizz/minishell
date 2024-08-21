@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/20 16:13:46 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/20 17:00:42 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,19 @@ typedef struct s_pipe
 	int	**pipe_fd;
 }	t_pipe;
 
+typedef struct s_heredoc
+{
+	int	fd;
+	char	*filepath;
+	char *line;
+	char *temp;
+	int	count;
+	char *expand;
+	int	quoted;
+}	t_heredoc;
+
 /* parsing struct */
+int	syntax_check(char *str);
 int parse_line(char *cmd_line, t_input **command, t_global *global);
 char **split_for_parsing(char *cmd_line, t_elements *elmts);
 void	count_elements(char *str, t_elements *elmts);
@@ -99,6 +111,9 @@ int	is_whitespace(char c);
 void	set_elements(t_elements *elmts);
 void	distribute_elements(t_input **command, t_elements *elmts, int *i);
 int	make_history_file(t_global **global);
+int	was_before(char *str, int i, char c);
+void set_quotes(char **str, int *inside_quote, t_elements *elmts);
+void	advance_line(char **cmd_line, int	*inside_quote, t_elements *elmts);
 
 /* populating struct */
 void	init_struct(t_input **command, t_elements *elmts);
@@ -142,7 +157,9 @@ int		set_env_array(t_env *env_list, char ***env_array); //?
 t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
 /*expand*/
+
 void	expand_var_words(t_input *input, t_env *env_list, int exit_status);
+char	*expanding_var(char *str, t_env *env_list, int exit_status);
 
 /*expand utils*/
 size_t	calc_expanded_len(char *str, t_env *env_list, int exit_status);
@@ -163,7 +180,7 @@ char	*get_paths(char **env, char *name);
 /* redirections */
 int	save_in_out(int	*stdin_copy, int *stdout_copy);
 int	restore_in_out(int	*stdin_copy, int *stdout_copy);
-int	make_redirections(t_input **command, char *pwd);
+int	make_redirections(t_input **command, t_global *global);
 int	redirect_in_out(t_input **command);
 int	redirection_out(t_input **command, int i);
 int	redirection_in(t_input **command, int i);
@@ -175,6 +192,7 @@ int	get_input_heredoc(t_input **command, t_global *global);
 int	make_heredoc_directory(t_global *global);
 char *make_heredoc_filename(t_input **command, int i, char *pwd);
 int remove_heredoc(char **env, char *pwd, int exit_status);
+int here_expand(t_heredoc *here, char *name);
 
 /* pipes + processes */
 int	create_pipes(t_pipe *exec);

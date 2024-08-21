@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 22:38:51 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/20 08:07:17 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/20 16:45:07 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

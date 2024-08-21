@@ -3,30 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 16:55:54 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/15 17:25:28 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/20 17:00:14 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	make_redirections(t_input **command, char *pwd)
+int	make_redirections(t_input **command, t_global *global)
 {
 	if (redirect_in_out(command) == 1)
 	{
-		(*command)->exit_status = 1;
+		global->exit_status = 1;
 		return (1);
 	}
-	if (redirect_heredoc(command, pwd) == 1)
+	if (redirect_heredoc(command, global->pwd) == 1)
 	{
-		(*command)->exit_status = 1;
+		global->exit_status = 1;
 		return (1);
 	}
 	if (redirect_append(command) == 1)
 	{
-		(*command)->exit_status = 1;
+		global->exit_status = 1;
 		return (1);
 	}
 	return (0);

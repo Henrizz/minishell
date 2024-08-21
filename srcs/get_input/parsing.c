@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/16 17:34:08 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/20 17:07:46 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 /* parses the command line in several steps:
 	-- checks for syntax errors (TO DO)
@@ -26,7 +26,11 @@ int parse_line(char *cmd_line, t_input **command, t_global *global)
 
 	if (!*cmd_line)
 		return (1);
-	//syntax error handling here
+	if (syntax_check(cmd_line) == 1)
+	{
+		(*command)->exit_status = 2;
+		return (1);
+	}	
 	if (!split_for_parsing(cmd_line, &elmts))
 		return (1);
 	divi_up_command(command, &elmts);
@@ -157,6 +161,8 @@ void	init_struct(t_input **command, t_elements *elmts)
 	(*command)->o = 0;
 	(*command)->h = 0;
 	(*command)->p = 0;
+	(*command)->exit_status = 0;
+	(*command)->pid = -1;
 }
 
 
