@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/20 16:53:01 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/21 18:01:47 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	get_input_heredoc(t_input **command, t_global *global)
 		return (1);
 	while ((*command)->heredoc[i])
 	{
-		here.filepath = make_heredoc_filename(command, i, global->pwd);
+		here.filepath = make_heredoc_filename(command, i, global);
 		here.fd = open(here.filepath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (here.fd == -1)
 			return (error_return("error making here_doc file"));
@@ -65,17 +65,17 @@ int	get_input_heredoc(t_input **command, t_global *global)
 	return (0);
 }
 
-char *make_heredoc_filename(t_input **command, int i, char *pwd)
+char *make_heredoc_filename(t_input **command, int i, t_global *global)
 {
 	char *filepath;
 	char *directory;
 
-	directory = ft_strjoin(pwd, "/.heredocs/.");
+	directory = ft_strjoin(global->pwd, "/.heredocs/.");
 	filepath = ft_strjoin(directory, (*command)->heredoc[i]);
 	if (!filepath)
 	{
 		perror("minishell: ");
-		(*command)->exit_status = 1;
+		global->exit_status = 1;
 		return (NULL);
 	}
 	i++;

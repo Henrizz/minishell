@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/21 14:53:59 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/21 20:21:53 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,18 +38,29 @@
 # define APP_ATTACHED 8
 # define REDIR 9
 # define PIPE 10
+# define RED_IN 11
+# define RED_OUT 12
+# define APP_OUT 13
 
 
 /* proposal for structure to hold the different variables of each command (every command node separated by pipe from the next one)
 potentially will be adjusted or expanded according to our needs
 --> words stores all commands and command arguments / red_in and red_out store the input (<) and
 output (>) redirections, heredoc stores heredoc (<<), app_out stores append output redirection (>>) */
+
+typedef struct s_direct
+{
+	char *name;
+	int	type;
+} t_direct;
+
 typedef struct s_input
 {
 	char **words;
 	char **red_in;
 	char **red_out;
 	char **heredoc;
+	t_direct *redirection;
 	char **app_out;
 	int cmd_ind;
 	int	j;
@@ -58,7 +69,6 @@ typedef struct s_input
 	int	p;
 	struct s_input *next;
 	int	pid;
-	int exit_status;
 } t_input;
 
 typedef struct s_env
@@ -110,7 +120,7 @@ int	count_characters(char *str, int *inside_quote);
 char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts);
 int	is_whitespace(char c);
 void	set_elements(t_elements *elmts);
-void	distribute_elements(t_input **command, t_elements *elmts, int *i);
+int	distribute_elements(t_input **command, t_elements *elmts, int *i);
 int	make_history_file(t_global **global);
 int	was_before(char *str, int i, char c);
 void set_quotes(char **str, int *inside_quote, t_elements *elmts);
@@ -124,7 +134,7 @@ int	was_before_array(char **array, int i, int symbol);
 
 /* populating struct */
 void	init_struct(t_input **command, t_elements *elmts);
-void divi_up_command(t_input **command, t_elements *elmts);
+int divi_up_command(t_input **command, t_elements *elmts);
 int	is_redirection(char *str);
 void	distribute_redirections(t_input **command, t_elements *elmts, int *i, int redirect_type);
 
@@ -189,15 +199,19 @@ int	save_in_out(int	*stdin_copy, int *stdout_copy);
 int	restore_in_out(int	*stdin_copy, int *stdout_copy);
 int	make_redirections(t_input **command, t_global *global);
 int	redirect_in_out(t_input **command);
-int	redirection_out(t_input **command, int i);
-int	redirection_in(t_input **command, int i);
-int	redirect_heredoc(t_input **command, char *pwd);
-int	redirect_append(t_input **command);
+//int	redirection_out(t_input **command, int i);
+//int	redirection_in(t_input **command, int i);
+int	redirection_in(char *filename, t_global *global);
+int	redirection_out(char *filename, t_global *global);
+int	redirect_heredoc(t_input **command, t_global *global);
+//int	redirect_append(t_input **command);
+int	redirect_append(char *filename, t_global *global);
+void	free_direct(t_direct *redirection);
 
 /* heredocs */
 int	get_input_heredoc(t_input **command, t_global *global);
 int	make_heredoc_directory(t_global *global);
-char *make_heredoc_filename(t_input **command, int i, char *pwd);
+char *make_heredoc_filename(t_input **command, int i, t_global *global);
 int remove_heredoc(char **env, char *pwd, int exit_status);
 int here_expand(t_heredoc *here, char *name);
 

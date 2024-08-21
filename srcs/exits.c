@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/15 17:22:09 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/21 20:22:25 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,33 @@ void	free_command(t_input **command)
 		temp = *command;
 		*command = (*command)->next;
 		free_array(temp->words);
-		free_array(temp->red_in);
-		free_array(temp->red_out);
+		//free_array(temp->red_in);
+		//free_array(temp->red_out);
 		free_array(temp->heredoc);
-		free_array(temp->app_out);
+		//free_array(temp->app_out);
+		//free((*command)->redirection);
 		free(temp);
+		//free_direct(temp->redirection);
+		free(temp->redirection);
 	}
 	*command = NULL;
 }
+
+/*void	free_direct(t_direct *redirection)
+{
+	int	i;
+
+	i = 0;
+	if (redirection)
+	{
+		while (redirection[i])
+		{
+			free(redirection[i]->name);
+			free(redirection[i]);
+			i++;
+		}
+	}
+}*/
 
 /* to free a twodimensional array of strings */
 void	free_array(char **str)
