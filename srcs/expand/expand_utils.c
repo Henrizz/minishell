@@ -6,6 +6,7 @@ size_t	calc_expanded_len(char *str, t_env *env_list, int exit_status)
 	int i;
 	char *var_name;
 	char *value;
+	char *itoa_str;
 
 	expanded_len = 0;
 	i = 0;
@@ -13,8 +14,12 @@ size_t	calc_expanded_len(char *str, t_env *env_list, int exit_status)
 	{
 		if(str[i] == '$' && str[i + 1] == '?')
 		{
-			expanded_len += ft_strlen(ft_itoa(exit_status));
-			i += 2;
+			 itoa_str = ft_itoa(exit_status);
+            if (!itoa_str)
+                return 0;
+            expanded_len += ft_strlen(itoa_str);
+            free(itoa_str);
+            i += 2;
 		}
 		else
 		if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))

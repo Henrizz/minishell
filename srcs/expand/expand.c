@@ -7,6 +7,7 @@ char	*expand_str(size_t expanded_len, char *str, t_env *env_list, int exit_statu
 	char *var_name;
 	char *value;
 	char *expanded;
+	char *temp_value;
 
 	i = 0;
 	k = 0;
@@ -17,10 +18,14 @@ char	*expand_str(size_t expanded_len, char *str, t_env *env_list, int exit_statu
 	{
 		if (str[i] == '$' && str[i + 1] == '?')
 		{
-			value = ft_itoa(exit_status);
-			while (*value)
-				expanded[k++] = *value++;
-			i += 2;
+			 value = ft_itoa(exit_status);
+            if (!value)
+                return (free(expanded), NULL);
+            temp_value = value;
+            while (*value)
+                expanded[k++] = *value++;
+            free(temp_value);
+            i += 2;
 		}
 		else
 		if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
