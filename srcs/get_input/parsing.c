@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/20 17:07:46 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/21 12:26:59 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ int parse_line(char *cmd_line, t_input **command, t_global *global)
 
 	if (!*cmd_line)
 		return (1);
-	if (syntax_check(cmd_line) == 1)
-	{
-		(*command)->exit_status = 2;
-		return (1);
-	}	
 	if (!split_for_parsing(cmd_line, &elmts))
 		return (1);
+	if (syntax_check(&elmts) == 1)
+	{
+		global->exit_status = 2;
+		return (1);
+	}	
 	divi_up_command(command, &elmts);
 	expand_var_words(*command, global->env_list, global->exit_status);
 	//print_arrays_testing(command);
