@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/21 20:21:53 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/21 22:14:45 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,12 @@ typedef struct s_direct
 typedef struct s_input
 {
 	char **words;
-	char **red_in;
-	char **red_out;
+	//char **red_in;
+	//char **red_out;
 	char **heredoc;
-	t_direct *redirection;
-	char **app_out;
+	char **redirections;
+	int	*types;
+	//char **app_out;
 	int cmd_ind;
 	int	j;
 	int	o;
@@ -206,7 +207,8 @@ int	redirection_out(char *filename, t_global *global);
 int	redirect_heredoc(t_input **command, t_global *global);
 //int	redirect_append(t_input **command);
 int	redirect_append(char *filename, t_global *global);
-void	free_direct(t_direct *redirection);
+int	no_redirection(t_input *command, int flag);
+//void	free_direct(t_direct *redirection);
 
 /* heredocs */
 int	get_input_heredoc(t_input **command, t_global *global);

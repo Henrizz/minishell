@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 16:55:54 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/21 19:57:35 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/21 21:45:14 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,16 @@ int	make_redirections(t_input **command, t_global *global)
 	int 	i;
 
 	i = 0;
-	while ((*command)->redirection[i])
+	while ((*command)->redirections[i])
 	{
-		if ((*command)->redirection[i]->type == RED_IN)
-			redirection_in((*command)->redirection[i]->name, global);
-		if ((*command)->redirection[i]->type == RED_OUT)
-			redirection_out((*command)->redirection[i]->name, global);
-		if ((*command)->redirection[i]->type == APP_OUT)
-			redirect_append((*command)->redirection[i]->name, global);	
+		if ((*command)->types[i] == RED_IN)
+			redirection_in((*command)->redirections[i], global);
+		if ((*command)->types[i] == RED_OUT)
+			redirection_out((*command)->redirections[i], global);
+		if ((*command)->types[i] == APP_OUT)
+			redirect_append((*command)->redirections[i], global);	
 		if (global->exit_status == 1)
-		{
-			//free_direct((*command)->redirection);
 			return (1);
-		}
 		i++;
 	}
 	if (redirect_heredoc(command, global) == 1)
@@ -37,7 +34,6 @@ int	make_redirections(t_input **command, t_global *global)
 		global->exit_status = 1;
 		return (1);
 	}
-	//free_direct((*command)->redirection);
 	return (0);
 }
 

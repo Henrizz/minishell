@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/21 19:54:55 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/21 22:36:21 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 		what_builtin(command->words, global);
 		exit(global->exit_status);
 	}
+	//replace_pipes(command, exec);
+	//close_all_pipes(exec);
 	if (ft_strrchr(command->words[0], '/'))
 	{
 		cmd_file = ft_strdup(command->words[0]);
