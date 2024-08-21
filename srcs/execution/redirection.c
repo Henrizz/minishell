@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 16:55:54 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/20 17:00:14 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/21 16:38:36 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
