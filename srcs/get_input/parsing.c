@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/22 14:34:26 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/22 14:47:04 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,9 +158,6 @@ int	is_redirection(char *str)
 
 void	init_struct(t_input **command, t_elements *elmts)
 {
-	int	i;
-
-	i  = 0;
 	*command = malloc(sizeof(t_input));
 	if (!(*command))
 		exit_shell("memory allocation failure", EXIT_FAILURE);
@@ -186,8 +183,6 @@ void print_arrays_testing(t_input **command)
 	int	i;
 	int j;
 	int k;
-	int o;
-	int p;
 
 	temp = *command;
 	while (temp)
@@ -195,8 +190,6 @@ void print_arrays_testing(t_input **command)
 		i = 0;
 		j = 0;
 		k = 0;
-		o = 0;
-		p = 0;
 		while (temp->words[i])
 		{
 			printf("cmd_i: %d - words: %s\n", temp->cmd_ind, temp->words[i]);
