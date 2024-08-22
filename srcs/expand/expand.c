@@ -176,20 +176,24 @@ char	*handle_quoting(char *str, t_env *env_list, int exit_status)
 void	expand_var_words(t_input *input, t_env *env_list, int exit_status)
 {
 	int	i;
+	t_input *temp;
 
-	i = 0;
-	while (input->words[i])
+	temp = input;
+	while (temp)
 	{
-		input->words[i] = handle_quoting(input->words[i], env_list, exit_status);
-		//printf("words[%d]: %s\n", i, input->words[i]);
-		i++;
-	}
-	i = 0;
-	while(input->redirections[i])
-	{
-		input->redirections[i] = handle_quoting(input->redirections[i], env_list, exit_status);
-		i++;
-	}
+		i = 0;
+		while (temp->words[i])
+		{
+			temp->words[i] = handle_quoting(temp->words[i], env_list, exit_status);
+			//printf("words[%d]: %s\n", i, input->words[i]);
+			i++;
+		}
+		i = 0;
+		while(temp->redirections[i])
+		{
+			temp->redirections[i] = handle_quoting(temp->redirections[i], env_list, exit_status);
+			i++;
+		}
 	/*while(input->red_in[i])
 	{
 		input->red_in[i] = handle_quoting(input->red_in[i], env_list, exit_status);
@@ -201,4 +205,6 @@ void	expand_var_words(t_input *input, t_env *env_list, int exit_status)
 		input->red_out[i] = handle_quoting(input->red_out[i], env_list, exit_status);
 		i++;
 	}*/
+	temp = temp->next;
+	}
 }
