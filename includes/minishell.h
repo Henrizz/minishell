@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/22 14:42:16 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/22 15:33:49 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ typedef struct s_heredoc
 	int	count;
 	char *expand;
 	int	quoted;
+	char quote_type;
+	int	flag;
 }	t_heredoc;
 
 /* parsing struct */
