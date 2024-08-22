@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/21 22:36:21 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/22 14:20:44 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@ void execute(t_input **command, t_global *global)
 	{
 		if (make_redirections(command, global) == 1)
 		{
+			restore_in_out(&stdin_copy, &stdout_copy);
 			free(exec);
 			return;
 		}
-		what_builtin((*command)->words, global);
+		else 
+			what_builtin((*command)->words, global);
 	}
 	else
 		setup_and_run(command, exec, global);
