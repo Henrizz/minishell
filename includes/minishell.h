@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/21 22:14:45 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/22 13:59:53 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ char	*get_paths(char **env, char *name);
 int	save_in_out(int	*stdin_copy, int *stdout_copy);
 int	restore_in_out(int	*stdin_copy, int *stdout_copy);
 int	make_redirections(t_input **command, t_global *global);
-int	redirect_in_out(t_input **command);
+//int	redirect_in_out(t_input **command);
 //int	redirection_out(t_input **command, int i);
 //int	redirection_in(t_input **command, int i);
 int	redirection_in(char *filename, t_global *global);
