@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redir_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:13:42 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/16 17:15:55 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/22 19:56:27 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,10 @@ int	make_history_file(t_global **global)
 {
 	char *filepath;
 	char *line;
-	//int	flag;
 
-	//rl_clear_history();
-	//flag = 0;
 	filepath = ft_strjoin((*global)->pwd, "/.history.txt");
 	if (!filepath)
 		return (error_return("history file join error"));
-	// if (access(filepath, F_OK) == -1)
-	// 	flag = 1;
 	(*global)->history_fd = open(filepath, O_RDWR | O_CREAT | O_APPEND, 0644);
 	if ((*global)->history_fd == -1)
 		return (error_return("history file"));
@@ -63,4 +58,26 @@ int	make_history_file(t_global **global)
 		line = get_next_line_new((*global)->history_fd);
 	}
 	return (0);
+}
+
+int	is_redirection(char *str)
+{
+	if (!ft_strncmp(str, "<", 2))
+		return (IN_DETACHED);
+	else if (!ft_strncmp(str, ">", 2))
+		return (OUT_DETACHED);
+	else if (!ft_strncmp(str, "<<", 3))
+		return (HERE_DETACHED);
+	else if (!ft_strncmp(str, ">>", 3))
+		return (APP_DETACHED);
+	else if (str[0] == '<' && str[1] != '<')
+		return (IN_ATTACHED);
+	else if (str[0] == '>' && str[1] != '>')
+		return (OUT_ATTACHED);
+	else if (str[0] == '<' && str[1] == '<')
+		return (HERE_ATTACHED);
+	else if (str[0] == '>' && str[1] == '>')
+		return (APP_ATTACHED);
+	else
+		return (0);
 }

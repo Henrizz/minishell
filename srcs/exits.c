@@ -6,26 +6,25 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/22 14:42:36 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:53:29 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-/* just an exit function to save space in main functions. Possibly needs to be later completed with signal handlings? or also free functions */
 int	exit_shell(char *message, int exit_status)
 {
-		if (exit_status == EXIT_SUCCESS && message != NULL)
-			ft_putstr_fd(message, 2);
-		if (exit_status == EXIT_FAILURE && message != NULL)
-			perror(message);
-		rl_clear_history();
-		exit(exit_status);
+	if (exit_status == EXIT_SUCCESS && message != NULL)
+		ft_putstr_fd(message, 2);
+	if (exit_status == EXIT_FAILURE && message != NULL)
+		perror(message);
+	rl_clear_history();
+	exit(exit_status);
 }
 
 void	free_command(t_input **command)
 {
-	t_input *temp;
+	t_input	*temp;
 
 	temp = *command;
 	while (*command != NULL)
@@ -35,8 +34,8 @@ void	free_command(t_input **command)
 		free_array(temp->words);
 		free_array(temp->redirections);
 		free_array(temp->heredoc);
-		free(temp);
 		free(temp->types);
+		free(temp);
 	}
 	*command = NULL;
 }

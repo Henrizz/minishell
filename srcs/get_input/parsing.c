@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/22 15:38:41 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/22 19:56:22 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 /* parses the command line in several steps:
 	-- checks for syntax errors (TO DO)
-	-- splits command line into seperate elements by whitespace but only if not inside quotes (still needs adjustment for elevated case of nested quote with same quote type)
+	-- splits command line into seperate elements by whitespace but only if not inside quotes 
+	(still needs adjustment for elevated case of nested quote with same quote type)
 	-- distributes all separates elements into their corresponding command arrays
 			- words
 			- redirections
 	-- launches expansion to replace environmental virables if needed */
 
-int parse_line(char *cmd_line, t_input **command, t_global *global)
+int	parse_line(char *cmd_line, t_input **command, t_global *global)
 {
-	t_elements elmts;
+	t_elements	elmts;
 
 	if (!*cmd_line)
 		return (1);
@@ -36,6 +37,7 @@ int parse_line(char *cmd_line, t_input **command, t_global *global)
 	if (divi_up_command(command, &elmts))
 	{
 		free_array(elmts.array);
+		global->exit_status = 1;
 		return (1);
 	}
 	free_array(elmts.array);
@@ -44,15 +46,16 @@ int parse_line(char *cmd_line, t_input **command, t_global *global)
 	return (0);
 }
 
-int divi_up_command(t_input **command, t_elements *elmts)
+int	divi_up_command(t_input **command, t_elements *elmts)
 {
-	int	i;
-	t_input *current;
-	t_input *new;
+	int		i;
+	t_input	*current;
+	t_input	*new;
 
 	i = 0;
 	new = NULL;
-	init_struct(command, elmts);
+	if (init_struct(command, elmts) == 1)
+		return (1);
 	(*command)->cmd_ind = 0;
 	current = *command;
 	while (elmts->array[i])
@@ -74,19 +77,22 @@ int divi_up_command(t_input **command, t_elements *elmts)
 int	distribute_elements(t_input **command, t_elements *elmts, int *i)
 {
 	int	k;
-	int redirect_type;
+	int	redirect_type;
 
 	k = 0;
 	while (elmts->array[*i] && ft_strncmp_ed(elmts->array[*i], "|", 2))
 	{
 		redirect_type = is_redirection(elmts->array[*i]);
 		if (redirect_type)
-			distribute_redirections(command, elmts, i, redirect_type);
+		{
+			if (divi_redirect(command, elmts, i, redirect_type) == 1)
+				return (1);
+		}
 		else
 		{
 			(*command)->words[k] = ft_strdup(elmts->array[*i]);
 			if (!(*command)->words[k])
-				return (error_return("words: failure to duplicate string"));
+				return (error_return("words: ft_strdup failure"));
 			k++;
 		}
 		(*i)++;
@@ -97,92 +103,43 @@ int	distribute_elements(t_input **command, t_elements *elmts, int *i)
 	return (0);
 }
 
-void	distribute_redirections(t_input **command, t_elements *elmts, int *i, int redirect_type)
+int	divi_redirect(t_input **command, t_elements *elmts, int *i, int r_type)
 {
-
-	if (redirect_type == IN_DETACHED || redirect_type == IN_ATTACHED)
-	{
-		if (redirect_type == IN_DETACHED)
-			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[++(*i)]);
-		else if (redirect_type == IN_ATTACHED)
-			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[(*i)] + 1);
-		(*command)->types[(*command)->j++] = RED_IN;
-	}
-	else if (redirect_type == OUT_DETACHED || redirect_type == OUT_ATTACHED)
-	{
-		if (redirect_type == OUT_DETACHED)
-			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[++(*i)]);
-		else if (redirect_type == OUT_ATTACHED)
-			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[(*i)] + 1);
-		(*command)->types[(*command)->j++] = RED_OUT;
-	}
-	else if (redirect_type == HERE_DETACHED)
+	if (r_type == IN_DETACHED)
+		transfer_string(command, elmts->array[++(*i)], 0, RED_IN);
+	else if (r_type == IN_ATTACHED)
+		transfer_string(command, elmts->array[(*i)], 1, RED_IN);
+	else if (r_type == OUT_DETACHED)
+		transfer_string(command, elmts->array[++(*i)], 0, RED_OUT);
+	else if (r_type == OUT_ATTACHED)
+		transfer_string(command, elmts->array[(*i)], 1, RED_OUT);
+	else if (r_type == APP_DETACHED)
+		transfer_string(command, elmts->array[++(*i)], 0, APP_OUT);
+	else if (r_type == APP_ATTACHED)
+		transfer_string(command, elmts->array[(*i)], 2, APP_OUT);
+	else if (r_type == HERE_DETACHED)
 		(*command)->heredoc[(*command)->h++] = ft_strdup(elmts->array[++(*i)]);
-	else if (redirect_type == HERE_ATTACHED)
+	else if (r_type == HERE_ATTACHED)
 		(*command)->heredoc[(*command)->h++] = ft_strdup(elmts->array[(*i)] + 2);
-	else if (redirect_type == APP_DETACHED || redirect_type == APP_ATTACHED)
-	{
-		if (redirect_type == APP_DETACHED)
-			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[++(*i)]);
-		else if (redirect_type == APP_ATTACHED)
-			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[(*i)] + 2);
-		(*command)->types[(*command)->j++] = APP_OUT;
-	}
-	if (((redirect_type == 1 || redirect_type == 2 || redirect_type == 3 
-		|| redirect_type == 4) && !(*command)->redirections[(*command)->j - 1])
-		|| ((redirect_type == 5 || redirect_type == 6) && !(*command)->heredoc[(*command)->h - 1]))
-		exit_shell("redirections: failure to duplicate string", EXIT_FAILURE);
+	if (((r_type == 1 || r_type == 2 || r_type == 3 
+		|| r_type == 4) && !(*command)->redirections[(*command)->j - 1])
+		|| ((r_type == 5 || r_type == 6) && !(*command)->heredoc[(*command)->h - 1]))
+		return (error_return("redirections: failure to duplicate string"));
+	return (0);
 }
 
-int	is_redirection(char *str)
+void	transfer_string(t_input **command, char *elmt, int offset, int type)
 {
-	if (!ft_strncmp(str, "<", 2))
-		return (IN_DETACHED);
-	else if (!ft_strncmp(str, ">", 2))
-		return (OUT_DETACHED);
-	else if (!ft_strncmp(str, "<<", 3))
-		return (HERE_DETACHED);
-	else if (!ft_strncmp(str, ">>", 3))
-		return (APP_DETACHED);
-	else if (str[0] == '<' && str[1] != '<')
-		return (IN_ATTACHED);
-	else if (str[0] == '>' && str[1] != '>')
-		return (OUT_ATTACHED);
-	else if (str[0] == '<' && str[1] == '<')
-		return (HERE_ATTACHED);
-	else if (str[0] == '>' && str[1] == '>')
-		return (APP_ATTACHED);
-	else
-		return (0);
+	(*command)->redirections[(*command)->j] = ft_strdup(elmt + offset);
+	(*command)->types[(*command)->j++] = type;
 }
 
-void	init_struct(t_input **command, t_elements *elmts)
+void	print_arrays_testing(t_input **command)
 {
-	*command = malloc(sizeof(t_input));
-	if (!(*command))
-		exit_shell("memory allocation failure", EXIT_FAILURE);
-	(*command)->words = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->heredoc = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->redirections = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->types = (int *)malloc((elmts->elmt_count + 1) * sizeof(int));
-	(*command)->next = NULL;
-	if (!(*command)->words || !(*command)->redirections || !(*command)->heredoc || !(*command)->types)
-		exit_shell("memory allocation failure", EXIT_FAILURE);
-	(*command)->words[0] = NULL;
-	(*command)->heredoc[0] = NULL;
-	(*command)->redirections[0] = NULL;
-	(*command)->j = 0;
-	(*command)->h = 0;
-	(*command)->pid = -1;
-}
-
-
-void print_arrays_testing(t_input **command)
-{
-	t_input *temp;
-	int	i;
-	int j;
-	int k;
+	t_input	*temp;
+	int		i;
+	int		j;
+	int		k;
 
 	temp = *command;
 	while (temp)

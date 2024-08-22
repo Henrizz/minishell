@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/22 15:33:49 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/22 19:54:14 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,15 +122,16 @@ void	advance_line(char **cmd_line, int	*inside_quote, t_elements *elmts);
 
 /* syntax */
 int	syntax_check(t_elements *elmts);
-int	check_for_symbols(char **array, int i);
-int	check_for_doubles(char **array, int i);
+int	check_symbols(char *array, int inside_quote, int quote_type);
+int	check_doubles(char **array, int i);
 int	was_before_array(char **array, int i, int symbol);
 
 /* populating struct */
-void	init_struct(t_input **command, t_elements *elmts);
+int	init_struct(t_input **command, t_elements *elmts);
 int divi_up_command(t_input **command, t_elements *elmts);
 int	is_redirection(char *str);
-void	distribute_redirections(t_input **command, t_elements *elmts, int *i, int redirect_type);
+int	divi_redirect(t_input **command, t_elements *elmts, int *i, int r_type);
+void	transfer_string(t_input **command, char *elmt, int offset, int type);
 
 /* free and exit functions */
 int	exit_shell(char *message, int exit_status);
@@ -139,7 +140,7 @@ void	free_command(t_input **command);
 int	error_return(char *message);
 
 /*Builtin commands*/
-void	what_builtin(char **command_words, t_global *global);
+int	what_builtin(char **command_words, t_global *global);
 void	echo(char **str, t_global *global);
 void	pwd(t_global *global);
 void	cd(char *path, t_global *global);
@@ -204,6 +205,8 @@ int	make_heredoc_directory(t_global *global);
 char *make_heredoc_filename(t_input **command, int i, t_global *global);
 int remove_heredoc(char **env, char *pwd, int exit_status);
 int here_expand(t_heredoc *here, char *name);
+int	terminal_loop(t_heredoc *here, char *filename, t_global *global);
+void	transfer_char(char *name, t_heredoc *here, int *j, int *i);
 
 /* pipes + processes */
 int	create_pipes(t_pipe *exec);

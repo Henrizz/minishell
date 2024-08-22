@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:08:03 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/20 17:09:01 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/22 17:53:02 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,30 @@
 void	advance_line(char **cmd_line, int *inside_quote, t_elements *elmts)
 {
 	while (is_whitespace(**cmd_line) && *inside_quote == 0)
-			(*cmd_line)++;
-		if ((**cmd_line == '"' || **cmd_line == '\'') && *inside_quote == 0)
-		{
-			*inside_quote = 1;
-			elmts->quote_type = **cmd_line;
-		}
-		else if (**cmd_line == elmts->quote_type && *inside_quote == 1)
-			*inside_quote = 0;
+		(*cmd_line)++;
+	if ((**cmd_line == '"' || **cmd_line == '\'') && *inside_quote == 0)
+	{
+		*inside_quote = 1;
+		elmts->quote_type = **cmd_line;
+	}
+	else if (**cmd_line == elmts->quote_type && *inside_quote == 1)
+		*inside_quote = 0;
 }
 
-void set_quotes(char **str, int *inside_quote, t_elements *elmts)
+void	set_quotes(char **str, int *inside_quote, t_elements *elmts)
 {
 	if (*inside_quote == 0 && (**str == '"' || **str == '\''))
-		{
+	{
+		elmts->quote_type = **str;
+		*inside_quote = 1;
+	}
+	else if (*inside_quote == 1 && (**str == '"' || **str == '\''))
+	{
+		if (elmts->quote_type == '\0')
 			elmts->quote_type = **str;
-			*inside_quote = 1;
-		}
-		else if (*inside_quote == 1 && (**str == '"' || **str == '\''))
-		{
-			if (elmts->quote_type == '\0')
-				elmts->quote_type = **str;
-			else if (**str == elmts->quote_type)
-				*inside_quote = 0;
-		}
+		else if (**str == elmts->quote_type)
+			*inside_quote = 0;
+	}
 }
 
 int	was_before(char *str, int i, char c)
