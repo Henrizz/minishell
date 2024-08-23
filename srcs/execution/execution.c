@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/20 17:00:57 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/22 14:20:44 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@ void execute(t_input **command, t_global *global)
 	{
 		if (make_redirections(command, global) == 1)
 		{
+			restore_in_out(&stdin_copy, &stdout_copy);
 			free(exec);
 			return;
 		}
-		what_builtin((*command)->words, global);
+		else 
+			what_builtin((*command)->words, global);
 	}
 	else
 		setup_and_run(command, exec, global);
@@ -58,7 +60,7 @@ int setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 			if (make_redirections(&current, global) != 1 && current->words[0])
 				child_process_exec(current, exec, global);
 			else
-				exit(EXIT_SUCCESS);
+				exit(global->exit_status);
 		}
 		current = current->next;
 	}
@@ -72,13 +74,15 @@ int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 	char	*cmd_file;
 
 	cmd_file = NULL;
+	replace_pipes(command, exec);
+	close_all_pipes(exec);
 	if (is_builtin(&command))
 	{
 		what_builtin(command->words, global);
-		exit(EXIT_SUCCESS);
+		exit(global->exit_status);
 	}
-	replace_pipes(command, exec);
-	close_all_pipes(exec);
+	//replace_pipes(command, exec);
+	//close_all_pipes(exec);
 	if (ft_strrchr(command->words[0], '/'))
 	{
 		cmd_file = ft_strdup(command->words[0]);
@@ -102,5 +106,5 @@ int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 	}
 	execve(cmd_file, command->words, global->env);
 	ft_putstr_fd("execve fail\n", 2);
-	exit(EXIT_FAILURE);
+	exit(1);
 }

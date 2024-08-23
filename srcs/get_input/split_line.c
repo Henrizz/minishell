@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   split_line.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/20 17:09:16 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/21 12:08:33 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char **split_for_parsing(char *cmd_line, t_elements *elmts)
 	elmts->array[i] = NULL;
 	if (inside_quote == 1)
 	{
-		ft_putstr_fd("minishell: error: unclosed quote\n", 2);
+		ft_putstr_fd("minishell: syntax error: unexpected end of file\n", 2);
 		free_array(elmts->array);
 		return (NULL);
 	}

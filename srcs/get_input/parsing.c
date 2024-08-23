@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/20 17:07:46 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/22 15:38:41 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,25 @@ int parse_line(char *cmd_line, t_input **command, t_global *global)
 
 	if (!*cmd_line)
 		return (1);
-	if (syntax_check(cmd_line) == 1)
-	{
-		(*command)->exit_status = 2;
-		return (1);
-	}	
 	if (!split_for_parsing(cmd_line, &elmts))
 		return (1);
-	divi_up_command(command, &elmts);
+	if (syntax_check(&elmts) == 1)
+	{
+		global->exit_status = 2;
+		return (1);
+	}
+	if (divi_up_command(command, &elmts))
+	{
+		free_array(elmts.array);
+		return (1);
+	}
+	free_array(elmts.array);
 	expand_var_words(*command, global->env_list, global->exit_status);
 	//print_arrays_testing(command);
 	return (0);
 }
 
-void divi_up_command(t_input **command, t_elements *elmts)
+int divi_up_command(t_input **command, t_elements *elmts)
 {
 	int	i;
 	t_input *current;
@@ -52,7 +57,8 @@ void divi_up_command(t_input **command, t_elements *elmts)
 	current = *command;
 	while (elmts->array[i])
 	{
-		distribute_elements(&current, elmts, &i);
+		if (distribute_elements(&current, elmts, &i))
+			return (1);
 		if (!ft_strncmp_ed(elmts->array[i], "|", 2))
 		{
 			init_struct(&new, elmts);
@@ -62,10 +68,10 @@ void divi_up_command(t_input **command, t_elements *elmts)
 			i++;
 		}
 	}
-	free_array(elmts->array);
+	return (0);
 }
 
-void	distribute_elements(t_input **command, t_elements *elmts, int *i)
+int	distribute_elements(t_input **command, t_elements *elmts, int *i)
 {
 	int	k;
 	int redirect_type;
@@ -80,40 +86,51 @@ void	distribute_elements(t_input **command, t_elements *elmts, int *i)
 		{
 			(*command)->words[k] = ft_strdup(elmts->array[*i]);
 			if (!(*command)->words[k])
-				exit_shell("words: failure to duplicate string", EXIT_FAILURE);
+				return (error_return("words: failure to duplicate string"));
 			k++;
 		}
 		(*i)++;
 	}
 	(*command)->words[k] = NULL;
-	(*command)->red_in[(*command)->j] = NULL;
-	(*command)->red_out[(*command)->o] = NULL;
+	(*command)->redirections[(*command)->j] = NULL;
 	(*command)->heredoc[(*command)->h] = NULL;
-	(*command)->app_out[(*command)->p] = NULL;
+	return (0);
 }
 
 void	distribute_redirections(t_input **command, t_elements *elmts, int *i, int redirect_type)
 {
-	if (redirect_type == IN_DETACHED)
-		(*command)->red_in[(*command)->j++] = ft_strdup(elmts->array[++(*i)]);
-	else if (redirect_type == IN_ATTACHED)
-		(*command)->red_in[(*command)->j++] = ft_strdup(elmts->array[(*i)] + 1);
-	else if (redirect_type == OUT_DETACHED)
-		(*command)->red_out[(*command)->o++] = ft_strdup(elmts->array[++(*i)]);
-	else if (redirect_type == OUT_ATTACHED)
-		(*command)->red_out[(*command)->o++] = ft_strdup(elmts->array[(*i)] + 1);
+
+	if (redirect_type == IN_DETACHED || redirect_type == IN_ATTACHED)
+	{
+		if (redirect_type == IN_DETACHED)
+			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[++(*i)]);
+		else if (redirect_type == IN_ATTACHED)
+			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[(*i)] + 1);
+		(*command)->types[(*command)->j++] = RED_IN;
+	}
+	else if (redirect_type == OUT_DETACHED || redirect_type == OUT_ATTACHED)
+	{
+		if (redirect_type == OUT_DETACHED)
+			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[++(*i)]);
+		else if (redirect_type == OUT_ATTACHED)
+			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[(*i)] + 1);
+		(*command)->types[(*command)->j++] = RED_OUT;
+	}
 	else if (redirect_type == HERE_DETACHED)
 		(*command)->heredoc[(*command)->h++] = ft_strdup(elmts->array[++(*i)]);
 	else if (redirect_type == HERE_ATTACHED)
 		(*command)->heredoc[(*command)->h++] = ft_strdup(elmts->array[(*i)] + 2);
-	else if (redirect_type == APP_DETACHED)
-		(*command)->app_out[(*command)->p++] = ft_strdup(elmts->array[++(*i)]);
-	else if (redirect_type == APP_ATTACHED)
-		(*command)->app_out[(*command)->p++] = ft_strdup(elmts->array[(*i)] + 2);
-	if (((redirect_type == 1 || redirect_type == 2) && !(*command)->red_in[(*command)->j - 1])
-		|| ((redirect_type == 3 || redirect_type == 4) && !(*command)->red_out[(*command)->o - 1])
-		|| ((redirect_type == 5 || redirect_type == 6) && !(*command)->heredoc[(*command)->h - 1])
-		|| ((redirect_type == 7 || redirect_type == 8) && !(*command)->app_out[(*command)->p - 1]))
+	else if (redirect_type == APP_DETACHED || redirect_type == APP_ATTACHED)
+	{
+		if (redirect_type == APP_DETACHED)
+			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[++(*i)]);
+		else if (redirect_type == APP_ATTACHED)
+			(*command)->redirections[(*command)->j] = ft_strdup(elmts->array[(*i)] + 2);
+		(*command)->types[(*command)->j++] = APP_OUT;
+	}
+	if (((redirect_type == 1 || redirect_type == 2 || redirect_type == 3 
+		|| redirect_type == 4) && !(*command)->redirections[(*command)->j - 1])
+		|| ((redirect_type == 5 || redirect_type == 6) && !(*command)->heredoc[(*command)->h - 1]))
 		exit_shell("redirections: failure to duplicate string", EXIT_FAILURE);
 }
 
@@ -145,23 +162,17 @@ void	init_struct(t_input **command, t_elements *elmts)
 	if (!(*command))
 		exit_shell("memory allocation failure", EXIT_FAILURE);
 	(*command)->words = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->red_in = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->red_out = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
 	(*command)->heredoc = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->app_out = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
+	(*command)->redirections = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
+	(*command)->types = (int *)malloc((elmts->elmt_count + 1) * sizeof(int));
 	(*command)->next = NULL;
-	if (!(*command)->words || !(*command)->red_in || !(*command)->red_out || !(*command)->heredoc || !(*command)->app_out)
+	if (!(*command)->words || !(*command)->redirections || !(*command)->heredoc || !(*command)->types)
 		exit_shell("memory allocation failure", EXIT_FAILURE);
 	(*command)->words[0] = NULL;
-	(*command)->red_in[0] = NULL;
-	(*command)->red_out[0] = NULL;
 	(*command)->heredoc[0] = NULL;
-	(*command)->app_out[0] = NULL;
+	(*command)->redirections[0] = NULL;
 	(*command)->j = 0;
-	(*command)->o = 0;
 	(*command)->h = 0;
-	(*command)->p = 0;
-	(*command)->exit_status = 0;
 	(*command)->pid = -1;
 }
 
@@ -172,8 +183,6 @@ void print_arrays_testing(t_input **command)
 	int	i;
 	int j;
 	int k;
-	int o;
-	int p;
 
 	temp = *command;
 	while (temp)
@@ -181,32 +190,20 @@ void print_arrays_testing(t_input **command)
 		i = 0;
 		j = 0;
 		k = 0;
-		o = 0;
-		p = 0;
 		while (temp->words[i])
 		{
 			printf("cmd_i: %d - words: %s\n", temp->cmd_ind, temp->words[i]);
 			i++;
 		}
-		while (temp->red_in[j])
+		while (temp->redirections[j])
 		{
-			printf("cmd_i: %d - red in: %s\n", temp->cmd_ind, temp->red_in[j]);
+			printf("cmd_i: %d - red %d: %s\n", temp->cmd_ind, temp->types[j], temp->redirections[j]);
 			j++;
-		}
-			while (temp->red_out[o])
-		{
-			printf("cmd_i: %d - red out: %s\n", temp->cmd_ind, temp->red_out[o]);
-			o++;
 		}
 			while (temp->heredoc[k])
 		{
 			printf("cmd_i: %d - heredoc: %s\n", temp->cmd_ind, temp->heredoc[k]);
 			k++;
-		}
-			while (temp->app_out[p])
-		{
-			printf("cmd_i: %d - append out: %s\n", temp->cmd_ind, temp->app_out[p]);
-			p++;
 		}
 		temp = temp->next;
 	}

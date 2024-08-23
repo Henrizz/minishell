@@ -6,7 +6,7 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 22:38:51 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/20 16:45:07 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/21 22:16:25 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	replace_pipes(t_input *command, t_pipe *exec)
 		return (0);
 	if (command->cmd_ind == 0)
 	{
-		if (!command->red_out[0] && !command->app_out[0])
+		if (!no_redirection(command, RED_OUT) && !no_redirection(command, APP_OUT))
 		{
 			if (dup2(exec->pipe_fd[command->cmd_ind][1], 1) == -1)
 				error_return("dup2 pipe[current][1]");
@@ -47,7 +47,7 @@ int	replace_pipes(t_input *command, t_pipe *exec)
 	}
 	else if (command->cmd_ind  == exec->pipe_qty)
 	{
-		if (!command->red_in[0] && !command->heredoc[0])
+		if (!no_redirection(command, RED_IN) && !command->heredoc[0])
 		{
 			if (dup2(exec->pipe_fd[command->cmd_ind  - 1][0], 0) == -1)
 				error_return("dup2 pipe[previous][0]");
@@ -57,18 +57,32 @@ int	replace_pipes(t_input *command, t_pipe *exec)
 	}
 	else
 	{
-		if (!command->red_in[0] && !command->heredoc[0])
+		if (!no_redirection(command, RED_IN) && !command->heredoc[0])
 		{
 			if (dup2(exec->pipe_fd[command->cmd_ind  - 1][0], 0) == -1)
 				error_return("dup2 pipe[previous][0]");
 			//close(exec->pipe_fd[command->cmd_ind  - 1][0]);
 		}
-		if (!command->red_out[0] && !command->app_out[0])
+		if (!no_redirection(command, RED_OUT) && !no_redirection(command, APP_OUT))
 		{
 			if (dup2(exec->pipe_fd[command->cmd_ind][1], 1) == -1)
 				error_return("dup2 pipe[current][1]");
 			//close(exec->pipe_fd[command->cmd_ind][1]);
 		}
+	}
+	return (0);
+}
+
+int	no_redirection(t_input *command, int flag)
+{
+	int	i;
+
+	i = 0;
+	while(command->redirections[i])
+	{
+		if (command->types[i] == flag)
+			return (1);
+		i++;
 	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/20 16:53:01 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/22 15:37:28 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	get_input_heredoc(t_input **command, t_global *global)
 		return (1);
 	while ((*command)->heredoc[i])
 	{
-		here.filepath = make_heredoc_filename(command, i, global->pwd);
+		here.filepath = make_heredoc_filename(command, i, global);
 		here.fd = open(here.filepath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (here.fd == -1)
 			return (error_return("error making here_doc file"));
@@ -44,7 +44,7 @@ int	get_input_heredoc(t_input **command, t_global *global)
 				free(here.line);
 				break ;
 			}
-			if (here.quoted == 0)
+			if (here.flag == 0)
 				here.temp = expanding_var(here.line, global->env_list, global->exit_status);
 			else
 				here.temp = ft_strdup(here.line);
@@ -65,17 +65,17 @@ int	get_input_heredoc(t_input **command, t_global *global)
 	return (0);
 }
 
-char *make_heredoc_filename(t_input **command, int i, char *pwd)
+char *make_heredoc_filename(t_input **command, int i, t_global *global)
 {
 	char *filepath;
 	char *directory;
 
-	directory = ft_strjoin(pwd, "/.heredocs/.");
+	directory = ft_strjoin(global->pwd, "/.heredocs/.");
 	filepath = ft_strjoin(directory, (*command)->heredoc[i]);
 	if (!filepath)
 	{
 		perror("minishell: ");
-		(*command)->exit_status = 1;
+		global->exit_status = 1;
 		return (NULL);
 	}
 	i++;
@@ -155,9 +155,6 @@ int remove_heredoc(char **env, char *pwd, int exit_status)
 
 int here_expand(t_heredoc *here, char *name)
 {
-	//check if delimiter is inside quote and adjust flag 
-	// remove quotes and store in here->expand
-	// return 1 in case of error 
 	int	i;
 	int	j;
 
@@ -165,17 +162,32 @@ int here_expand(t_heredoc *here, char *name)
 	j = 0;
 	here->quoted = 0;
 	here->count = 1;
+	here->quote_type = '\0';
+	here->flag = 0;
 	here->expand = malloc((ft_strlen(name) + 1) * sizeof(char));
 	if (!here->expand)
 		return (1);
-	
-	if (name[i] == '"' || name[i] == '\'')
-	{	
-		here->quoted = 1;
+	if (name[0] == '"' || name[0] == '\'')
+		here->flag = 1;
+	while (name[i])
+	{
+		if ((name[i] == '"' || name[i] == '\'') && here->quoted == 0)
+		{	
+			here->quoted = 1;
+			here->quote_type = name[i++];
+		}
+		if (here->quoted == 1 || (here->quoted == 0 && (name[i] != '"' || name[i] != '\'')))
+		{
+			if ((name[i] == '"' || name[i] == '\'') && here->quote_type == name[i])
+			{
+				here->quoted = 0;
+				here->quote_type = '\0';
+			}
+			else
+				here->expand[j++] = name[i];
+		}
 		i++;
 	}
-	while (name[i] && name[i] != '"' && name[i] != '\'')
-		here->expand[j++] = name[i++];
 	here->expand[j] = '\0';
 	return (0);
 }
