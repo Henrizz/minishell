@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 18:46:14 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/22 18:47:31 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/24 14:25:40 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*make_heredoc_filename(t_input **command, int i, t_global *global)
 	char	*filepath;
 	char	*directory;
 
+	if (make_heredoc_directory(global) == 1)
+		return (NULL);
 	directory = ft_strjoin(global->pwd, "/.heredocs/.");
 	filepath = ft_strjoin(directory, (*command)->heredoc[i]);
 	if (!filepath)
@@ -42,6 +44,8 @@ int	make_heredoc_directory(t_global *global)
 	if (!cmd[1])
 		return (error_return("error allocating heredoc path"));
 	cmd[2] = NULL;
+	if (access(cmd[1], R_OK | W_OK | X_OK) == 0)
+		return (free(cmd[1]), 0);
 	pid = fork();
 	if (pid == -1)
 		return (error_return("fork error"));
@@ -54,8 +58,7 @@ int	make_heredoc_directory(t_global *global)
 	waitpid(pid, &status, 0);
 	if (WIFEXITED(status))
 		global->exit_status = WEXITSTATUS(status);
-	free(cmd[1]);
-	return (0);
+	return (free(cmd[1]), 0);
 }
 
 int	here_expand(t_heredoc *here, char *name)

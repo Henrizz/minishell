@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 16:55:54 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/22 17:18:06 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/24 14:59:58 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ int	redirect_heredoc(t_input **command, t_global *global)
 		{
 			filepath = make_heredoc_filename(command, i, global);
 			fd = open(filepath, O_RDONLY);
+			free(filepath);
 			if (fd == -1)
 				return (error_return((*command)->heredoc[i]));
 			if (dup2(fd, 0) == -1)

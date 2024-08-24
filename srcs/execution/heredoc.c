@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/22 18:47:25 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/24 14:52:47 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,26 @@ int	get_input_heredoc(t_input **command, t_global *global)
 {
 	int			i;
 	t_heredoc	here;
+	t_input	*current;
 
-	i = 0;
-	if (!(*command)->heredoc[0])
-		return (0);
-	if (make_heredoc_directory(global) == 1)
-		return (1);
-	while ((*command)->heredoc[i])
+	current = (*command);
+	while (current)
 	{
-		here.filepath = make_heredoc_filename(command, i, global);
-		here.fd = open(here.filepath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (here.fd == -1)
-			return (error_return("error making here_doc file"));
-		free(here.filepath);
-		here_expand(&here, (*command)->heredoc[i]);
-		while (1)
+		i = 0;
+		while (current->heredoc[i])
 		{
-			if (terminal_loop(&here, (*command)->heredoc[i], global) == 1)
-				break ;
+			here.filepath = make_heredoc_filename(&current, i, global);
+			here.fd = open(here.filepath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (here.fd == -1 || !here.filepath)
+				return (error_return("error making here_doc file or directory"));
+			free(here.filepath);
+			here_expand(&here, current->heredoc[i]);
+			if (terminal_loop(&here, current->heredoc[i], global) == 1)
+				return (1);
+			i++;
+			free(here.expand);
 		}
-		i++;
-		free(here.expand);
+		current = current->next;
 	}
 	return (0);
 }
@@ -45,27 +44,26 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 {
 	char	*mssg;
 
-	mssg = "minishell: warning: here-document delimited at line ";
-	here->line = readline(">");
-	if (here->line == NULL)
+	mssg = "minishell: warning: here-document delimited at line by end-of-file (wanted `";
+	while (1)
 	{
-		printf("%s%d by end-of-file (wanted `%s')\n", mssg, here->count, here->expand);
-		//free(here->line);
-		return (1);
+		here->line = readline(">");
+		if (here->line == NULL)
+			return (printf("%.52s%d%s%s')\n", mssg, here->count, mssg + 51, here->expand), 0);
+		else if (!ft_strncmp(here->line, here->expand, ft_strlen(filename)))
+			return (free(here->line), 0);
+		if (here->flag == 0)
+			here->temp = expanding_var(here->line, global->env_list, global->exit_status);
+		else
+			here->temp = ft_strdup(here->line);
+		if (!here->temp)
+			return (free(here->line), free(here->expand), 1);
+		ft_putstr_fd(here->temp, here->fd);
+		ft_putstr_fd("\n", here->fd);
+		free(here->line);
+		free(here->temp);
+		here->count++;
 	}
-	else if (!ft_strncmp(here->line, here->expand, ft_strlen(filename)))
-		return (free(here->line), 1);
-	if (here->flag == 0)
-		here->temp = expanding_var(here->line, global->env_list, global->exit_status);
-	else
-		here->temp = ft_strdup(here->line);
-	if (!here->temp)
-		return (free(here->line), 1);
-	ft_putstr_fd(here->temp, here->fd);
-	ft_putstr_fd("\n", here->fd);
-	free(here->line);
-	free(here->temp);
-	here->count++;
 	return (0);
 }
 
