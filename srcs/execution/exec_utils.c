@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/17 16:27:40 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/08/22 16:46:43 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,12 @@ char	*find_cmd_file(char **cmd, char **env)
 			cmd_file = ft_strjoin(temp, cmd[0]);
 			free(temp);
 			if (access(cmd_file, X_OK) == 0)
-			{
-				free_array(paths);
-				return (cmd_file);
-			}
-			else
-				free(cmd_file);
+				return (free_array(paths), cmd_file);
+			free(cmd_file);
 			i++;
 		}
+		free_array(paths);
 	}
-	free_array(paths);
 	ft_putstr_fd(cmd[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
 	return (NULL);
@@ -46,8 +42,8 @@ char	*find_cmd_file(char **cmd, char **env)
 
 int	get_cmd_index(t_input **command, t_pipe *exec)
 {
-	t_input *temp;
-	int	i;
+	t_input	*temp;
+	int		i;
 
 	temp = *command;
 	i = 0;
@@ -66,12 +62,16 @@ int	get_cmd_index(t_input **command, t_pipe *exec)
 int	is_builtin(t_input **command)
 {
 	int	len;
+
 	if (!(*command)->words[0])
 		return (0);
 	len = ft_strlen((*command)->words[0]) + 1;
-	if(!ft_strncmp((*command)->words[0], "echo", len) || !ft_strncmp((*command)->words[0], "cd", len)
-		|| !ft_strncmp((*command)->words[0], "pwd", len) || !ft_strncmp((*command)->words[0], "export", len)
-		|| !ft_strncmp((*command)->words[0], "unset", len) || !ft_strncmp((*command)->words[0], "env", len)
+	if (!ft_strncmp((*command)->words[0], "echo", len) 
+		|| !ft_strncmp((*command)->words[0], "cd", len) 
+		|| !ft_strncmp((*command)->words[0], "pwd", len) 
+		|| !ft_strncmp((*command)->words[0], "export", len)
+		|| !ft_strncmp((*command)->words[0], "unset", len) 
+		|| !ft_strncmp((*command)->words[0], "env", len)
 		|| !ft_strncmp((*command)->words[0], "exit", len))
 		return (1);
 	return (0);

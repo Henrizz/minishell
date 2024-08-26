@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/21 12:08:33 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/22 17:54:53 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 /* splits the entire command line into separate elements ("tokens"), delimited by whitespace and taking into account when inside quotes */
 
-char **split_for_parsing(char *cmd_line, t_elements *elmts)
+char	**split_for_parsing(char *cmd_line, t_elements *elmts)
 {
 	int	i;
 	int	inside_quote;
-	
+
 	i = 0;
 	inside_quote = 0;
 	elmts->is_word = 0;
@@ -45,9 +45,9 @@ char **split_for_parsing(char *cmd_line, t_elements *elmts)
 	return (elmts->array);
 }
 
-char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
+char	*ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
 {
-	int	i;
+	int		i;
 	char	*dup;
 
 	i = 0;
@@ -82,8 +82,8 @@ char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts)
 
 int	count_characters(char *str, int *inside_quote)
 {
-	int	i;
-	int	count;
+	int		i;
+	int		count;
 	char	quote_type;
 
 	i = 0;
@@ -102,7 +102,7 @@ int	count_characters(char *str, int *inside_quote)
 		{
 			if (quote_type == '\0')
 				quote_type = str[i];
-			else if(str[i] == quote_type)
+			else if (str[i] == quote_type)
 				*inside_quote = 0;
 		}
 		count++;
@@ -115,7 +115,7 @@ void	count_elements(char *str, t_elements *elmts)
 {
 	int	i;
 	int	inside_quote;
-	
+
 	elmts->is_word = 0;
 	elmts->elmt_count = 0;
 	i = 0;

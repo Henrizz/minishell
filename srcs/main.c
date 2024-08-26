@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/17 11:52:39 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/22 17:54:09 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 int	main(int argc, char **argv, char **env)
 {
-	char	*cmd_line;
-	t_input	*command;
-	t_global *global;
+	char		*cmd_line;
+	t_input		*command;
+	t_global	*global;
 
 	command = NULL;
 	(void)argv;
 	if (argc > 1)
 		return (0); // for now, just to silence argc, but later maybe more actions or error handling
 	global_init(&global, env);
-	while(1)
+	while (1)
 	{
 		cmd_line = readline("temp_prompt$ ");
 		if (!cmd_line) //to check if command line pointer is NULL (in case of ctrl+D or else)
