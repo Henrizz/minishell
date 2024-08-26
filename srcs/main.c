@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/22 17:54:09 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:23:23 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	main(int argc, char **argv, char **env)
 		{
 			remove_heredoc(env, global->pwd, global->exit_status);
 			close(global->history_fd);
-			return (exit_shell("exit\n", EXIT_SUCCESS));
+			return (exit_shell(EXIT_SUCCESS));
 		}
 		if (*cmd_line)
 		{

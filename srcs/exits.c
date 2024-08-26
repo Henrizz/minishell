@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   exits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/22 17:53:29 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:23:09 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	exit_shell(char *message, int exit_status)
+int	exit_shell(int exit_status)
 {
-	if (exit_status == EXIT_SUCCESS && message != NULL)
-		ft_putstr_fd(message, 2);
-	if (exit_status == EXIT_FAILURE && message != NULL)
-		perror(message);
+	//if (exit_status == EXIT_SUCCESS && message != NULL)
+		//ft_putstr_fd(message, 2);
+	//if (exit_status == EXIT_FAILURE && message != NULL)
+		//perror(message);
 	rl_clear_history();
 	exit(exit_status);
 }
