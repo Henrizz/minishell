@@ -1,7 +1,7 @@
 
 #include "../../includes/minishell.h"
 
-void	cmd_env(char **command_words, t_global *global)
+void	env_cmd(char **command_words, t_global *global)
 {
 	t_env *temp;
 
