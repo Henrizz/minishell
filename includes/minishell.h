@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/27 12:58:51 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/28 00:07:04 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,10 @@ void	error_identifier(char *str, char *command);
 /* global */
 void	global_init(t_global **global, char **env);
 void	print_array(char **array);
-void	init_signals(void);
+//void	init_signals(void);
+void	sig_interactive(void);
+void	sig_non_interactive(void);
+void	sig_non_interactive_heredoc(void);
 
 /* env */
 int	env_init(char **env, t_env **env_list);

@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/27 13:22:17 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/28 00:06:35 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,12 @@ int	main(int argc, char **argv, char **env)
 	global_init(&global, env);
 	while (1)
 	{
+		sig_interactive();
+		//init_signals();
 		cmd_line = readline("temp_prompt$ ");
 		if (!cmd_line) //to check if command line pointer is NULL (in case of ctrl+D or else)
 			shell_exit(global);
+		sig_non_interactive();
 		if (*cmd_line)
 		{
 			add_history(cmd_line);
