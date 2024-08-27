@@ -43,7 +43,7 @@ CC = cc
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(ADDRFLAG) $(LIBFT) $(LDFLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
 	chmod +x $(NAME)
 
 $(LIBFT):
