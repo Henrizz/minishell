@@ -15,8 +15,8 @@ int	what_builtin(char **command_words, t_global *global)
 	if(!ft_strncmp(command_words[0], "unset", 5))
 		unset(command_words, global);
 	if(!ft_strncmp(command_words[0], "env", 3))
-	 	cmd_env(command_words, global);
-	// if(!ft_strncmp(command_words[0], "exit", 4))
-	// 	exit();
+	 	env_cmd(command_words, global);
+	if(!ft_strncmp(command_words[0], "exit", 4))
+		exit_cmd(command_words, global);
 	return (global->exit_status);
 }

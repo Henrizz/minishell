@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/22 19:54:14 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/26 18:23:39 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ int	divi_redirect(t_input **command, t_elements *elmts, int *i, int r_type);
 void	transfer_string(t_input **command, char *elmt, int offset, int type);
 
 /* free and exit functions */
-int	exit_shell(char *message, int exit_status);
+int	exit_shell(int exit_status);
 void	free_array(char **str);
 void	free_command(t_input **command);
 int	error_return(char *message);
@@ -144,9 +144,10 @@ int	what_builtin(char **command_words, t_global *global);
 void	echo(char **str, t_global *global);
 void	pwd(t_global *global);
 void	cd(char *path, t_global *global);
-void	cmd_env(char **command_words, t_global *global);
+void	env_cmd(char **command_words, t_global *global);
 void	export(char **words, t_global *global);
 void	unset(char **args, t_global *global);
+void	exit_cmd(char **command_words, t_global *global);
 void	error_identifier(char *str, char *command);
 
 /* global */

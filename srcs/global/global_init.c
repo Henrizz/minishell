@@ -75,7 +75,10 @@ void	global_init(t_global **global, char **env)
 	env_array = NULL;
 	*global = malloc(sizeof(t_global));
 	if (!*global)
-		exit_shell("Error: malloc failed\n", EXIT_FAILURE);
+	{
+		perror("minishell: malloc");
+		exit(EXIT_FAILURE);
+	}
 	(*global)->exit_status = 0;
 	(*global)->pwd = getenv("PWD");
 	if(env_init(env, &env_list))
