@@ -12,6 +12,8 @@
 
 #include "../includes/minishell.h"
 
+int global_signum = 0;
+
 int	main(int argc, char **argv, char **env)
 {
 	char		*cmd_line;

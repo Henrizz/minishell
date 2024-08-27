@@ -1,8 +1,11 @@
 #include "../../includes/minishell.h"
 
+extern int global_signum;
+
 void	signal_handler(int signum)
 {
 	//if inside of a heredoc then stop heredoc
+	global_signum = signum;
 	if (signum == SIGINT)
 	{
 		write(1,"\n", 1);

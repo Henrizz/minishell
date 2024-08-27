@@ -12,6 +12,8 @@
 
 #include "../../includes/minishell.h"
 
+extern int global_signum;
+
 int	get_input_heredoc(t_input **command, t_global *global)
 {
 	int			i;
@@ -52,6 +54,11 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 			return (printf("%.52s%d%s%s')\n", mssg, here->count, mssg + 51, here->expand), 0);
 		else if (!ft_strncmp(here->line, here->expand, ft_strlen(filename)))
 			return (free(here->line), 0);
+		else if(global_signum == SIGINT)
+		{
+			global_signum = 0;
+			return (free(here->line), 1);
+		}
 		if (here->flag == 0)
 			here->temp = expanding_var(here->line, global->env_list, global->exit_status);
 		else
