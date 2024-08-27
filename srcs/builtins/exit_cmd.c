@@ -53,5 +53,6 @@ void	exit_cmd(char **command_words, t_global *global)
 	}
 	else
 		global->exit_status = 0;
+	ft_putstr_fd("exit\n", 1);
 	cleanup_and_exit(global);
 }
