@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/26 18:23:09 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/27 13:17:51 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,23 @@ int	exit_shell(int exit_status)
 		//perror(message);
 	rl_clear_history();
 	exit(exit_status);
+}
+
+void	cleanup_and_exit(t_global *global)
+{
+	close(global->history_fd);
+	remove_heredoc(global->env, global->pwd, global->exit_status);
+	rl_clear_history();
+	free_env_list(&global->env_list);
+	free_array(global->env);
+	free(global);
+	exit(global->exit_status);
+}
+
+void	shell_exit(t_global *global)
+{
+	ft_putstr_fd("exit\n", 1);
+	cleanup_and_exit(global);
 }
 
 void	free_command(t_input **command)

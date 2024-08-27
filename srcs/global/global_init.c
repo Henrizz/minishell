@@ -73,6 +73,7 @@ void	global_init(t_global **global, char **env)
 
 	env_list = NULL;
 	env_array = NULL;
+	init_signals();
 	*global = malloc(sizeof(t_global));
 	if (!*global)
 	{
