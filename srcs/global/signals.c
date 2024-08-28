@@ -15,11 +15,12 @@ void signal_handler_heredoc(int signal)
     if (signal == SIGINT)
     {
         global_signum = SIGINT;
-	//rl_replace_line("> ^C", 0);
+	//rl_replace_line("", 0);
 	//rl_on_new_line();
 	//rl_redisplay();
-	//rl_done = 1;
-	ioctl(1, TIOCSTI, "\n");
+	write(1, "\n", 1);
+	rl_done = 1;
+	ioctl(1, TIOCSTI, "");
         //write(1, "\n", 1);  // Print a newline to ensure clean output after interrupt
     }
 }
