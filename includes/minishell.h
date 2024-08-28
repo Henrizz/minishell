@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/28 15:46:43 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:34:59 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include "../libft/libft.h"
 # include <sys/ioctl.h>
 # include <termios.h>
+# include <dirent.h>
 
 # define IN_DETACHED 1
 # define IN_ATTACHED 2
@@ -121,7 +122,7 @@ int	distribute_elements(t_input **command, t_elements *elmts, int *i);
 int	make_history_file(t_global **global);
 int	was_before(char *str, int i, char c);
 void set_quotes(char **str, int *inside_quote, t_elements *elmts);
-void	advance_line(char **cmd_line, int	*inside_quote, t_elements *elmts);
+void	advance_line(char **cmd_line, int *inside_quote, t_elements *elmts);
 
 /* syntax */
 int	syntax_check(t_elements *elmts);
@@ -198,6 +199,7 @@ char	*extract_var_name(const char *str, int i);
 void execute(t_input **command, t_global *global);
 int set_up_pipes_redirections(t_input **command, t_pipe *exec);
 int set_up_and_run_processes(t_input **command, t_global *global);
+int	is_directory(char *name);
 
 /* execution utils */
 int	get_cmd_index(t_input **command, t_pipe *exec);
