@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/28 18:57:57 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/08/28 19:48:31 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ typedef struct s_global
 	char *pwd;
 	int exit_status;
 	int	history_fd;
+	char *prompt;
 } t_global;
 typedef struct s_elements
 {

@@ -70,4 +70,5 @@ void	unset(char **args, t_global *global)
 		}
 		i++;
 	}
+	return;
 }

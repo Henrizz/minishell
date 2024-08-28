@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/28 16:44:06 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/28 19:57:42 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
 volatile __sig_atomic_t global_signum = 0;
+
 
 int	main(int argc, char **argv, char **env)
 {
@@ -28,11 +29,10 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		sig_basic();
-		cmd_line = readline("temp_prompt$ ");
+		cmd_line = readline(global->prompt);
 		if (!cmd_line) //to check if command line pointer is NULL (in case of ctrl+D or else)
 			shell_exit(global);
 		set_signum_and_exit_status(global);
-		//sig_interactive_heredoc(); //see if it should be later?
 		if (*cmd_line)
 		{
 			add_history(cmd_line);
@@ -41,7 +41,6 @@ int	main(int argc, char **argv, char **env)
 		}
 		if (parse_line(cmd_line, &command, global) != 1) //if no syntax errors have been found or line is not empty
 		{
-			//sig_execution();
 			sig_interactive_heredoc();
 			execute(&command, global);
 			remove_heredoc(global->env, global->pwd, global->exit_status); //to remove heredoc files after execution
@@ -50,8 +49,5 @@ int	main(int argc, char **argv, char **env)
 		free_command(&command);
 	}
 	cleanup_and_exit(global);
-	// free_env_list(&global->env_list);
-	// free_array(global->env);
-	// free(global);
 	return (0);
 }

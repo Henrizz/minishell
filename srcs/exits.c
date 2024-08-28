@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/27 13:17:51 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/28 19:53:22 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	cleanup_and_exit(t_global *global)
 	rl_clear_history();
 	free_env_list(&global->env_list);
 	free_array(global->env);
+	free(global->prompt);
 	free(global);
 	exit(global->exit_status);
 }
