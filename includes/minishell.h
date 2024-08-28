@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/28 00:07:04 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/28 12:08:07 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,8 @@ void	print_array(char **array);
 void	sig_interactive(void);
 void	sig_non_interactive(void);
 void	sig_non_interactive_heredoc(void);
+void	signal_handler_heredoc(int signal);
+void	reset_line(int signum);
 
 /* env */
 int	env_init(char **env, t_env **env_list);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/28 00:06:44 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/28 12:13:25 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,16 +50,20 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 	while (1)
 	{
 		//init_signals();
-		sig_interactive();
+		//sig_interactive();
+		signal(SIGINT, signal_handler_heredoc);
 		if(global_signum == SIGINT)
 		{
+			ft_printf("inside first if\n");
 			global_signum = 0;
 			return (1);
 		}
 		here->line = readline(">");
-		sig_non_interactive_heredoc();
+		//sig_non_interactive_heredoc();
 		if(global_signum == SIGINT)
 		{
+			ft_printf("inside second if\n");
+			free(here->line);
 			global_signum = 0;
 			return (1);
 		}
@@ -80,6 +84,7 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 		free(here->temp);
 		here->count++;
 	}
+	signal(SIGINT, reset_line);
 	return (0);
 }
 

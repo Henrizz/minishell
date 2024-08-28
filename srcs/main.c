@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/28 00:06:35 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/28 11:39:10 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
