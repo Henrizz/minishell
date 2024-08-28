@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/24 14:52:47 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/28 16:37:25 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,18 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 	mssg = "minishell: warning: here-document delimited at line by end-of-file (wanted `";
 	while (1)
 	{
-		here->line = readline(">");
+		here->line = readline("> ");
 		if (here->line == NULL)
 			return (printf("%.52s%d%s%s')\n", mssg, here->count, mssg + 51, here->expand), 0);
 		else if (!ft_strncmp(here->line, here->expand, ft_strlen(filename)))
 			return (free(here->line), 0);
+		if(global_signum == SIGINT)
+		{
+			//ft_printf("inside second if\n");
+			free(here->line);
+			//global_signum = 0;
+			return (1);
+		}
 		if (here->flag == 0)
 			here->temp = expanding_var(here->line, global->env_list, global->exit_status);
 		else
@@ -64,6 +71,7 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 		free(here->temp);
 		here->count++;
 	}
+	signal(SIGINT, reset_line);
 	return (0);
 }
 

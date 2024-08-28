@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/26 18:23:39 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/08/28 15:46:43 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <readline/history.h>
 # include <fcntl.h>
 # include "../libft/libft.h"
+# include <sys/ioctl.h>
+# include <termios.h>
 
 # define IN_DETACHED 1
 # define IN_ATTACHED 2
@@ -42,6 +44,7 @@
 # define RED_OUT 12
 # define APP_OUT 13
 
+extern volatile __sig_atomic_t global_signum;
 
 /* proposal for structure to hold the different variables of each command (every command node separated by pipe from the next one)
 potentially will be adjusted or expanded according to our needs
@@ -135,9 +138,11 @@ void	transfer_string(t_input **command, char *elmt, int offset, int type);
 
 /* free and exit functions */
 int	exit_shell(int exit_status);
+void	shell_exit(t_global *global);
 void	free_array(char **str);
 void	free_command(t_input **command);
 int	error_return(char *message);
+void	cleanup_and_exit(t_global *global);
 
 /*Builtin commands*/
 int	what_builtin(char **command_words, t_global *global);
@@ -153,6 +158,16 @@ void	error_identifier(char *str, char *command);
 /* global */
 void	global_init(t_global **global, char **env);
 void	print_array(char **array);
+//void	init_signals(void);
+void	sig_basic(void);
+void	sig_non_interactive(void);
+void	sig_interactive_heredoc(void);
+void	signal_handler_heredoc(int signal);
+void	reset_line(int signum);
+void	sig_execution(void);
+void	display_new_line_sigint(int signum);
+void	display_new_line_sigquit(int signum);
+void	set_signum_and_exit_status(t_global *global);
 
 /* env */
 int	env_init(char **env, t_env **env_list);

@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/22 17:11:15 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/28 15:31:54 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@ void	execute(t_input **command, t_global *global)
 	if (!exec)
 		return ;
 	if (save_in_out(&stdin_copy, &stdout_copy) == -1 
-		|| get_input_heredoc(command, global) == -1)
+		|| get_input_heredoc(command, global) == 1)
 		return (free(exec));
+	sig_execution(); //double check position
 	if (!(*command)->next && is_builtin(command))
 	{
 		if (make_redirections(command, global) == 1)
