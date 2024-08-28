@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/28 15:31:54 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:45:24 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	execute(t_input **command, t_global *global)
 	if (save_in_out(&stdin_copy, &stdout_copy) == -1 
 		|| get_input_heredoc(command, global) == 1)
 		return (free(exec));
-	sig_execution(); //double check position
+	sig_execution();
 	if (!(*command)->next && is_builtin(command))
 	{
 		if (make_redirections(command, global) == 1)
@@ -71,28 +71,62 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 {
 	char	*cmd_file;
+	int	i;
 
+	i = 0;
 	replace_pipes(command, exec);
 	close_all_pipes(exec);
 	if (is_builtin(&command))
 		exit(what_builtin(command->words, global));
-	if (ft_strrchr(command->words[0], '/'))
+	while (command->words[i][0] == '\0')
+		i++;
+	if (ft_strrchr(command->words[i], '/'))
 	{
-		cmd_file = ft_strdup(command->words[0]);
-		if (!cmd_file || access(cmd_file, X_OK) != 0)
+		cmd_file = ft_strdup(command->words[i]);
+		if (!cmd_file || access(cmd_file, F_OK) != 0)
 		{
+			ft_putstr_fd("minishell: ", 2);
 			ft_putstr_fd(cmd_file, 2);
-			ft_putstr_fd(": command not found\n", 2);
+			ft_putstr_fd(": No such file or directory\n", 2);
 			free(cmd_file);
 			exit(127);
+		}
+		if (is_directory(cmd_file))
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(cmd_file, 2);
+			ft_putstr_fd(": Is a directory\n", 2);
+			free(cmd_file);
+			exit(126);
+		}
+		if (access(cmd_file, X_OK) != 0)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(cmd_file, 2);
+			ft_putstr_fd(": Permission denied\n", 2);
+			free(cmd_file);
+			exit(126);
 		}
 	}
 	else
 	{
-		cmd_file = find_cmd_file(command->words, global->env);
+		cmd_file = find_cmd_file(command->words + i, global->env);
 		if (cmd_file == NULL)
 			exit(127);
 	}
-	execve(cmd_file, command->words, global->env);
+	execve(cmd_file, command->words + i, global->env);
 	exit(error_return("execve fail\n"));
+}
+
+int	is_directory(char *name)
+{
+	DIR 	*dir;
+	
+	dir = opendir(name);
+	if (dir)
+	{
+		closedir(dir);
+		return (1);
+	}
+	return (0);
 }
