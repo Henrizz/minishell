@@ -28,7 +28,7 @@ void	handle_exit_status(char **command_words, t_global *global)
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(command_words[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		global->exit_status = 255;
+		global->exit_status = 2;
 		return;
 	}
 	global->exit_status = ft_atoi(command_words[1]);
