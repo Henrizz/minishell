@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/28 15:46:43 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/08/28 18:24:51 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ void	cleanup_and_exit(t_global *global);
 int	what_builtin(char **command_words, t_global *global);
 void	echo(char **str, t_global *global);
 void	pwd(t_global *global);
-void	cd(char *path, t_global *global);
+void	cd(char **command_words, t_global *global);
 void	env_cmd(char **command_words, t_global *global);
 void	export(char **words, t_global *global);
 void	unset(char **args, t_global *global);

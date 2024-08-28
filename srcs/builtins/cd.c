@@ -18,8 +18,17 @@ static void	update_pwd_and_env(char *old_pwd, t_env *env_list, char ***env)
 	set_env_array(env_list, env);
 }
 
-void	cd(char *path, t_global *global)
+void	cd(char **command_words, t_global *global)
 {
+	char *path;
+
+	path = command_words[1];
+	if (command_words[2])
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+			global->exit_status = 1;
+			return;
+	}
 	char old_pwd[PATH_MAX];
 	if(!path)
 	{
