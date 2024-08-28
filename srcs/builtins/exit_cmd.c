@@ -34,14 +34,7 @@ void	handle_exit_status(char **command_words, t_global *global)
 	global->exit_status = ft_atoi(command_words[1]);
 }
 
-void	cleanup_and_exit(t_global *global)
-{
-	rl_clear_history();
-	free_env_list(&global->env_list);
-	free_array(global->env);
-	free(global);
-	exit(global->exit_status);
-}
+
 
 void	exit_cmd(char **command_words, t_global *global)
 {
