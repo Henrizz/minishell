@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/28 19:48:31 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/08/31 20:32:55 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,11 @@
 # define RED_OUT 12
 # define APP_OUT 13
 
-extern volatile __sig_atomic_t global_signum;
+#ifndef EKEYREVOKED
+# define EKEYREVOKED 128
+#endif
+// to compile in my personal laptop EKEYREVOKEDˆˆ
+extern volatile sig_atomic_t global_signum;
 
 /* proposal for structure to hold the different variables of each command (every command node separated by pipe from the next one)
 potentially will be adjusted or expanded according to our needs
