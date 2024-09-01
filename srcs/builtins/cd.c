@@ -18,22 +18,6 @@ static void	update_pwd_and_env(char *old_pwd, t_env *env_list, char ***env)
 	set_env_array(env_list, env);
 }
 
-char	*get_cd_path(char **words, t_global *global)
-{
-	if (!words[1])
-	{
-		char *path = get_env_value("HOME", global->env_list);
-		if (!path)
-		{
-			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-			global->exit_status = 1;
-			return (NULL);
-		}
-		return (path);
-	}
-	return (ft_strdup(words[1]));
-}
-
 void	change_directory(char *path, t_global *global)
 {
 	char	old_pwd[PATH_MAX];
@@ -54,18 +38,28 @@ void	change_directory(char *path, t_global *global)
 void	cd(char **words, t_global *global)
 {
 	char *path;
-	if (words[2] != NULL)
+
+	if (!words[1])
+	{
+		path = get_env_value("HOME", global->env_list);
+		if (!path)
+		{
+			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+			global->exit_status = 1;
+			return;
+		}
+	}
+	else if (words[1] && !words[2])
+		path = ft_strdup(words[1]);
+	else
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 		global->exit_status = 1;
 		return;
 	}
-	path = get_cd_path(words, global);
-	if (path)
-	{
-		change_directory(path, global);
-		free(path);
-	}
+	change_directory(path, global);
+	if (words[1] && !words[2])
+    	free(path);
 }
 
 /*void	cd(char **words, t_global *global)
@@ -74,7 +68,7 @@ void	cd(char **words, t_global *global)
 	char old_pwd[PATH_MAX];
 
 
-	if (words[2] != NULL)
+	if (words[2] && words[2][0] != '\0')
 	{
 		//printf("here");
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
