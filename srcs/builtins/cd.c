@@ -34,7 +34,7 @@ void	change_directory(char *path, t_global *global)
 			return;
 		}
 		path = ft_strdup(temp_oldpwd);
-		//free(temp_oldpwd);
+		free(temp_oldpwd);
 	}
 	if (!chdir(path))
 	{
@@ -59,6 +59,7 @@ void	cd(char **words, t_global *global)
 		{
 			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
 			global->exit_status = 1;
+			free(path);
 			return;
 		}
 	}
