@@ -43,6 +43,7 @@ t_env	*allocate_env_var(void)
 char	*get_env_value(char *var_name, t_env *env_list)
 {
 	t_env	*current;
+	char	*value;
 	size_t len;
 
 	current = env_list;
@@ -50,7 +51,7 @@ char	*get_env_value(char *var_name, t_env *env_list)
 	while (current)
 	{
 		if (ft_strncmp(var_name, current->key, len) == 0 && current->key[len] == '\0')
-			return (current->value);
+			return (value = ft_strdup(current->value));
 		current = current->next;
 	}
 	return ("");

@@ -33,6 +33,7 @@ size_t	calc_expanded_len(char *str, t_env *env_list, int exit_status)
 				return 0;
 			expanded_len += ft_strlen(value);
 			i += ft_strlen(var_name);
+			free(value); //TODO
 			free(var_name);
 		}
 		else
