@@ -21,16 +21,21 @@ static void	update_pwd_and_env(char *old_pwd, t_env *env_list, char ***env)
 void	change_directory(char *path, t_global *global)
 {
 	char	old_pwd[PATH_MAX];
-	char	old_old_pwd[PATH_MAX];
+	char	*temp_oldpwd;
 
 	getcwd(old_pwd, PATH_MAX);
 	if(ft_strncmp(path, "-", 1) == 0)
 	{
-		old_old_pwd = get_env_value(xx)
-		path = ft_strdup(old_pwd);
-
+		temp_oldpwd = get_env_value("OLDPWD", global->env_list);
+		if(temp_oldpwd[0] == '\0')
+		{
+			ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
+			global->exit_status = 1;
+			return;
+		}
+		path = ft_strdup(temp_oldpwd);
+		//free(temp_oldpwd);
 	}
-		
 	if (!chdir(path))
 	{
 		update_pwd_and_env(old_pwd, global->env_list, &global->env);
@@ -47,7 +52,7 @@ void	cd(char **words, t_global *global)
 {
 	char *path;
 
-	if (!words[1])
+	if (!words[1] || (ft_strncmp(words[1], "˜", 1) == 0))
 	{
 		path = get_env_value("HOME", global->env_list);
 		if (path[0] == '\0')
