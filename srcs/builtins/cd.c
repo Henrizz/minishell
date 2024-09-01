@@ -58,7 +58,7 @@ void	cd(char **words, t_global *global)
 		return;
 	}
 	change_directory(path, global);
-	//if (words[1] && !words[2])
+	if (words[1] && !words[2])
     	free(path);
 }
 

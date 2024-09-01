@@ -40,7 +40,7 @@ char	*expand_str(size_t expanded_len, char *str, t_env *env_list, int exit_statu
 			while (*value)
 				expanded[k++] = *value++;
 			i += ft_strlen(var_name);
-			free(value); //TODO
+			//free(value); //TODO
 			free(var_name);
 		}
 		else

@@ -72,7 +72,7 @@ int	create_prompt(char **prompt, t_global *global)
 	//char *pwd;
 	char *temp;
 	
-	value = get_env_value("USER", global->env_list);
+	value = ft_strdup(get_env_value("USER", global->env_list));
 	//pwd = get_env_value("PWD", global->env_list);
 	
 	temp = ft_strjoin(value, "@");
