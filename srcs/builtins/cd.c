@@ -52,7 +52,7 @@ void	cd(char **words, t_global *global)
 {
 	char *path;
 
-	if (!words[1] || (ft_strncmp(words[1], "˜", 1) == 0))
+	if (!words[1])
 	{
 		path = get_env_value("HOME", global->env_list);
 		if (path[0] == '\0')

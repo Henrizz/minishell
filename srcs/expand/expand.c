@@ -1,6 +1,71 @@
 #include "../../includes/minishell.h"
 
-char	*expand_str(size_t expanded_len, char *str, t_env *env_list, int exit_status)
+char *expand_str(size_t expanded_len, char *str, t_global *global) { //leaks
+    int i = 0;
+    int k = 0;
+    char *var_name = NULL;
+    char *value = NULL;
+    char *expanded = (char *)malloc(expanded_len + 1);
+    char *temp_value;
+
+    if (!expanded)
+        return NULL;
+
+    while (str[i]) {
+        if (str[i] == '~') {
+            // Handle '~' for HOME directory
+            value = get_env_value("HOME", global->env_list);
+            if (!value)
+			{
+                free(expanded);
+                return NULL;
+            }
+            temp_value = value;
+            while (*value)
+                expanded[k++] = *value++;
+            free(temp_value);
+            i++;
+
+        } else if (str[i] == '$' && str[i + 1] == '?') {
+            // Handle '$?'
+            value = ft_itoa(global->exit_status);
+            if (!value) {
+                free(expanded);
+                return NULL;
+            }
+            temp_value = value;
+            while (*value)
+                expanded[k++] = *value++;
+            free(temp_value);
+            i += 2;
+        } else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_')) {
+            // Handle environment variables like $VAR
+            i++;
+            var_name = extract_var_name(str, i);
+            if (!var_name) {
+                free(expanded);
+                return NULL;
+            }
+            value = get_env_value(var_name, global->env_list);
+            if (!value) {
+                free(expanded);
+                free(var_name);
+                return NULL;
+            }
+            while (*value)
+                expanded[k++] = *value++;
+            i += ft_strlen(var_name);
+            free(var_name);
+            //free(value); // Ensure you free value after using it
+        } else {
+            expanded[k++] = str[i++];
+        }
+    }
+    expanded[k] = '\0';
+    return expanded;
+}
+
+/*char	*expand_str(size_t expanded_len, char *str, t_global *global) // no leaks
 {
 	int i;
 	int k;
@@ -18,7 +83,7 @@ char	*expand_str(size_t expanded_len, char *str, t_env *env_list, int exit_statu
 	{
 		if (str[i] == '$' && str[i + 1] == '?')
 		{
-			 value = ft_itoa(exit_status);
+			 value = ft_itoa(global->exit_status);
             if (!value)
                 return (free(expanded), NULL);
             temp_value = value;
@@ -34,13 +99,12 @@ char	*expand_str(size_t expanded_len, char *str, t_env *env_list, int exit_statu
 			var_name = extract_var_name(str, i);
 			if (!var_name)
 				return (free(expanded), NULL);
-			value = get_env_value(var_name, env_list);
+			value = get_env_value(var_name, global->env_list);
 			if (!value)
 				return (free(expanded), NULL);
 			while (*value)
 				expanded[k++] = *value++;
 			i += ft_strlen(var_name);
-			//free(value); //TODO
 			free(var_name);
 		}
 		else
@@ -48,15 +112,146 @@ char	*expand_str(size_t expanded_len, char *str, t_env *env_list, int exit_statu
 	}
 	expanded[k] = '\0';
 	return (expanded);
-}
+}*/
 
-char	*expanding_var(char *str, t_env *env_list, int exit_status)
+// char *expand_str(size_t expanded_len, const char *str, t_global *global) {
+//     size_t i = 0, k = 0;
+//     char *var_name = NULL;
+//     char *value = NULL;
+//     char *expanded = (char *)malloc(expanded_len + 1);
+
+//     if (!expanded) {
+//         return NULL;
+//     }
+
+//     while (str[i]) {
+//         if (str[i] == '~') {
+//             if (str[i + 1] == '\0' || str[i + 1] == '/') {
+//                 value = get_env_value("HOME", global->env_list);
+//                 if (!value) {
+//                     free(expanded);
+//                     return NULL;
+//                 }
+//                 size_t len = ft_strlen(value);
+//                 memcpy(expanded + k, value, len);
+//                 k += len;
+//                 free(value);  // Free the value after copying
+//                 i++;
+//             } else {
+//                 expanded[k++] = str[i++];
+//             }
+//         } else if (str[i] == '$' && str[i + 1] == '?') {
+//             value = ft_itoa(global->exit_status);
+//             if (!value) {
+//                 free(expanded);
+//                 return NULL;
+//             }
+//             size_t len = ft_strlen(value);
+//             memcpy(expanded + k, value, len);
+//             k += len;
+//             free(value);  // Free the value after copying
+//             i += 2;
+//         } else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_')) {
+//             i++;
+//             var_name = extract_var_name(str, i);
+//             if (!var_name) {
+//                 free(expanded);
+//                 return NULL;
+//             }
+//             value = get_env_value(var_name, global->env_list);
+//             free(var_name);  // Free the var_name after use
+//             if (!value) {
+//                 free(expanded);
+//                 return NULL;
+//             }
+//             size_t len = ft_strlen(value);
+//             memcpy(expanded + k, value, len);
+//             k += len;
+//             free(value);  // Free the value after copying
+//             i += ft_strlen(var_name);
+//         } else {
+//             expanded[k++] = str[i++];
+//         }
+//     }
+//     expanded[k] = '\0'; // Null-terminate the result
+//     return expanded;
+// }
+
+// char	*expand_str(size_t expanded_len, char *str, t_global *global)
+// {
+// 	int i;
+// 	int k;
+// 	char *var_name;
+// 	char *value;
+// 	char *expanded;
+// 	char *temp_value;
+
+// 	i = 0;
+// 	k = 0;
+// 	expanded = (char *)malloc(expanded_len + 1);
+// 	if (!expanded)
+// 		return NULL;
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '~')
+// 		{
+// 			if (str[i + 1] == '\0' || str[i + 1] == '/')
+// 			{
+// 				value = get_env_value("HOME", global->env_list);
+// 				if (!value)
+// 					return (free(expanded), NULL);
+// 				temp_value = value;
+// 				while (*value)
+// 					expanded[k++] = *value++;
+// 				free(temp_value);
+// 				i++;
+// 			}
+// 			//else
+// 			// {
+// 			// 	expanded[k++] = str[i++];
+// 			// }
+// 		}
+// 		if (str[i] == '$' && str[i + 1] == '?')
+// 		{
+// 			 value = ft_itoa(global->exit_status);
+//             if (!value)
+//                 return (free(expanded), NULL);
+//             temp_value = value;
+//             while (*value)
+//                 expanded[k++] = *value++;
+//             free(temp_value);
+//             i += 2;
+// 		}
+// 		else
+// 		if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
+// 		{
+// 			i++;
+// 			var_name = extract_var_name(str, i);
+// 			if (!var_name)
+// 				return (free(expanded), NULL);
+// 			value = get_env_value(var_name, global->env_list);
+// 			if (!value)
+// 				return (free(expanded), NULL);
+// 			while (*value)
+// 				expanded[k++] = *value++;
+// 			i += ft_strlen(var_name);
+// 			//free(value); //TODO
+// 			free(var_name);
+// 		}
+// 		else
+// 			expanded[k++] = str[i++];
+// 	}
+// 	expanded[k] = '\0';
+// 	return (expanded);
+// }
+
+char	*expanding_var(char *str, t_global *global)
 {
 	size_t	expanded_len;
 	char	*expanded;
 
-	expanded_len = calc_expanded_len(str, env_list, exit_status);
-	expanded = expand_str(expanded_len, str, env_list, exit_status);
+	expanded_len = calc_expanded_len(str, global);
+	expanded = expand_str(expanded_len, str, global);
 	if (!expanded)
 		return (NULL);
 	return (expanded);
@@ -80,7 +275,7 @@ char	*concat_and_free(char *s1, char *s2)
     return (new_str);
 }
 
-char	*process_quoted_segment(char **current, char quote, t_env *env_list, int exit_status)
+char	*process_quoted_segment(char **current, char quote, t_global *global)
 {
 	char *start;
 	char *segment;
@@ -92,7 +287,7 @@ char	*process_quoted_segment(char **current, char quote, t_env *env_list, int ex
     segment = ft_substr(start, 0, *current - start);
     if (quote == '"')
 	{
-        expanded = expanding_var(segment, env_list, exit_status);
+        expanded = expanding_var(segment, global);
         free(segment);
         segment = expanded;
     }
@@ -101,7 +296,7 @@ char	*process_quoted_segment(char **current, char quote, t_env *env_list, int ex
     return (segment);
 }
 
-char	*process_non_quoted_segment(char **current, t_env *env_list, int exit_status)
+char	*process_non_quoted_segment(char **current, t_global *global)
 {
     char *start;
 	char *segment;
@@ -111,12 +306,12 @@ char	*process_non_quoted_segment(char **current, t_env *env_list, int exit_statu
     while (**current != '\'' && **current != '"' && **current != '\0')
         (*current)++;
     segment = ft_substr(start, 0, *current - start);
-    expanded = expanding_var(segment, env_list, exit_status);
+    expanded = expanding_var(segment, global);
     free(segment);
     return (expanded);
 }
 
-char	*handle_quoting(char *str, t_env *env_list, int exit_status)
+char	*handle_quoting(char *str, t_global *global)
 {
     char	*result;
 	char	*current;
@@ -130,9 +325,9 @@ char	*handle_quoting(char *str, t_env *env_list, int exit_status)
 	{
         segment = NULL;
         if (*current == '\'' || *current == '"')
-            segment = process_quoted_segment(&current, *current, env_list, exit_status);
+            segment = process_quoted_segment(&current, *current, global);
 		else
-            segment = process_non_quoted_segment(&current, env_list, exit_status);
+            segment = process_non_quoted_segment(&current, global);
         if (!segment)
             return (free(result), NULL);
         result = concat_and_free(result, segment);
@@ -174,7 +369,7 @@ char	*handle_quoting(char *str, t_env *env_list, int exit_status)
 // }
 
 
-void	expand_var_words(t_input *input, t_env *env_list, int exit_status)
+void	expand_var_words(t_input *input, t_global *global)
 {
 	int	i;
 	t_input *temp;
@@ -185,14 +380,14 @@ void	expand_var_words(t_input *input, t_env *env_list, int exit_status)
 		i = 0;
 		while (temp->words[i])
 		{
-			temp->words[i] = handle_quoting(temp->words[i], env_list, exit_status);
+			temp->words[i] = handle_quoting(temp->words[i], global);
 			//printf("words[%d]: %s\n", i, input->words[i]);
 			i++;
 		}
 		i = 0;
 		while(temp->redirections[i])
 		{
-			temp->redirections[i] = handle_quoting(temp->redirections[i], env_list, exit_status);
+			temp->redirections[i] = handle_quoting(temp->redirections[i], global);
 			i++;
 		}
 	/*while(input->red_in[i])
