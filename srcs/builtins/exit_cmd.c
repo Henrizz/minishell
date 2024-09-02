@@ -36,7 +36,7 @@ void	handle_exit_status(char **command_words, t_global *global)
 
 
 
-void	exit_cmd(char **command_words, t_global *global)
+void	exit_cmd(char **command_words, t_global *global, t_input **command)
 {
 	if (command_words[1])
 	{
@@ -46,6 +46,8 @@ void	exit_cmd(char **command_words, t_global *global)
 	}
 	else
 		global->exit_status = 0;
-	ft_putstr_fd("exit\n", 1);
+	if ((*command)->cmd_ind == 0)
+		ft_putstr_fd("exit\n", 2);
+	free_command(command);
 	cleanup_and_exit(global);
 }

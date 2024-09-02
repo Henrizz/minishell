@@ -52,11 +52,12 @@ char *expand_str(size_t expanded_len, char *str, t_global *global) { //leaks
                 free(var_name);
                 return NULL;
             }
+            temp_value = value;
             while (*value)
                 expanded[k++] = *value++;
             i += ft_strlen(var_name);
             free(var_name);
-            //free(value); // Ensure you free value after using it
+            free(temp_value); // Ensure you free value after using it
         } else {
             expanded[k++] = str[i++];
         }

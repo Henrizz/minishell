@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/28 18:45:24 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 18:44:31 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,119 +14,110 @@
 
 void	execute(t_input **command, t_global *global)
 {
-	t_pipe	*exec;
 	int		stdin_copy;
 	int		stdout_copy;
+	t_input	*temp;
 
-	exec = malloc(sizeof(t_pipe));
-	if (!exec)
-		return ;
 	if (save_in_out(&stdin_copy, &stdout_copy) == -1 
 		|| get_input_heredoc(command, global) == 1)
-		return (free(exec));
+		return ;
 	sig_execution();
+	temp = *command;
 	if (!(*command)->next && is_builtin(command))
 	{
-		if (make_redirections(command, global) == 1)
+		if (make_redirection(command, global, &temp) == 1)
 		{
 			restore_in_out(&stdin_copy, &stdout_copy);
-			free(exec);
 			return ;
 		}
 		else 
-			what_builtin((*command)->words, global);
+			what_builtin((*command)->words, global, command);
 	}
 	else
-		setup_and_run(command, exec, global);
-	free(exec);
+		setup_and_run(command, global->exec, global);
 	restore_in_out(&stdin_copy, &stdout_copy);
 }
 
 int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 {
-	t_input	*current;
+	t_input	*curr;
 
-	current = *command;
+	curr = *command;
 	get_cmd_index(command, exec);
 	create_pipes(exec);
-	while (current)
+	while (curr)
 	{
-		current->pid = fork();
-		if (current->pid == -1)
+		curr->pid = fork();
+		if (curr->pid == -1)
 			return (error_return("fork error"));
-		if (current->pid == 0)
+		if (curr->pid == 0)
 		{
-			if (make_redirections(&current, global) != 1 && current->words[0])
-				child_process_exec(current, exec, global);
+			if (make_redirection(&curr, global, command) != 1 && curr->words[0])
+				child_exec(curr, exec, global, command);
 			else
-				exit(global->exit_status);
+			{
+				close_all_pipes(exec);
+				cleanup_and_exit(global);
+			}
 		}
-		current = current->next;
+		curr = curr->next;
 	}
 	close_all_pipes(exec);
 	wait_loop(command, global);
 	return (0);
 }
 
-int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
+int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 {
 	char	*cmd_file;
-	int	i;
+	int		i;
 
 	i = 0;
-	replace_pipes(command, exec);
+	replace_pipes(curr, exec);
 	close_all_pipes(exec);
-	if (is_builtin(&command))
-		exit(what_builtin(command->words, global));
-	while (command->words[i][0] == '\0')
+	if (is_builtin(&curr))
+	{
+		what_builtin(curr->words, glob, &curr);
+		free_command(inpt);
+		cleanup_and_exit(glob);
+	}
+	while (curr->words[i][0] == '\0')
 		i++;
-	if (ft_strrchr(command->words[i], '/'))
-	{
-		cmd_file = ft_strdup(command->words[i]);
-		if (!cmd_file || access(cmd_file, F_OK) != 0)
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(cmd_file, 2);
-			ft_putstr_fd(": No such file or directory\n", 2);
-			free(cmd_file);
-			exit(127);
-		}
-		if (is_directory(cmd_file))
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(cmd_file, 2);
-			ft_putstr_fd(": Is a directory\n", 2);
-			free(cmd_file);
-			exit(126);
-		}
-		if (access(cmd_file, X_OK) != 0)
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(cmd_file, 2);
-			ft_putstr_fd(": Permission denied\n", 2);
-			free(cmd_file);
-			exit(126);
-		}
-	}
+	if (ft_strrchr(curr->words[i], '/'))
+		cmd_file = prepare_path_command(curr->words[i], glob, inpt);
 	else
-	{
-		cmd_file = find_cmd_file(command->words + i, global->env);
-		if (cmd_file == NULL)
-			exit(127);
-	}
-	execve(cmd_file, command->words + i, global->env);
-	exit(error_return("execve fail\n"));
+		cmd_file = prepare_bare_cmd(curr->words, i, glob, inpt);
+	execve(cmd_file, curr->words + i, glob->env);
+	glob->exit_status = error_return("execve fail\n");
+	free_command(inpt);
+	cleanup_and_exit(glob);
+	return (0);
 }
 
-int	is_directory(char *name)
+char	*prepare_bare_cmd(char **cmd, int i, t_global *glob, t_input **inpt)
 {
-	DIR 	*dir;
-	
-	dir = opendir(name);
-	if (dir)
+	char	*cmd_file;
+
+	cmd_file = find_cmd_file(cmd + i, glob->env);
+	if (cmd_file == NULL)
 	{
-		closedir(dir);
-		return (1);
+		free_command(inpt);
+		glob->exit_status = 127;
+		cleanup_and_exit(glob);
 	}
-	return (0);
+	return (cmd_file);
+}
+
+char	*prepare_path_command(char *word, t_global *global, t_input **input)
+{
+	char	*file;
+
+	file = ft_strdup(word);
+	if (!file || access(file, F_OK) != 0)
+		file_error(file, ": No such file or directory\n", global, input);
+	if (is_directory(file))
+		file_error(file, ": Is a directory\n", global, input);
+	if (access(file, X_OK) != 0)
+		file_error(file, ": Permission denied\n", global, input);
+	return (file);
 }

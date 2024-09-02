@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/28 19:53:22 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/02 17:41:02 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int	exit_shell(int exit_status)
 
 void	cleanup_and_exit(t_global *global)
 {
-	int exit_status = global->exit_status;
+	int exit_status;
+	exit_status = global->exit_status;
 	
 	close(global->history_fd);
 	remove_heredoc(global->env, global->pwd, global->exit_status);
@@ -32,6 +33,7 @@ void	cleanup_and_exit(t_global *global)
 	free_env_list(&global->env_list);
 	free_array(global->env);
 	free(global->prompt);
+	free(global->exec);
 	free(global);
 	exit(exit_status);
 }
@@ -54,6 +56,7 @@ void	free_command(t_input **command)
 		free_array(temp->words);
 		free_array(temp->redirections);
 		free_array(temp->heredoc);
+		//free_array(temp->cmd_file);
 		free(temp->types);
 		free(temp);
 	}
@@ -78,7 +81,17 @@ void	free_array(char **str)
 
 int	error_return(char *message)
 {
-	ft_putstr_fd("minishell: ", 2);
-	perror(message);
+	char	*line;
+
+	line = ft_strjoin("minishell: ", message);
+	if (!line)
+	{
+		ft_putstr_fd("error allocating perror line", 2);
+		return (1);
+	}
+	perror(line);
+	//ft_putstr_fd("minishell: ", 2);
+	//perror(message);
+	free(line);
 	return (1);
 }

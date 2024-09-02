@@ -105,7 +105,8 @@ void	global_init(t_global **global, char **env)
 	env_array = NULL;
 
 	*global = malloc(sizeof(t_global));
-	if (!*global)
+	(*global)->exec = malloc(sizeof(t_pipe));
+	if (!*global || !(*global)->exec)
 	{
 		perror("minishell: malloc");
 		exit(EXIT_FAILURE);
