@@ -2,7 +2,7 @@
 
 void	reset_line(int signum)
 {
-	global_signum = signum;
+	g_global_signum = signum;
 	(void)signum;
 	write(1, "\n", STDERR_FILENO);
 	rl_replace_line("", 0);
@@ -10,26 +10,22 @@ void	reset_line(int signum)
 	rl_redisplay();
 }
 
-void signal_handler_heredoc(int signal)
+void	signal_handler_heredoc(int signal)
 {
-    if (signal == SIGINT)
-    {
-        global_signum = SIGINT;
-	//rl_replace_line("", 0);
-	//rl_on_new_line();
-	//rl_redisplay();
-	write(1, "\n", 1);
-	rl_done = 1;
-	ioctl(1, TIOCSTI, "");
-        //write(1, "\n", 1);  // Print a newline to ensure clean output after interrupt
-    }
+	if (signal == SIGINT)
+	{
+		g_global_signum = SIGINT;
+		write(1, "\n", 1);
+		rl_done = 1;
+		ioctl(1, TIOCSTI, "");
+	}
 }
 
 void	display_new_line_sigquit(int signum)
 {
 	if (signum == SIGQUIT)
 	{
-		global_signum = SIGQUIT;
+		g_global_signum = SIGQUIT;
 		printf("Quit (core dumped)\n");
 		//write(1, "\n", STDERR_FILENO);
 		//rl_on_new_line();
@@ -40,7 +36,7 @@ void	display_new_line_sigint(int signum)
 {
 	if (signum == SIGINT)
 	{
-		global_signum = SIGINT;
+		g_global_signum = SIGINT;
 		//printf("\n");
 		write(1, "\n", STDERR_FILENO);
 		rl_on_new_line();
@@ -92,11 +88,11 @@ void	sig_execution(void)
 
 void	set_signum_and_exit_status(t_global *global)
 {
-	if (global_signum == SIGINT)
+	if (g_global_signum == SIGINT)
 		global->exit_status = (EKEYREVOKED + SIGINT);
-	else if (global_signum == SIGQUIT)
+	else if (g_global_signum == SIGQUIT)
 		global->exit_status = (EKEYREVOKED + SIGQUIT);
-	global_signum = 0;
+	g_global_signum = 0;
 }
 
 // void	signal_handler(int signum)

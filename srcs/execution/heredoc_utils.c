@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 18:46:14 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/24 14:25:40 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 15:55:51 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ int	here_expand(t_heredoc *here, char *name)
 	here->count = 1;
 	here->quote_type = '\0';
 	here->flag = 0;
-	here->expand = malloc((ft_strlen(name) + 1) * sizeof(char));
-	if (!here->expand)
+	here->exp = malloc((ft_strlen(name) + 1) * sizeof(char));
+	if (!here->exp)
 		return (1);
 	if (name[0] == '"' || name[0] == '\'')
 		here->flag = 1;
@@ -82,7 +82,7 @@ int	here_expand(t_heredoc *here, char *name)
 		transfer_char(name, here, &j, &i);
 		i++;
 	}
-	here->expand[j] = '\0';
+	here->exp[j] = '\0';
 	return (0);
 }
 
@@ -93,14 +93,16 @@ void	transfer_char(char *name, t_heredoc *here, int *j, int *i)
 		here->quoted = 1;
 		here->quote_type = name[(*i)++];
 	}
-	if (here->quoted == 1 || (here->quoted == 0 && (name[*i] != '"' || name[*i] != '\'')))
+	if (here->quoted == 1 || (here->quoted == 0 
+			&& (name[*i] != '"' || name[*i] != '\'')))
 	{
-		if ((name[*i] == '"' || name[*i] == '\'') && here->quote_type == name[*i])
+		if ((name[*i] == '"' || name[*i] == '\'') 
+			&& here->quote_type == name[*i])
 		{
 			here->quoted = 0;
 			here->quote_type = '\0';
 		}
 		else
-			here->expand[(*j)++] = name[*i];
+			here->exp[(*j)++] = name[*i];
 	}
 }

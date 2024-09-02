@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/02 15:05:00 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 17:41:02 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	free_command(t_input **command)
 		free_array(temp->words);
 		free_array(temp->redirections);
 		free_array(temp->heredoc);
+		//free_array(temp->cmd_file);
 		free(temp->types);
 		free(temp);
 	}
@@ -80,7 +81,17 @@ void	free_array(char **str)
 
 int	error_return(char *message)
 {
-	ft_putstr_fd("minishell: ", 2);
-	perror(message);
+	char	*line;
+
+	line = ft_strjoin("minishell: ", message);
+	if (!line)
+	{
+		ft_putstr_fd("error allocating perror line", 2);
+		return (1);
+	}
+	perror(line);
+	//ft_putstr_fd("minishell: ", 2);
+	//perror(message);
+	free(line);
 	return (1);
 }

@@ -14,13 +14,16 @@ void	echo(char **str, t_global *global)
 			i++;
 		while(str[i])
 		{
-			ft_putstr_fd(str[i], 1);
+			printf("%s", str[i]);
+			//ft_putstr_fd(str[i], 1);
 			if(str[i + 1] != NULL)
-				ft_putstr_fd(" ", 1);
+				printf(" ");
+				//ft_putstr_fd(" ", 1);
 			i++;
 		}
 		if(ft_strncmp(str[1], "-n", len) != 0)
-			ft_putstr_fd("\n", 1);
+			printf("\n");
+			//ft_putstr_fd("\n", 1);
 	}
 	global->exit_status = 0;
 }

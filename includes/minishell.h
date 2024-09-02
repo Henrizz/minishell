@@ -5,11 +5,10 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/09/02 15:07:36 by hzimmerm         ###   ########.fr       */
+/*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
+/*   Updated: 2024/09/02 18:40:54 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
@@ -45,39 +44,33 @@
 # define RED_OUT 12
 # define APP_OUT 13
 
-#ifndef EKEYREVOKED
-# define EKEYREVOKED 128
-#endif
+# ifndef EKEYREVOKED
+#  define EKEYREVOKED 128
+# endif
 // to compile in my personal laptop EKEYREVOKEDˆˆ
-extern volatile sig_atomic_t global_signum;
-
-/* proposal for structure to hold the different variables of each command (every command node separated by pipe from the next one)
-potentially will be adjusted or expanded according to our needs
---> words stores all commands and command arguments / red_in and red_out store the input (<) and
-output (>) redirections, heredoc stores heredoc (<<), app_out stores append output redirection (>>) */
+extern volatile sig_atomic_t	g_global_signum;
 
 typedef struct s_input
 {
-	char **words;
-	char **heredoc;
-	char **redirections;
-	int	*types;
-	int cmd_ind;
-	int	j;
-	//int	o;
-	int	h;
-	//int	p;
-	struct s_input *next;
-	int	pid;
-} t_input;
+	char			**words;
+	char			**heredoc;
+	char			**redirections;
+	int				*types;
+	int				cmd_ind;
+	int				j;
+	int				h;
+	int				pid;
+	//char			**cmd_file;
+	struct s_input	*next;
+}	t_input;
 
 typedef struct s_env
 {
-	char *key;
-	char *value;
-	int	export;
-	struct s_env *next;
-} t_env;
+	char			*key;
+	char			*value;
+	int				export;
+	struct s_env	*next;
+}	t_env;
 
 typedef struct s_pipe
 {
@@ -87,74 +80,74 @@ typedef struct s_pipe
 
 typedef struct s_global
 {
+	char	**env;
+	char	*pwd;
+	int		exit_status;
+	int		history_fd;
+	char	*prompt;
 	t_env	*env_list;
-	char **env;
-	char *pwd;
-	int exit_status;
-	int	history_fd;
-	char *prompt;
 	t_pipe	*exec;
-} t_global;
+}	t_global;
+
 typedef struct s_elements
 {
-	char **array;
-	int	elmt_count;
-	int	char_count;
-	int	is_word;
-	char quote_type;
-} t_elements;
-
+	char		**array;
+	int			elmt_count;
+	int			char_count;
+	int			is_word;
+	char		quote_type;
+}	t_elements;
 
 typedef struct s_heredoc
 {
-	int	fd;
-	char	*filepath;
-	char *line;
-	char *temp;
-	int	count;
-	char *expand;
-	int	quoted;
-	char quote_type;
-	int	flag;
+	int			fd;
+	char		*filepath;
+	char		*line;
+	char		*temp;
+	int			count;
+	char		*exp;
+	int			quoted;
+	char		quote_type;
+	int			flag;
 }	t_heredoc;
 
 /* parsing struct */
-int parse_line(char *cmd_line, t_input **command, t_global *global);
-char **split_for_parsing(char *cmd_line, t_elements *elmts);
+int		parse_line(char *cmd_line, t_input **command, t_global *global);
+char	**split_for_parsing(char *cmd_line, t_elements *elmts);
 void	count_elements(char *str, t_elements *elmts);
-int	count_characters(char *str, int *inside_quote);
-char *ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts);
-int	is_whitespace(char c);
+int		count_characters(char *str, int *inside_quote);
+char	*ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts);
+int		is_whitespace(char c);
 void	set_elements(t_elements *elmts);
-int	distribute_elements(t_input **command, t_elements *elmts, int *i);
-int	make_history_file(t_global **global);
-int	was_before(char *str, int i, char c);
-void set_quotes(char **str, int *inside_quote, t_elements *elmts);
+int		distribute_elements(t_input **command, t_elements *elmts, int *i);
+int		make_history_file(t_global **global);
+int		was_before(char *str, int i, char c);
+void	set_quotes(char **str, int *inside_quote, t_elements *elmts);
 void	advance_line(char **cmd_line, int *inside_quote, t_elements *elmts);
 
 /* syntax */
-int	syntax_check(t_elements *elmts);
-int	check_symbols(char *array, int inside_quote, int quote_type);
-int	check_doubles(char **array, int i);
-int	was_before_array(char **array, int i, int symbol);
+int		syntax_check(t_elements *elmts);
+int		check_symbols(char *array, int inside_quote, int quote_type);
+int		check_doubles(char **array, int i);
+int		was_before_array(char **array, int i, int symbol);
 
 /* populating struct */
-int	init_struct(t_input **command, t_elements *elmts);
-int divi_up_command(t_input **command, t_elements *elmts);
-int	is_redirection(char *str);
-int	divi_redirect(t_input **command, t_elements *elmts, int *i, int r_type);
+int		init_struct(t_input **command, t_elements *elmts);
+int		divi_up_command(t_input **command, t_elements *elmts);
+int		is_redirection(char *str);
+int		divi_redirect(t_input **command, t_elements *elmts, int *i, int r_type);
 void	transfer_string(t_input **command, char *elmt, int offset, int type);
 
 /* free and exit functions */
-int	exit_shell(int exit_status);
+int		exit_shell(int exit_status);
 void	shell_exit(t_global *global);
 void	free_array(char **str);
 void	free_command(t_input **command);
-int	error_return(char *message);
+int		error_return(char *message);
 void	cleanup_and_exit(t_global *global);
 
 /*Builtin commands*/
-int	what_builtin(char **command_words, t_global *global, t_input **command);
+int		what_builtin(char **command_words, t_global *global, t_input **command);
 void	echo(char **str, t_global *global);
 void	pwd(t_global *global);
 void	cd(char **command_words, t_global *global);
@@ -179,10 +172,10 @@ void	display_new_line_sigquit(int signum);
 void	set_signum_and_exit_status(t_global *global);
 
 /* env */
-int	env_init(char **env, t_env **env_list);
+int		env_init(char **env, t_env **env_list);
 void	set_env(char *key, char *value, t_env *env_list, int export_flag);
 t_env	*new_env_var(char *str, int export);
-void append_new_var(t_env **env_list, t_env *new_var);
+void	append_new_var(t_env **env_list, t_env *new_var);
 
 /* env and global utils */
 t_env	*allocate_env_var(void);
@@ -204,45 +197,49 @@ char	*extract_var_name(const char *str, int i);
 
 /* execution */
 //void execute(t_input **command, t_env *env_list, char **env, char *pwd);
-void execute(t_input **command, t_global *global);
-int set_up_pipes_redirections(t_input **command, t_pipe *exec);
-int set_up_and_run_processes(t_input **command, t_global *global);
-int	is_directory(char *name);
+void	execute(t_input **command, t_global *global);
+int		set_up_pipes_redirections(t_input **command, t_pipe *exec);
+int		set_up_and_run_processes(t_input **command, t_global *global);
+int		is_directory(char *name);
 
 /* execution utils */
-int	get_cmd_index(t_input **command, t_pipe *exec);
-int	is_builtin(t_input **command);
+int		get_cmd_index(t_input **command, t_pipe *exec);
+int		is_builtin(t_input **command);
 char	*find_cmd_file(char **cmd, char **env);
 char	*get_paths(char **env, char *name);
+void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt);
+char	*prepare_path_command(char *word, t_global *global, t_input **input);
+char	*prepare_bare_command(char **cmd, int i, t_global *glob, t_input **inpt);
 
 /* redirections */
-int	save_in_out(int	*stdin_copy, int *stdout_copy);
-int	restore_in_out(int	*stdin_copy, int *stdout_copy);
-int	make_redirections(t_input **command, t_global *global);
-int	redirection_in(char *filename, t_global *global);
-int	redirection_out(char *filename, t_global *global);
-int	redirect_heredoc(t_input **command, t_global *global);
-int	redirect_append(char *filename, t_global *global);
-int	no_redirection(t_input *command, int flag);
+int		save_in_out(int	*stdin_copy, int *stdout_copy);
+int		restore_in_out(int	*stdin_copy, int *stdout_copy);
+int		make_redirection(t_input **command, t_global *global, t_input **input);
+int		redirection_in(char *filename, t_global *global);
+int		redirection_out(char *filename, t_global *global);
+int		redirect_heredoc(t_input **command, t_global *global);
+int		redirect_append(char *filename, t_global *global);
+int		no_redirection(t_input *command, int flag);
 
 /* heredocs */
-int	get_input_heredoc(t_input **command, t_global *global);
-int	make_heredoc_directory(t_global *global);
-char *make_heredoc_filename(t_input **command, int i, t_global *global);
-int remove_heredoc(char **env, char *pwd, int exit_status);
-int here_expand(t_heredoc *here, char *name);
-int	terminal_loop(t_heredoc *here, char *filename, t_global *global);
+int		get_input_heredoc(t_input **command, t_global *global);
+int		make_heredoc_directory(t_global *global);
+char	*make_heredoc_filename(t_input **command, int i, t_global *global);
+int		remove_heredoc(char **env, char *pwd, int exit_status);
+int		here_expand(t_heredoc *here, char *name);
+int		terminal_loop(t_heredoc *here, char *filename, t_global *global);
 void	transfer_char(char *name, t_heredoc *here, int *j, int *i);
 
 /* pipes + processes */
-int	create_pipes(t_pipe *exec);
-int	replace_pipes(t_input *command, t_pipe *exec);
+int		create_pipes(t_pipe *exec);
+int		replace_pipes(t_input *command, t_pipe *exec);
 void	close_all_pipes(t_pipe *exec);
 void	wait_loop(t_input **command, t_global *global);
+int		child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt);
 int	child_process_exec(t_input *command, t_pipe *exec, t_global *global, t_input **input);
-int setup_and_run(t_input **command, t_pipe *exec, t_global *global);
+int		setup_and_run(t_input **command, t_pipe *exec, t_global *global);
 
 /* utils - to be deleted later */
-void print_arrays_testing(t_input **command);
+void	print_arrays_testing(t_input **command);
 
 #endif
