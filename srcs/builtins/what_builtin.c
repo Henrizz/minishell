@@ -7,7 +7,7 @@ int	what_builtin(char **command_words, t_global *global)
 	if(!ft_strncmp(command_words[0], "echo", 4))
 	 	echo(command_words, global);
 	if(!ft_strncmp(command_words[0], "cd", 2))
-	 	cd(command_words, global);
+		cd(command_words, global);
 	if(!ft_strncmp(command_words[0], "pwd", 3))
 		pwd(global);
 	if(!ft_strncmp(command_words[0], "export", 6))

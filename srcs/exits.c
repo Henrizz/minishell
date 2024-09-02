@@ -24,6 +24,8 @@ int	exit_shell(int exit_status)
 
 void	cleanup_and_exit(t_global *global)
 {
+	int exit_status = global->exit_status;
+	
 	close(global->history_fd);
 	remove_heredoc(global->env, global->pwd, global->exit_status);
 	rl_clear_history();
@@ -31,7 +33,7 @@ void	cleanup_and_exit(t_global *global)
 	free_array(global->env);
 	free(global->prompt);
 	free(global);
-	exit(global->exit_status);
+	exit(exit_status);
 }
 
 void	shell_exit(t_global *global)
