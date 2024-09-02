@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/28 18:45:24 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 12:43:49 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 			if (make_redirections(&current, global) != 1 && current->words[0])
 				child_process_exec(current, exec, global);
 			else
-				exit(global->exit_status);
+				cleanup_and_exit(global);
+				//exit(global->exit_status);
 		}
 		current = current->next;
 	}
@@ -77,7 +78,10 @@ int	child_process_exec(t_input *command, t_pipe *exec, t_global *global)
 	replace_pipes(command, exec);
 	close_all_pipes(exec);
 	if (is_builtin(&command))
-		exit(what_builtin(command->words, global));
+	{
+		what_builtin(command->words, global);
+		cleanup_and_exit(global);
+	}
 	while (command->words[i][0] == '\0')
 		i++;
 	if (ft_strrchr(command->words[i], '/'))

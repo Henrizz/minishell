@@ -90,7 +90,7 @@ int	create_prompt(char **prompt, t_global *global)
 		free(temp);
 		return (1);
 	}
-	free(value);
+	//free(value);
 	//free(pwd);
 	free(temp);
 	return (0);

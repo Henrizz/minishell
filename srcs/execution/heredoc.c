@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/28 16:37:25 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 12:09:50 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 			//ft_printf("inside second if\n");
 			free(here->line);
 			//global_signum = 0;
+			free(here->expand);
 			return (1);
 		}
 		if (here->flag == 0)
