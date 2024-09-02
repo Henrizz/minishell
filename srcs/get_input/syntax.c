@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 13:12:16 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/02 12:16:36 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 12:51:41 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,7 @@ int	check_symbols(char *array, int inside_quote, int quote_type)
 			quote_type = '\0';
 		}
 		if (inside_quote == 0 && (array[j] == ';' || array[j] == '\\' 
-			|| array[j] == '&' || array[j] == '(' || array[j] == ')' || array[j] == '#'
-			|| array[j] == '~'))
+			|| array[j] == '&' || array[j] == '(' || array[j] == ')' || array[j] == '#'))
 		{
 			printf("minishell: error: shell does not handle '%c'\n", array[j]);
 			return (1);

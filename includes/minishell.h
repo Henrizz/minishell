@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/08/28 19:48:31 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/01 20:56:45 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,11 @@
 # define RED_OUT 12
 # define APP_OUT 13
 
-extern volatile __sig_atomic_t global_signum;
+#ifndef EKEYREVOKED
+# define EKEYREVOKED 128
+#endif
+// to compile in my personal laptop EKEYREVOKEDˆˆ
+extern volatile sig_atomic_t global_signum;
 
 /* proposal for structure to hold the different variables of each command (every command node separated by pipe from the next one)
 potentially will be adjusted or expanded according to our needs
@@ -188,11 +192,11 @@ t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
 /*expand*/
 
-void	expand_var_words(t_input *input, t_env *env_list, int exit_status);
-char	*expanding_var(char *str, t_env *env_list, int exit_status);
+void	expand_var_words(t_input *input, t_global *global);
+char	*expanding_var(char *str, t_global *global);
 
 /*expand utils*/
-size_t	calc_expanded_len(char *str, t_env *env_list, int exit_status);
+size_t	calc_expanded_len(char *str, t_global *global);
 char	*extract_var_name(const char *str, int i);
 
 /* execution */
