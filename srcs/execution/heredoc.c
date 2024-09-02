@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/28 16:37:25 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 16:39:17 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 			return (1);
 		}
 		if (here->flag == 0)
-			here->temp = expanding_var(here->line, global->env_list, global->exit_status);
+			here->temp = expanding_var(here->line, global);
 		else
 			here->temp = ft_strdup(here->line);
 		if (!here->temp)
