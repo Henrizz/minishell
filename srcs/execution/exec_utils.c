@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/02 16:01:31 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 18:44:13 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,17 @@ char	*get_paths(char **env, char *name)
 		i++;
 	}
 	return (NULL);
+}
+
+int	is_directory(char *name)
+{
+	DIR	*dir;
+
+	dir = opendir(name);
+	if (dir)
+	{
+		closedir(dir);
+		return (1);
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:13:42 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/22 19:56:27 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 18:44:39 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,4 +80,19 @@ int	is_redirection(char *str)
 		return (APP_ATTACHED);
 	else
 		return (0);
+}
+
+void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt)
+{
+	ft_putstr_fd("minishell: ", 2);
+	ft_putstr_fd(file, 2);
+	ft_putstr_fd(mssg, 2);
+	free(file);
+	free_command(inpt);
+	if (!ft_strncmp(mssg, ": Permission denied\n", 21) 
+		|| !ft_strncmp(mssg, ": Is a directory\n", 18))
+		glob->exit_status = 126;
+	else if (!ft_strncmp(mssg, ": No such file or directory\n", 29))
+		glob->exit_status = 127;
+	cleanup_and_exit(glob);
 }

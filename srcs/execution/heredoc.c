@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/02 15:54:52 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 19:03:07 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,15 @@ int	get_input_heredoc(t_input **command, t_global *global)
 
 int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 {
-	char	*m1;
-	char	*m2;
-
-	m1 = "minishell: warning: here-document delimited at line ";
-	m2 = " by end-of-file (wanted `";
 	while (1)
 	{
 		here->line = readline("> ");
 		if (here->line == NULL)
-			return (printf("%s%d%s%s')\n", m1, here->count, m2, here->exp), 0);
+			return (print_eof_warning(here->count, here->exp), 0);
 		else if (!ft_strncmp(here->line, here->exp, ft_strlen(filename)))
 			return (free(here->line), 0);
 		if (g_global_signum == SIGINT)
-		{
-			free(here->line);
-			free(here->exp);
-			return (1);
-		}
+			return (free(here->line), free(here->exp), 1);
 		if (here->flag == 0)
 			here->temp = expanding_var(here->line, global);
 		else
@@ -74,6 +65,16 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 	}
 	signal(SIGINT, reset_line);
 	return (0);
+}
+
+void	print_eof_warning(int count, char *here_exp)
+{
+	char	*mssg1;
+	char	*mssg2;
+
+	mssg1 = "minishell: warning: here-document delimited at line ";
+	mssg2 = " by end-of-file (wanted `";
+	printf("%s%d%s%s')\n", mssg1, count, mssg2, here_exp);
 }
 
 int	remove_heredoc(char **env, char *pwd, int exit_status)

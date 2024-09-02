@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/02 18:41:09 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 18:44:31 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	if (ft_strrchr(curr->words[i], '/'))
 		cmd_file = prepare_path_command(curr->words[i], glob, inpt);
 	else
-		cmd_file = prepare_bare_command(curr->words, i, glob, inpt);
+		cmd_file = prepare_bare_cmd(curr->words, i, glob, inpt);
 	execve(cmd_file, curr->words + i, glob->env);
 	glob->exit_status = error_return("execve fail\n");
 	free_command(inpt);
@@ -94,7 +94,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	return (0);
 }
 
-char	*prepare_bare_command(char **cmd, int i, t_global *glob, t_input **inpt)
+char	*prepare_bare_cmd(char **cmd, int i, t_global *glob, t_input **inpt)
 {
 	char	*cmd_file;
 
@@ -120,32 +120,4 @@ char	*prepare_path_command(char *word, t_global *global, t_input **input)
 	if (access(file, X_OK) != 0)
 		file_error(file, ": Permission denied\n", global, input);
 	return (file);
-}
-
-void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt)
-{
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd(file, 2);
-	ft_putstr_fd(mssg, 2);
-	free(file);
-	free_command(inpt);
-	if (!ft_strncmp(mssg, ": Permission denied\n", 21) 
-		|| !ft_strncmp(mssg, ": Is a directory\n", 18))
-		glob->exit_status = 126;
-	else if (!ft_strncmp(mssg, ": No such file or directory\n", 29))
-		glob->exit_status = 127;
-	cleanup_and_exit(glob);
-}
-
-int	is_directory(char *name)
-{
-	DIR	*dir;
-
-	dir = opendir(name);
-	if (dir)
-	{
-		closedir(dir);
-		return (1);
-	}
-	return (0);
 }

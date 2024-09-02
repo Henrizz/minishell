@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/02 18:40:54 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 18:55:19 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ typedef struct s_input
 	int				j;
 	int				h;
 	int				pid;
-	//char			**cmd_file;
 	struct s_input	*next;
 }	t_input;
 
@@ -209,7 +208,7 @@ char	*find_cmd_file(char **cmd, char **env);
 char	*get_paths(char **env, char *name);
 void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt);
 char	*prepare_path_command(char *word, t_global *global, t_input **input);
-char	*prepare_bare_command(char **cmd, int i, t_global *glob, t_input **inpt);
+char	*prepare_bare_cmd(char **cmd, int i, t_global *glob, t_input **inpt);
 
 /* redirections */
 int		save_in_out(int	*stdin_copy, int *stdout_copy);
@@ -229,6 +228,7 @@ int		remove_heredoc(char **env, char *pwd, int exit_status);
 int		here_expand(t_heredoc *here, char *name);
 int		terminal_loop(t_heredoc *here, char *filename, t_global *global);
 void	transfer_char(char *name, t_heredoc *here, int *j, int *i);
+void	print_eof_warning(int count, char *here_exp);
 
 /* pipes + processes */
 int		create_pipes(t_pipe *exec);
@@ -236,7 +236,6 @@ int		replace_pipes(t_input *command, t_pipe *exec);
 void	close_all_pipes(t_pipe *exec);
 void	wait_loop(t_input **command, t_global *global);
 int		child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt);
-int	child_process_exec(t_input *command, t_pipe *exec, t_global *global, t_input **input);
 int		setup_and_run(t_input **command, t_pipe *exec, t_global *global);
 
 /* utils - to be deleted later */
