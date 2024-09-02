@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/08/22 16:46:43 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/02 14:25:00 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ char	*find_cmd_file(char **cmd, char **env)
 	}
 	ft_putstr_fd(cmd[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
+	
 	return (NULL);
 }
 

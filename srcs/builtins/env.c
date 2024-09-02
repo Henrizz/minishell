@@ -9,7 +9,7 @@ void	env_cmd(char **command_words, t_global *global)
 	if(command_words[1])
 	{
 		printf("env: %s: No such file or directory\n", command_words[1]);
-		global->exit_status = 1;
+		global->exit_status = 127;
 		return;
 	}
 	if(global->env_list == NULL)

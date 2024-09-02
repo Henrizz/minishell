@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2024/09/01 20:56:45 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/02 15:07:36 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,13 @@ typedef struct s_env
 	int	export;
 	struct s_env *next;
 } t_env;
+
+typedef struct s_pipe
+{
+	int	pipe_qty;
+	int	**pipe_fd;
+}	t_pipe;
+
 typedef struct s_global
 {
 	t_env	*env_list;
@@ -86,6 +93,7 @@ typedef struct s_global
 	int exit_status;
 	int	history_fd;
 	char *prompt;
+	t_pipe	*exec;
 } t_global;
 typedef struct s_elements
 {
@@ -96,11 +104,6 @@ typedef struct s_elements
 	char quote_type;
 } t_elements;
 
-typedef struct s_pipe
-{
-	int	pipe_qty;
-	int	**pipe_fd;
-}	t_pipe;
 
 typedef struct s_heredoc
 {
@@ -151,14 +154,14 @@ int	error_return(char *message);
 void	cleanup_and_exit(t_global *global);
 
 /*Builtin commands*/
-int	what_builtin(char **command_words, t_global *global);
+int	what_builtin(char **command_words, t_global *global, t_input **command);
 void	echo(char **str, t_global *global);
 void	pwd(t_global *global);
 void	cd(char **command_words, t_global *global);
 void	env_cmd(char **command_words, t_global *global);
 void	export(char **words, t_global *global);
 void	unset(char **args, t_global *global);
-void	exit_cmd(char **command_words, t_global *global);
+void	exit_cmd(char **command_words, t_global *global, t_input **command);
 void	error_identifier(char *str, char *command);
 
 /* global */
@@ -236,7 +239,7 @@ int	create_pipes(t_pipe *exec);
 int	replace_pipes(t_input *command, t_pipe *exec);
 void	close_all_pipes(t_pipe *exec);
 void	wait_loop(t_input **command, t_global *global);
-int	child_process_exec(t_input *command, t_pipe *exec, t_global *global);
+int	child_process_exec(t_input *command, t_pipe *exec, t_global *global, t_input **input);
 int setup_and_run(t_input **command, t_pipe *exec, t_global *global);
 
 /* utils - to be deleted later */

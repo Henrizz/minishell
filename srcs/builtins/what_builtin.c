@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-int	what_builtin(char **command_words, t_global *global)
+int	what_builtin(char **command_words, t_global *global, t_input **command)
 {
 	if (!command_words[0])
 		return (0);
@@ -17,6 +17,6 @@ int	what_builtin(char **command_words, t_global *global)
 	if(!ft_strncmp(command_words[0], "env", 3))
 	 	env_cmd(command_words, global);
 	if(!ft_strncmp(command_words[0], "exit", 4))
-		exit_cmd(command_words, global);
+		exit_cmd(command_words, global, command);
 	return (global->exit_status);
 }
