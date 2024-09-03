@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 13:12:16 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/02 17:15:30 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/03 18:14:14 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,29 +106,5 @@ int	check_symbols(char *array, int inside_quote, int quote_type)
 		}
 		j++;
 	}
-	return (0);
-}
-
-int	init_struct(t_input **command, t_elements *elmts)
-{
-	*command = malloc(sizeof(t_input));
-	if (!(*command))
-		return (error_return("memory allocation failure"));
-	(*command)->words = malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->heredoc = malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->redirections = malloc((elmts->elmt_count + 1) * sizeof(char *));
-	//(*command)->cmd_file = malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->types = malloc((elmts->elmt_count + 1) * sizeof(int));
-	(*command)->next = NULL;
-	if (!(*command)->words || !(*command)->redirections || !(*command)->heredoc 
-		|| !(*command)->types)// || !(*command)->cmd_file)
-		return (error_return("memory allocation failure"));
-	(*command)->words[0] = NULL;
-	(*command)->heredoc[0] = NULL;
-	(*command)->redirections[0] = NULL;
-	//(*command)->cmd_file[0] = NULL;
-	(*command)->j = 0;
-	(*command)->h = 0;
-	(*command)->pid = -1;
 	return (0);
 }

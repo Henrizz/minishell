@@ -6,26 +6,24 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:13:42 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/02 18:44:39 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/03 16:09:00 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-/* this function saves the original standard input and standard output in the corresponding int variable before potential redirection */
 int	save_in_out(int	*stdin_copy, int *stdout_copy)
 {
-	*stdin_copy = dup(STDIN_FILENO); // save stdin to reset later
+	*stdin_copy = dup(STDIN_FILENO);
 	*stdout_copy = dup(STDOUT_FILENO);
 	if (*stdin_copy == -1 || *stdout_copy == -1)
 		return (error_return("dup"));
 	return (0);
 }
 
-/* this function restores the original standard in and out after the command has been executed with their potential redirection */
 int	restore_in_out(int	*stdin_copy, int *stdout_copy)
 {
-	if (dup2(*stdin_copy, STDIN_FILENO) == -1 || dup2(*stdout_copy, STDOUT_FILENO) == -1) //reset to stdin + stdout
+	if (dup2(*stdin_copy, 0) == -1 || dup2(*stdout_copy, 1) == -1)
 	{
 		close(*stdin_copy);
 		close(*stdout_copy);
@@ -38,8 +36,8 @@ int	restore_in_out(int	*stdin_copy, int *stdout_copy)
 
 int	make_history_file(t_global **global)
 {
-	char *filepath;
-	char *line;
+	char	*filepath;
+	char	*line;
 
 	filepath = ft_strjoin((*global)->pwd, "/.history.txt");
 	if (!filepath)
@@ -49,7 +47,7 @@ int	make_history_file(t_global **global)
 		return (error_return("history file"));
 	free(filepath);
 	line = get_next_line_new((*global)->history_fd);
-	while(line)
+	while (line)
 	{
 		if (line[ft_strlen(line) - 1] == '\n')
 			line[ft_strlen(line) - 1] = '\0';

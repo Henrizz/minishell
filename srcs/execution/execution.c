@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/02 18:44:31 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/03 18:24:29 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	execute(t_input **command, t_global *global)
 	temp = *command;
 	if (!(*command)->next && is_builtin(command))
 	{
-		if (make_redirection(command, global, &temp) == 1)
+		if (make_redirection(command, global) == 1)
 		{
 			restore_in_out(&stdin_copy, &stdout_copy);
 			return ;
@@ -52,7 +52,7 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 			return (error_return("fork error"));
 		if (curr->pid == 0)
 		{
-			if (make_redirection(&curr, global, command) != 1 && curr->words[0])
+			if (make_redirection(&curr, global) != 1 && curr->words[0])
 				child_exec(curr, exec, global, command);
 			else
 			{

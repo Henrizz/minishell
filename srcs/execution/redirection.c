@@ -6,13 +6,13 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 16:55:54 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/02 18:41:24 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/03 19:04:43 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	make_redirection(t_input **command, t_global *global, t_input **input)
+int	make_redirection(t_input **command, t_global *global)//, t_input **input)
 {
 	int	i;
 
@@ -22,12 +22,12 @@ int	make_redirection(t_input **command, t_global *global, t_input **input)
 		if ((*command)->types[i] == RED_IN)
 			redirection_in((*command)->redirections[i], global);
 		if ((*command)->types[i] == RED_OUT)
-			redirection_out((*command)->redirections[i], global);
+			redirection_out((*command)->redirections[i], global, command);
 		if ((*command)->types[i] == APP_OUT)
-			redirect_append((*command)->redirections[i], global);
+			redirect_append((*command)->redirections[i], global, command);
 		if (global->exit_status == 1)
 		{
-			free_command(input);
+			//free_command(input);
 			return (1);
 		}
 		i++;
@@ -68,7 +68,7 @@ int	redirect_heredoc(t_input **command, t_global *global)
 	return (0);
 }
 
-int	redirect_append(char *filename, t_global *global)
+int	redirect_append(char *filename, t_global *global, t_input **command)
 {
 	int	fd;
 
@@ -78,7 +78,7 @@ int	redirect_append(char *filename, t_global *global)
 		global->exit_status = 1;
 		return (error_return(filename));
 	}
-	if (dup2(fd, 1) == -1)
+	if (ft_strncmp((*command)->words[0], "exit", 5) && dup2(fd, 1) == -1)
 	{
 		global->exit_status = 1;
 		close(fd);
@@ -88,8 +88,7 @@ int	redirect_append(char *filename, t_global *global)
 	return (0);
 }
 
-/* separated function for shortening the redirection while loop */
-int	redirection_out(char *filename, t_global *global)
+int	redirection_out(char *filename, t_global *global, t_input **command)
 {
 	int	fd;
 
@@ -99,7 +98,7 @@ int	redirection_out(char *filename, t_global *global)
 		global->exit_status = 1;
 		return (error_return(filename));
 	}
-	if (dup2(fd, 1) == -1)
+	if (ft_strncmp((*command)->words[0], "exit", 5) && dup2(fd, 1) == -1)
 	{
 		global->exit_status = 1;
 		close(fd);
@@ -109,7 +108,6 @@ int	redirection_out(char *filename, t_global *global)
 	return (0);
 }
 
-/* separated function for shortening the redirection while loop */
 int	redirection_in(char *filename, t_global *global)
 {
 	int	fd;

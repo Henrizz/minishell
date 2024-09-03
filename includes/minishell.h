@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/02 18:55:19 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/03 19:04:58 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,8 @@ typedef struct s_heredoc
 int		parse_line(char *cmd_line, t_input **command, t_global *global);
 char	**split_for_parsing(char *cmd_line, t_elements *elmts);
 void	count_elements(char *str, t_elements *elmts);
-int		count_characters(char *str, int *inside_quote);
-char	*ft_strdup_delim(char **str, int *inside_quote, t_elements *elmts);
+int		count_chars(char *str, int *inside_quote);
+char	*ft_strdup_delim(char **str, int *quoted, t_elements *elmts);
 int		is_whitespace(char c);
 void	set_elements(t_elements *elmts);
 int		distribute_elements(t_input **command, t_elements *elmts, int *i);
@@ -123,6 +123,9 @@ int		make_history_file(t_global **global);
 int		was_before(char *str, int i, char c);
 void	set_quotes(char **str, int *inside_quote, t_elements *elmts);
 void	advance_line(char **cmd_line, int *inside_quote, t_elements *elmts);
+int		is_symbol(char c, int flag);
+int		should_it_count_char(char c, int *inside_quote);
+void	should_it_count_elmt(char *str, int i, t_elements *elmts, int *quoted);
 
 /* syntax */
 int		syntax_check(t_elements *elmts);
@@ -213,12 +216,12 @@ char	*prepare_bare_cmd(char **cmd, int i, t_global *glob, t_input **inpt);
 /* redirections */
 int		save_in_out(int	*stdin_copy, int *stdout_copy);
 int		restore_in_out(int	*stdin_copy, int *stdout_copy);
-int		make_redirection(t_input **command, t_global *global, t_input **input);
+int		make_redirection(t_input **command, t_global *global);//, t_input **input);
 int		redirection_in(char *filename, t_global *global);
-int		redirection_out(char *filename, t_global *global);
+int		redirection_out(char *filename, t_global *global, t_input **command);
 int		redirect_heredoc(t_input **command, t_global *global);
-int		redirect_append(char *filename, t_global *global);
-int		no_redirection(t_input *command, int flag);
+int		redirect_append(char *filename, t_global *global, t_input **command);
+int		no_redirect(t_input *command, int flag);
 
 /* heredocs */
 int		get_input_heredoc(t_input **command, t_global *global);
