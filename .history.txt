@@ -1,8 +1,0 @@
-echo $HOME
-echo ~
-echo ~$HOME
-echo "hola $USER" Y HOLA $HOME ~
-echo "hola $USER" Y HOLA $HOME~
-echo "hola $USER" Y HOLA $HOME~ '$USER'
-echo "hola $USER" Y HOLA $HOME ~
-echo $HOME
