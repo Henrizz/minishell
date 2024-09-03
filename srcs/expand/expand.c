@@ -9,94 +9,98 @@ char *process_expansion(t_expand_state *state, char *str, t_global *global);
 char *expand_str(size_t expanded_len, char *str, t_global *global);
 
 // Handle the tilde (~) expansion
-char *handle_tilde(t_expand_state *state, t_global *global)
+char	*handle_home(t_expand_state *state, t_global *global)
 {
 	char *temp_value;
-    char *value = get_env_value("HOME", global->env_list);
-    if (!value)
-        return NULL;
+	char *value = get_env_value("HOME", global->env_list);
+	if (!value)
+		return NULL;
 	temp_value = value;
-    while (*value)
-        state->expanded[(state->k)++] = *value++;
-    global->home_expanded = 1;
+	while (*value)
+		state->expanded[(state->k)++] = *value++;
+	global->home_expanded = 1;
 	free(temp_value);
 	state->i++;
-    return state->expanded;
+	return state->expanded;
 }
 
 // Handle the special variable $?
-char *handle_exit_stat(t_expand_state *state, t_global *global) {
+char	*handle_exit_stat(t_expand_state *state, t_global *global) 
+{
 	char *temp_value;
-    char *value = ft_itoa(global->exit_status);
-    if (!value)
-        return NULL;
+	char *value = ft_itoa(global->exit_status);
+	if (!value)
+		return NULL;
 	temp_value = value;
-    while (*value)
-        state->expanded[(state->k)++] = *value++;
-    free(temp_value);
+	while (*value)
+		state->expanded[(state->k)++] = *value++;
+	free(temp_value);
 	state->i +=2;
-    return state->expanded;
+	return state->expanded;
 }
 
 // Handle environment variable expansion
-char *handle_variable(t_expand_state *state, char *str, t_global *global) {
+char	*handle_var(t_expand_state *state, char *str, t_global *global)
+{
 	char *temp_value;
-    char *var_name = extract_var_name(str, (++state->i));
-    if (!var_name)
-        return NULL;
-    char *value = get_env_value(var_name, global->env_list);
-
-    if (!value)
-        return NULL;
+	char *var_name = extract_var_name(str, (++state->i));
+	if (!var_name)
+		return NULL;
+	char *value = get_env_value(var_name, global->env_list);
+	if (!value)
+		return NULL;
 	temp_value = value;
-    while (*value)
-        state->expanded[(state->k)++] = *value++;
-    state->i += ft_strlen(var_name);
+	while (*value)
+		state->expanded[(state->k)++] = *value++;
+	state->i += ft_strlen(var_name);
 	free(var_name);
-    free(temp_value);
-    return state->expanded;
+	free(temp_value);
+	return state->expanded;
 }
 
 // Append a single character to the expanded string
-char *append_char(t_expand_state *state, char c) {
-    state->expanded[(state->k)++] = c;
-    return state->expanded;
+char	*append_char(t_expand_state *state, char c)
+{
+	state->expanded[(state->k)++] = c;
+	return (state->expanded);
 }
 
 // Process each character for potential expansion
-char *process_expansion(t_expand_state *state, char *str, t_global *global) {
-    if (str[state->i] == '~') {
-        return handle_tilde(state, global);
-    } else if (str[state->i] == '$' && str[state->i + 1] == '?') {
-        state->i++;
-        return handle_exit_stat(state, global);
-    } else if (str[state->i] == '$' && (ft_isalnum(str[state->i + 1]) || str[state->i + 1] == '_')) {
-        return handle_variable(state, str, global);
-    }
-    return append_char(state, str[(state->i)++]);
+char	*process_expansion(t_expand_state *state, char *str, t_global *global)
+{
+	if (str[state->i] == '~')
+		return (handle_home(state, global));
+	else if (str[state->i] == '$' && str[state->i + 1] == '?')
+	{
+		state->i++;
+		return (handle_exit_stat(state, global));
+	}
+	else if (str[state->i] == '$' && (ft_isalnum(str[state->i + 1]) || str[state->i + 1] == '_'))
+		return (handle_var(state, str, global));
+	return (append_char(state, str[(state->i)++]));
 }
 
 // Main function that orchestrates the string expansion
-char *expand_str(size_t expanded_len, char *str, t_global *global) {
-    t_expand_state state;
-    state.i = 0;
-    state.k = 0;
-    state.expanded = (char *)malloc(expanded_len + 1);
+char	*expand_str(size_t expanded_len, char *str, t_global *global)
+{
+	t_expand_state	state;
 
-    if (!state.expanded)
-        return NULL;
-
-    while (str[state.i]) {
-        if (!(state.expanded = process_expansion(&state, str, global))) {
-            free(state.expanded);
-            return NULL;
-        }
-    }
-
-    state.expanded[state.k] = '\0';
-    return state.expanded;
+	state.i = 0;
+	state.k = 0;
+	state.expanded = (char *)malloc(expanded_len + 1);
+	if (!state.expanded)
+		return (NULL);
+	while (str[state.i])
+	{
+		if (!(state.expanded = process_expansion(&state, str, global)))
+		{
+			free(state.expanded);
+			return (NULL);
+		}
+	}
+	state.expanded[state.k] = '\0';
+	return (state.expanded);
 }
-
 
 /*char *expand_str(size_t expanded_len, char *str, t_global *global)
 {
@@ -182,14 +186,14 @@ char	*expanding_var(char *str, t_global *global)
 
 char	*concat_and_free(char *s1, char *s2)
 {
-    char *new_str;
+    char	*new_str;
 
-	new_str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+    new_str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
     if (!new_str)
-	{
-        free(s1);
-        free(s2);
-        return NULL;
+    {
+	    free(s1);
+	    free(s2);
+	    return (NULL);
     }
     ft_strlcpy(new_str, s1, ft_strlen(s1) + 1);
     ft_strlcat(new_str, s2, ft_strlen(s1) + ft_strlen(s2) + 1);
@@ -200,64 +204,64 @@ char	*concat_and_free(char *s1, char *s2)
 
 char	*process_quoted_segment(char **current, char quote, t_global *global)
 {
-	char *start;
-	char *segment;
-	char *expanded;
+	char	*start;
+	char	*segment;
+	char	*expanded;
 
-    start = ++(*current);
-    while (**current != quote && **current != '\0')
-        (*current)++;
-    segment = ft_substr(start, 0, *current - start);
-    if (quote == '"')
+	start = ++(*current);
+	while (**current != quote && **current != '\0')
+		(*current)++;
+	segment = ft_substr(start, 0, *current - start);
+	if (quote == '"')
 	{
-        expanded = expanding_var(segment, global);
-        free(segment);
-        segment = expanded;
-    }
-    if (**current == quote)
-        (*current)++;
-    return (segment);
+		expanded = expanding_var(segment, global);
+		free(segment);
+		segment = expanded;
+	}
+	if (**current == quote)
+		(*current)++;
+	return (segment);
 }
 
 char	*process_non_quoted_segment(char **current, t_global *global)
 {
-    char *start;
-	char *segment;
-	char *expanded;
+	char	*start;
+	char	*segment;
+	char	*expanded;
 
 	start = *current;
-    while (**current != '\'' && **current != '"' && **current != '\0')
-        (*current)++;
-    segment = ft_substr(start, 0, *current - start);
-    expanded = expanding_var(segment, global);
-    free(segment);
-    return (expanded);
+	while (**current != '\'' && **current != '"' && **current != '\0')
+		(*current)++;
+	segment = ft_substr(start, 0, *current - start);
+	expanded = expanding_var(segment, global);
+	free(segment);
+	return (expanded);
 }
 
 char	*handle_quoting(char *str, t_global *global)
 {
-    char	*result;
+	char	*result;
 	char	*current;
 	char	*segment;
 
 	result = ft_strdup("");
-    if (!result)
-        return NULL;
-    current = str;
-    while (*current != '\0')
+	if (!result)
+		return (NULL);
+	current = str;
+	while (*current != '\0')
 	{
-        segment = NULL;
-        if (*current == '\'' || *current == '"')
-            segment = process_quoted_segment(&current, *current, global);
+		segment = NULL;
+		if (*current == '\'' || *current == '"')
+			segment = process_quoted_segment(&current, *current, global);
 		else
-            segment = process_non_quoted_segment(&current, global);
-        if (!segment)
-            return (free(result), NULL);
-        result = concat_and_free(result, segment);
-        if (!result)
-            return (NULL);
-    }
-    return (free(str), result);
+			segment = process_non_quoted_segment(&current, global);
+		if (!segment)
+			return (free(result), NULL);
+		result = concat_and_free(result, segment);
+		if (!result)
+			return (NULL);
+	}
+	return (free(str), result);
 }
 
 void	expand_var_words(t_input *input, t_global *global)
@@ -281,17 +285,6 @@ void	expand_var_words(t_input *input, t_global *global)
 			temp->redirections[i] = handle_quoting(temp->redirections[i], global);
 			i++;
 		}
-	/*while(input->red_in[i])
-	{
-		input->red_in[i] = handle_quoting(input->red_in[i], env_list, exit_status);
-		i++;
-	}
-	i = 0;
-	while(input->red_out[i])
-	{
-		input->red_out[i] = handle_quoting(input->red_out[i], env_list, exit_status);
-		i++;
-	}*/
-	temp = temp->next;
+		temp = temp->next;
 	}
 }
