@@ -16,13 +16,11 @@ void	execute(t_input **command, t_global *global)
 {
 	int		stdin_copy;
 	int		stdout_copy;
-	t_input	*temp;
-
+	
 	if (save_in_out(&stdin_copy, &stdout_copy) == -1 
 		|| get_input_heredoc(command, global) == 1)
 		return ;
 	sig_execution();
-	temp = *command;
 	if (!(*command)->next && is_builtin(command))
 	{
 		if (make_redirection(command, global) == 1)
