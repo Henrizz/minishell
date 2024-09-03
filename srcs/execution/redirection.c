@@ -6,13 +6,13 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 16:55:54 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/03 19:04:43 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/03 19:57:09 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	make_redirection(t_input **command, t_global *global)//, t_input **input)
+int	make_redirection(t_input **command, t_global *global)
 {
 	int	i;
 
@@ -26,10 +26,7 @@ int	make_redirection(t_input **command, t_global *global)//, t_input **input)
 		if ((*command)->types[i] == APP_OUT)
 			redirect_append((*command)->redirections[i], global, command);
 		if (global->exit_status == 1)
-		{
-			//free_command(input);
 			return (1);
-		}
 		i++;
 	}
 	if (redirect_heredoc(command, global) == 1)
