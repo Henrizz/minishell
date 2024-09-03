@@ -1,14 +1,115 @@
 #include "../../includes/minishell.h"
 
-char *expand_str(size_t expanded_len, char *str, t_global *global) { //leaks
-    int i = 0;
-    int k = 0;
+// Function prototypes
+char *handle_tilde(t_expand_state *state, t_global *global);
+char *handle_exit_stat(t_expand_state *state, t_global *global);
+char *handle_variable(t_expand_state *state, char *str, t_global *global);
+char *append_char(t_expand_state *state, char c);
+char *process_expansion(t_expand_state *state, char *str, t_global *global);
+char *expand_str(size_t expanded_len, char *str, t_global *global);
+
+// Handle the tilde (~) expansion
+char *handle_tilde(t_expand_state *state, t_global *global)
+{
+	char *temp_value;
+    char *value = get_env_value("HOME", global->env_list);
+    if (!value)
+        return NULL;
+	temp_value = value;
+    while (*value)
+        state->expanded[(state->k)++] = *value++;
+    global->home_expanded = 1;
+	free(temp_value);
+	state->i++;
+    return state->expanded;
+}
+
+// Handle the special variable $?
+char *handle_exit_stat(t_expand_state *state, t_global *global) {
+	char *temp_value;
+    char *value = ft_itoa(global->exit_status);
+    if (!value)
+        return NULL;
+	temp_value = value;
+    while (*value)
+        state->expanded[(state->k)++] = *value++;
+    free(temp_value);
+	state->i +=2;
+    return state->expanded;
+}
+
+// Handle environment variable expansion
+char *handle_variable(t_expand_state *state, char *str, t_global *global) {
+	char *temp_value;
+    char *var_name = extract_var_name(str, (++state->i));
+    if (!var_name)
+        return NULL;
+    char *value = get_env_value(var_name, global->env_list);
+
+    if (!value)
+        return NULL;
+	temp_value = value;
+    while (*value)
+        state->expanded[(state->k)++] = *value++;
+    state->i += ft_strlen(var_name);
+	free(var_name);
+    free(temp_value);
+    return state->expanded;
+}
+
+// Append a single character to the expanded string
+char *append_char(t_expand_state *state, char c) {
+    state->expanded[(state->k)++] = c;
+    return state->expanded;
+}
+
+// Process each character for potential expansion
+char *process_expansion(t_expand_state *state, char *str, t_global *global) {
+    if (str[state->i] == '~') {
+        return handle_tilde(state, global);
+    } else if (str[state->i] == '$' && str[state->i + 1] == '?') {
+        state->i++;
+        return handle_exit_stat(state, global);
+    } else if (str[state->i] == '$' && (ft_isalnum(str[state->i + 1]) || str[state->i + 1] == '_')) {
+        return handle_variable(state, str, global);
+    }
+    return append_char(state, str[(state->i)++]);
+}
+
+// Main function that orchestrates the string expansion
+char *expand_str(size_t expanded_len, char *str, t_global *global) {
+    t_expand_state state;
+    state.i = 0;
+    state.k = 0;
+    state.expanded = (char *)malloc(expanded_len + 1);
+
+    if (!state.expanded)
+        return NULL;
+
+    while (str[state.i]) {
+        if (!(state.expanded = process_expansion(&state, str, global))) {
+            free(state.expanded);
+            return NULL;
+        }
+    }
+
+    state.expanded[state.k] = '\0';
+    return state.expanded;
+}
+
+
+/*char *expand_str(size_t expanded_len, char *str, t_global *global)
+{
+	t_expand_state state;
+
+    state.i = 0;
+    state.k = 0;
+    state.expanded = (char *)malloc(expanded_len + 1);
     char *var_name = NULL;
     char *value = NULL;
-    char *expanded = (char *)malloc(expanded_len + 1);
     char *temp_value;
 
-    if (!expanded)
+    if (!state.expanded)
         return NULL;
 
     while (str[i]) {
@@ -17,12 +118,12 @@ char *expand_str(size_t expanded_len, char *str, t_global *global) { //leaks
             value = get_env_value("HOME", global->env_list);
             if (!value)
 			{
-                free(expanded);
+                free(state.expanded);
                 return NULL;
             }
             temp_value = value;
             while (*value)
-                expanded[k++] = *value++;
+                state.expanded[k++] = *value++;
 			global->home_expanded = 1;
             free(temp_value);
             i++;
@@ -31,12 +132,12 @@ char *expand_str(size_t expanded_len, char *str, t_global *global) { //leaks
             // Handle '$?'
             value = ft_itoa(global->exit_status);
             if (!value) {
-                free(expanded);
+                free(state.expanded);
                 return NULL;
             }
             temp_value = value;
             while (*value)
-                expanded[k++] = *value++;
+                state.expanded[k++] = *value++;
             free(temp_value);
             i += 2;
         } else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_')) {
@@ -44,28 +145,28 @@ char *expand_str(size_t expanded_len, char *str, t_global *global) { //leaks
             i++;
             var_name = extract_var_name(str, i);
             if (!var_name) {
-                free(expanded);
+                free(state.expanded);
                 return NULL;
             }
             value = get_env_value(var_name, global->env_list);
             if (!value) {
-                free(expanded);
+                free(state.expanded);
                 free(var_name);
                 return NULL;
             }
             temp_value = value;
             while (*value)
-                expanded[k++] = *value++;
+                state.expanded[k++] = *value++;
             i += ft_strlen(var_name);
             free(var_name);
             free(temp_value); // Ensure you free value after using it
         } else {
-            expanded[k++] = str[i++];
+            state.expanded[k++] = str[i++];
         }
     }
-    expanded[k] = '\0';
-    return expanded;
-}
+    state.expanded[k] = '\0';
+    return state.expanded;
+}*/
 
 char	*expanding_var(char *str, t_global *global)
 {

@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/03 17:55:01 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/09/03 19:03:31 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,13 @@ typedef struct s_heredoc
 	char		quote_type;
 	int			flag;
 }	t_heredoc;
+
+typedef struct s_expand_state
+{
+	int		i;
+	int		k;
+	char		*expanded;
+}	t_expand_state;
 
 /* parsing struct */
 int		parse_line(char *cmd_line, t_input **command, t_global *global);
