@@ -1,17 +1,5 @@
 #include "../../includes/minishell.h"
 
-char	*process_expansion(t_expand_state *state, char *str, t_global *global)
-{
-	if (str[state->i] == '~')
-		return (handle_home(state, global));
-	else if (str[state->i] == '$' && str[state->i + 1] == '?')
-		return (handle_exit(state, global));
-	else if (str[state->i] == '$' && (ft_isalnum(str[state->i + 1]) || str[state->i + 1] == '_'))
-		return (handle_var(state, str, global));
-	state->expanded[(state->k)++] =  str[(state->i)++];
-	return (state->expanded);
-}
-
 char	*expanding_var(char *str, t_global *global)
 {
 	size_t	expanded_len;

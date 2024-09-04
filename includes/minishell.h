@@ -6,7 +6,7 @@
 /*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/03 19:03:31 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/09/04 10:48:53 by stephaniema      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,13 +194,17 @@ int		set_env_array(t_env *env_list, char ***env_array); //?
 t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
 /*expand*/
-
 void	expand_var_words(t_input *input, t_global *global);
 char	*expanding_var(char *str, t_global *global);
 
 /*expand utils*/
 size_t	calc_expanded_len(char *str, t_global *global);
 char	*extract_var_name(const char *str, int i);
+char	*handle_home(t_expand_state *state, t_global *global);
+char	*handle_exit(t_expand_state *state, t_global *global);
+char	*handle_var(t_expand_state *state, char *str, t_global *global);
+char	*process_expansion(t_expand_state *state, char *str, t_global *global);
+char	*concat_and_free(char *s1, char *s2);
 
 /* execution */
 //void execute(t_input **command, t_env *env_list, char **env, char *pwd);
