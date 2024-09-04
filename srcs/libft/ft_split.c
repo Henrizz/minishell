@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/23 18:20:42 by hzimmerm          #+#    #+#             */
-/*   Updated: 2023/11/29 16:01:14 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:18:18 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,12 +93,8 @@ static void	*ft_loop_outs(char **array, char const *s, char c, int count)
 char	**ft_split(char const *s, char c)
 {
 	char	**array;
-//	int		i;
-//	int		j;
 	int		count;
 
-//	i = 0;
-//	j = 0;
 	if (s == 0)
 		return (0);
 	count = ft_count_words(s, c);

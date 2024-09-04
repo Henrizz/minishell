@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 18:11:18 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/03 19:57:55 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:28:16 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,20 +93,16 @@ void	print_arrays_testing(t_input **command)
 		j = 0;
 		k = 0;
 		while (temp->words[i])
-		{
-			printf("cmd_i: %d - words: %s\n", temp->cmd_ind, temp->words[i]);
-			i++;
-		}
+			printf("cmd_i: %d - words: %s\n", temp->cmd_ind, temp->words[i++]);
 		while (temp->redirections[j])
 		{
-			printf("cmd_i: %d - red %d: %s\n", temp->cmd_ind, temp->types[j], temp->redirections[j]);
+			printf("cmd_i: %d - red %d: %s\n", temp->cmd_ind, temp->types[j],
+				temp->redirections[j]);
 			j++;
 		}
 		while (temp->heredoc[k])
-		{
-			printf("cmd_i: %d - heredoc: %s\n", temp->cmd_ind, temp->heredoc[k]);
-			k++;
-		}
+			printf("cmd_i: %d - heredoc: %s\n", temp->cmd_ind,
+				temp->heredoc[k++]);
 		temp = temp->next;
 	}
 }

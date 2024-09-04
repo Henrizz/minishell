@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/03 18:24:29 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:20:57 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	execute(t_input **command, t_global *global)
 {
 	int		stdin_copy;
 	int		stdout_copy;
-	
+
 	if (save_in_out(&stdin_copy, &stdout_copy) == -1 
 		|| get_input_heredoc(command, global) == 1)
 		return ;
