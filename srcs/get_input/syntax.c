@@ -6,35 +6,34 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 13:12:16 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/02 17:15:30 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/03 20:16:11 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	syntax_check(t_elements *elmts)
+int	syntax_check(t_elements *elm)
 {
-	int	i;
+	int		i;
 	int		quoted;
-	char	quote_type;
+	char	qtype;
 
 	i = 0;
-	while (elmts->array[i])
+	while (elm->array[i])
 	{
 		quoted = 0;
-		quote_type = '\0';
-		if (check_symbols(elmts->array[i], quoted, quote_type) || check_doubles(elmts->array, i))
-		{
-			free_array(elmts->array);
-			return (1);
-		}
-		if ((!ft_strncmp(elmts->array[i], "|", 2) || !ft_strncmp(elmts->array[i], "<", 2)
-			|| !ft_strncmp(elmts->array[i], ">", 2) || !ft_strncmp(elmts->array[i], "<<", 3)
-			|| !ft_strncmp(elmts->array[i], ">>", 3)) && elmts->array[i + 1] == NULL)
+		qtype = '\0';
+		if (check_symbols(elm->array[i], quoted, qtype) 
+			|| check_doubles(elm->array, i))
+			return (free_array(elm->array), 1);
+		if ((!ft_strncmp(elm->array[i], "|", 2) 
+				|| !ft_strncmp(elm->array[i], "<", 2) 
+				|| !ft_strncmp(elm->array[i], ">", 2) 
+				|| !ft_strncmp(elm->array[i], "<<", 3)
+				|| !ft_strncmp(elm->array[i], ">>", 3)) && !elm->array[i + 1])
 		{
 			printf("minishell: syntax error near unexpected token 'newline'\n");
-			free_array(elmts->array);
-			return (1);
+			return (free_array(elm->array), 1);
 		}
 		i++;
 	}
@@ -75,60 +74,38 @@ int	was_before_array(char **array, int i, int symbol)
 	}
 	if (symbol == PIPE)
 	{
-		if (!ft_strncmp(array[i - 1], "|", 2))
+		if (!ft_strncmp(array[i - 1], "|", 2)
+			|| !ft_strncmp(array[i - 1], "<", 2)
+			|| !ft_strncmp(array[i - 1], ">", 2))
 			return (1);
 	}
 	return (0);
 }
 
-int	check_symbols(char *array, int inside_quote, int quote_type)
+int	check_symbols(char *array, int quoted, int quote_type)
 {
 	int		j;
 
 	j = 0;
 	while (array[j])
 	{
-		if (inside_quote == 0 && (array[j] == '"' || array[j] == '\''))
+		if (quoted == 0 && (array[j] == '"' || array[j] == '\''))
 		{
-			inside_quote = 1;
+			quoted = 1;
 			quote_type = array[j];
 		}
 		else if (array[j] == quote_type)
 		{
-			inside_quote = 0;
+			quoted = 0;
 			quote_type = '\0';
 		}
-		if (inside_quote == 0 && (array[j] == ';' || array[j] == '\\' 
-			|| array[j] == '&' || array[j] == '(' || array[j] == ')' || array[j] == '#'))
+		if (!quoted && (array[j] == ';' || array[j] == '\\' || array[j] == '&' 
+				|| array[j] == '(' || array[j] == ')' || array[j] == '#'))
 		{
 			printf("minishell: error: shell does not handle '%c'\n", array[j]);
 			return (1);
 		}
 		j++;
 	}
-	return (0);
-}
-
-int	init_struct(t_input **command, t_elements *elmts)
-{
-	*command = malloc(sizeof(t_input));
-	if (!(*command))
-		return (error_return("memory allocation failure"));
-	(*command)->words = malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->heredoc = malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->redirections = malloc((elmts->elmt_count + 1) * sizeof(char *));
-	//(*command)->cmd_file = malloc((elmts->elmt_count + 1) * sizeof(char *));
-	(*command)->types = malloc((elmts->elmt_count + 1) * sizeof(int));
-	(*command)->next = NULL;
-	if (!(*command)->words || !(*command)->redirections || !(*command)->heredoc 
-		|| !(*command)->types)// || !(*command)->cmd_file)
-		return (error_return("memory allocation failure"));
-	(*command)->words[0] = NULL;
-	(*command)->heredoc[0] = NULL;
-	(*command)->redirections[0] = NULL;
-	//(*command)->cmd_file[0] = NULL;
-	(*command)->j = 0;
-	(*command)->h = 0;
-	(*command)->pid = -1;
 	return (0);
 }

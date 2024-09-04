@@ -47,7 +47,7 @@ void	exit_cmd(char **command_words, t_global *global, t_input **command)
 	else
 		global->exit_status = 0;
 	if ((*command)->cmd_ind == 0)
-		ft_putstr_fd("exit\n", 2);
+		ft_putstr_fd("exit\n", 1);
 	free_command(command);
 	cleanup_and_exit(global);
 }

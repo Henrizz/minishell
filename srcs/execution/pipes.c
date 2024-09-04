@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 22:38:51 by Henriette         #+#    #+#             */
-/*   Updated: 2024/08/22 18:55:43 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/03 16:08:05 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,29 +37,29 @@ int	replace_pipes(t_input *command, t_pipe *exec)
 		return (0);
 	if (command->cmd_ind == 0)
 	{
-		if ((!no_redirection(command, RED_OUT) && !no_redirection(command, APP_OUT))
+		if ((!no_redirect(command, RED_OUT) && !no_redirect(command, APP_OUT))
 			&& dup2(exec->pipe_fd[command->cmd_ind][1], 1) == -1)
 			error_return("dup2 pipe[current][1]");
 	}
 	else if (command->cmd_ind == exec->pipe_qty)
 	{
-		if ((!no_redirection(command, RED_IN) && !command->heredoc[0])
+		if ((!no_redirect(command, RED_IN) && !command->heredoc[0])
 			&& dup2(exec->pipe_fd[command->cmd_ind - 1][0], 0) == -1)
 			error_return("dup2 pipe[previous][0]");
 	}
 	else
 	{
-		if ((!no_redirection(command, RED_IN) && !command->heredoc[0]) 
+		if ((!no_redirect(command, RED_IN) && !command->heredoc[0]) 
 			&& dup2(exec->pipe_fd[command->cmd_ind - 1][0], 0) == -1)
 			error_return("dup2 pipe[previous][0]");
-		if ((!no_redirection(command, RED_OUT) && !no_redirection(command, APP_OUT))
+		if ((!no_redirect(command, RED_OUT) && !no_redirect(command, APP_OUT))
 			&& dup2(exec->pipe_fd[command->cmd_ind][1], 1) == -1)
-				error_return("dup2 pipe[current][1]");
+			error_return("dup2 pipe[current][1]");
 	}
 	return (0);
 }
 
-int	no_redirection(t_input *command, int flag)
+int	no_redirect(t_input *command, int flag)
 {
 	int	i;
 
@@ -103,8 +103,6 @@ void	wait_loop(t_input **command, t_global *global)
 		waitpid(current->pid, &status, 0);
 		if (WIFEXITED(status))
 			global->exit_status = WEXITSTATUS(status);
-   		//ft_putnbr_fd(current->exit_status, 2);
-   	 	//ft_putstr_fd("\n", 2);
 		current = current->next;
 	}
 }
