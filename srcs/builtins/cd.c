@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/04 14:46:25 by smanriqu          #+#    #+#             */
+/*   Updated: 2024/09/04 14:47:02 by smanriqu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 static void	print_error(char *path)
@@ -12,6 +24,7 @@ static void	print_error(char *path)
 static void	update_pwd_and_env(char *old_pwd, t_env *env_list, char ***env)
 {
 	char pwd[PATH_MAX];
+	
 	getcwd(pwd, PATH_MAX);
 	set_env("OLDPWD", old_pwd, env_list, 1);
 	set_env("PWD", pwd, env_list, 1);
@@ -24,14 +37,14 @@ void	change_directory(char *path, t_global *global)
 	char	*temp_oldpwd;
 
 	getcwd(old_pwd, PATH_MAX);
-	if(ft_strncmp(path, "-", 1) == 0)
+	if (ft_strncmp(path, "-", 1) == 0)
 	{
 		temp_oldpwd = get_env_value("OLDPWD", global->env_list);
-		if(temp_oldpwd[0] == '\0')
+		if (temp_oldpwd[0] == '\0')
 		{
 			ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
 			global->exit_status = 1;
-			return;
+			return ;
 		}
 		path = ft_strdup(temp_oldpwd);
 		free(temp_oldpwd);
@@ -50,7 +63,7 @@ void	change_directory(char *path, t_global *global)
 
 void	cd(char **words, t_global *global)
 {
-	char *path;
+	char	*path;
 
 	if (!words[1])
 	{
@@ -60,25 +73,25 @@ void	cd(char **words, t_global *global)
 			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
 			global->exit_status = 1;
 			free(path);
-			return;
+			return ;
 		}
 	}
 	else if (words[1] && !words[2])
 	{
 		path = ft_strdup(words[1]);
-		if(path[0] == '\0' && global->home_expanded == 1)
+		if (path[0] == '\0' && global->home_expanded == 1)
 		{
 			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
 			global->exit_status = 1;
 			free(path);
-			return;
+			return ;
 		}
 	}
 	else
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 		global->exit_status = 1;
-		return;
+		return ;
 	}
 	change_directory(path, global);
 	if (words[1] && !words[2])

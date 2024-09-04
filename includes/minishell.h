@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: stephaniemanrique <stephaniemanrique@st    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/04 11:06:51 by stephaniema      ###   ########.fr       */
+/*   Updated: 2024/09/04 14:45:39 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,10 +170,9 @@ void	unset(char **args, t_global *global);
 void	exit_cmd(char **command_words, t_global *global, t_input **command);
 void	error_identifier(char *str, char *command);
 
-/* global */
+/* global and signals*/
 void	global_init(t_global **global, char **env);
 void	print_array(char **array);
-//void	init_signals(void);
 void	sig_basic(void);
 void	sig_non_interactive(void);
 void	sig_interactive_heredoc(void);

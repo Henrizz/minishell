@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/04 14:29:50 by smanriqu          #+#    #+#             */
+/*   Updated: 2024/09/04 14:30:23 by smanriqu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 char	*expanding_var(char *str, t_global *global)
 {
-	size_t	expanded_len;
-	t_expand_state		state;
+	size_t			expanded_len;
+	t_expand_state	state;
 
 	state.i = 0;
 	state.k = 0;

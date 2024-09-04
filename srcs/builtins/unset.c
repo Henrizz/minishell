@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/04 14:51:05 by smanriqu          #+#    #+#             */
+/*   Updated: 2024/09/04 14:51:36 by smanriqu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	error_identifier(char *str, char *command)
@@ -11,7 +23,7 @@ void	error_identifier(char *str, char *command)
 
 static int	is_syntax_ok(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (ft_isdigit(str[0]))
@@ -27,8 +39,8 @@ static int	is_syntax_ok(char *str)
 
 void	unset_env(char *key, t_env *env_list)
 {
-	t_env *current;
-	t_env *prev;
+	t_env	*current;
+	t_env	*prev;
 
 	current = env_list;
 	prev = NULL;
@@ -43,7 +55,7 @@ void	unset_env(char *key, t_env *env_list)
 			free(current->key);
 			free(current->value);
 			free(current);
-			return;
+			return ;
 		}
 		prev = current;
 		current = current->next;
@@ -52,7 +64,7 @@ void	unset_env(char *key, t_env *env_list)
 
 void	unset(char **args, t_global *global)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (args[i])
@@ -70,5 +82,5 @@ void	unset(char **args, t_global *global)
 		}
 		i++;
 	}
-	return;
+	return ;
 }

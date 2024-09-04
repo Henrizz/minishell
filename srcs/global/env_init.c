@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env_init.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/04 14:32:00 by smanriqu          #+#    #+#             */
+/*   Updated: 2024/09/04 14:35:54 by smanriqu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
@@ -6,37 +17,36 @@ void	update_existing_env(t_env *current, char *value, int export_flag)
 	free(current->value);
 	current->value = ft_strdup(value);
 	if (!current->value)
-		return;
+		return ;
 	current->export = export_flag;
 }
 
 void	set_env(char *key, char *value, t_env *env_list, int export_flag)
 {
-	size_t key_len;
-	t_env *existing_env;
-	t_env *new_var;
+	size_t	key_len;
+	t_env	*existing_env;
+	t_env	*new_var;
 
 	key_len = ft_strlen(key);
 	existing_env = find_existing_env(env_list, key, key_len);
 	if (existing_env)
 	{
 		update_existing_env(existing_env, value, export_flag);
-		return;
+		return ;
 	}
 	new_var = new_env_var(key, export_flag);
 	if (!new_var)
-		return;
+		return ;
 	free(new_var->value);
 	new_var->value = ft_strdup(value);
 	if (!new_var->value)
 	{
 		free_env_var(new_var);
-		return;
+		return ;
 	}
 	append_new_var(&env_list, new_var);
 }
 
-// Sets the key and value for the t_env struct based on the input string
 int	set_key_value(t_env *env_var, char *str)
 {
 	char	*equal_sign;
@@ -47,7 +57,8 @@ int	set_key_value(t_env *env_var, char *str)
 	if (equal_sign)
 	{
 		env_var->key = ft_substr(str, 0, equal_sign - str);
-		env_var->value = ft_substr(str, equal_sign - str + 1, len - (equal_sign - str + 1));
+		env_var->value = ft_substr(str, equal_sign - str
+				+ 1, len - (equal_sign - str + 1));
 	}
 	else
 	{
@@ -57,7 +68,6 @@ int	set_key_value(t_env *env_var, char *str)
 	return (env_var->key && env_var->value);
 }
 
-// Creates a new environment variable
 t_env	*new_env_var(char *str, int export)
 {
 	t_env	*new_var;
@@ -91,4 +101,3 @@ int	env_init(char **env, t_env **env_list)
 	}
 	return (1);
 }
-

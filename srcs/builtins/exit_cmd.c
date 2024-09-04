@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit_cmd.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/04 14:48:59 by smanriqu          #+#    #+#             */
+/*   Updated: 2024/09/04 14:49:17 by smanriqu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 int	is_valid_number(char *arg)
@@ -21,7 +33,7 @@ void	handle_exit_status(char **command_words, t_global *global)
 	{
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		global->exit_status = 1;
-		return;
+		return ;
 	}
 	if (!is_valid_number(command_words[1]))
 	{
@@ -29,7 +41,7 @@ void	handle_exit_status(char **command_words, t_global *global)
 		ft_putstr_fd(command_words[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
 		global->exit_status = 2;
-		return;
+		return ;
 	}
 	global->exit_status = ft_atoi(command_words[1]);
 }
@@ -42,7 +54,7 @@ void	exit_cmd(char **command_words, t_global *global, t_input **command)
 	{
 		handle_exit_status(command_words, global);
 		if (command_words[2] || global->exit_status == 255)
-			return;
+			return ;
 	}
 	else
 		global->exit_status = 0;
