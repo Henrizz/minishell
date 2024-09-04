@@ -3,17 +3,18 @@
 char	*expanding_var(char *str, t_global *global)
 {
 	size_t	expanded_len;
-	t_expand_state	state;
+	t_expand_state		state;
+
 	state.i = 0;
 	state.k = 0;
-
 	expanded_len = calc_expanded_len(str, global);
 	state.expanded = (char *)malloc(expanded_len + 1);
 	if (!state.expanded)
 		return (NULL);
 	while (str[state.i])
 	{
-		if (!(state.expanded = process_expansion(&state, str, global)))
+		state.expanded = process_expansion(&state, str, global);
+		if (!state.expanded)
 		{
 			free(state.expanded);
 			return (NULL);
@@ -87,8 +88,8 @@ char	*handle_quoting(char *str, t_global *global)
 
 void	expand_var_words(t_input *input, t_global *global)
 {
-	int	i;
-	t_input *temp;
+	int		i;
+	t_input	*temp;
 
 	temp = input;
 	global->home_expanded = 0;
@@ -101,9 +102,10 @@ void	expand_var_words(t_input *input, t_global *global)
 			i++;
 		}
 		i = 0;
-		while(temp->redirections[i])
+		while (temp->redirections[i])
 		{
-			temp->redirections[i] = handle_quoting(temp->redirections[i], global);
+			temp->redirections[i]
+				= handle_quoting(temp->redirections[i], global);
 			i++;
 		}
 		temp = temp->next;
