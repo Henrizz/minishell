@@ -1,217 +1,98 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/04 14:30:36 by smanriqu          #+#    #+#             */
+/*   Updated: 2024/09/04 14:30:38 by smanriqu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-size_t calc_expanded_len(char *str, t_global *global) { //  leaks
-    size_t expanded_len = 0;
-    int i = 0;
-    char *var_name = NULL;
-    char *value = NULL;
-    char *itoa_str;
+char	*handle_home(t_expand_state *state, t_global *global)
+{
+	char	*temp_value;
+	char	*value;
 
-    while (str[i]) {
-        if (str[i] == '~') {
-            // Handle '~' for HOME directory
-                value = get_env_value("HOME", global->env_list);
-                if (!value)
-                    return 0;
-                expanded_len += ft_strlen(value);
-                free(value); // Ensure you free value after using it
-                i++;
-            
-        } else if (str[i] == '$' && str[i + 1] == '?') {
-            // Handle '$?'
-            itoa_str = ft_itoa(global->exit_status);
-            if (!itoa_str)
-                return 0;
-            expanded_len += ft_strlen(itoa_str);
-            free(itoa_str); // Ensure you free itoa_str after using it
-            i += 2;
-        } else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_')) {
-            // Handle environment variables like $VAR
-            i++;
-            var_name = extract_var_name(str, i);
-            if (!var_name)
-                return 0;
-            value = get_env_value(var_name, global->env_list);
-            if (!value) {
-                free(var_name);
-                return 0;
-            }
-            expanded_len += ft_strlen(value);
-            i += ft_strlen(var_name);
-            free(var_name);
-            free(value); // Ensure you free value after using it
-        } else {
-            expanded_len++;
-            i++;
-        }
-    }
-    return expanded_len;
+	value = get_env_value("HOME", global->env_list);
+	if (!value)
+		return (NULL);
+	temp_value = value;
+	while (*value)
+		state->expanded[(state->k)++] = *value++;
+	global->home_expanded = 1;
+	free(temp_value);
+	state->i++;
+	return (state->expanded);
 }
 
-/*size_t	calc_expanded_len(char *str, t_global *global) // no leaks
+char	*handle_exit(t_expand_state *state, t_global *global)
 {
-	size_t expanded_len;
-	int i;
-	char *var_name;
-	char *value;
-	char *itoa_str;
+	char	*temp_value;
+	char	*value;
 
-	expanded_len = 0;
-	i = 0;
-	while (str[i])
-	{
-		if(str[i] == '$' && str[i + 1] == '?')
-		{
-			 itoa_str = ft_itoa(global->exit_status);
-            if (!itoa_str)
-                return 0;
-            expanded_len += ft_strlen(itoa_str);
-            free(itoa_str);
-            i += 2;
-		}
-		else
-		if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
-		{
-			i++;
-			var_name = extract_var_name(str, i);
-			if (!var_name)
-				return 0;
-			value = get_env_value(var_name, global->env_list);
-			if (!value)
-				return 0;
-			expanded_len += ft_strlen(value);
-			i += ft_strlen(var_name);
-			free(var_name);
-		}
-		else
-		{
-			expanded_len++;
-			i++;
-		}
-	}
-	return (expanded_len);
-}*/
+	value = ft_itoa(global->exit_status);
+	if (!value)
+		return (NULL);
+	temp_value = value;
+	while (*value)
+		state->expanded[(state->k)++] = *value++;
+	free(temp_value);
+	state->i += 2;
+	return (state->expanded);
+}
 
-
-// size_t calc_expanded_len(char *str, t_global *global) {
-//     size_t expanded_len = 0;
-//     int i = 0;
-//     char *var_name;
-//     char *value;
-//     char *itoa_str;
-
-//     while (str[i]) {
-//         if (str[i] == '~') {
-//             if (str[i + 1] == '\0' || str[i + 1] == '/') {
-//                 value = get_env_value("HOME", global->env_list);
-//                 if (!value) {
-//                     return 0; // HOME not found
-//                 }
-//                 expanded_len += ft_strlen(value);
-//                 free(value); // Free the allocated memory
-//                 i++;
-//             }
-//         } else if (str[i] == '$' && str[i + 1] == '?') {
-//             itoa_str = ft_itoa(global->exit_status);
-//             if (!itoa_str) {
-//                 return 0; // Memory allocation failed
-//             }
-//             expanded_len += ft_strlen(itoa_str);
-//             free(itoa_str); // Free the allocated memory
-//             i += 2;
-//         } else if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_')) {
-//             i++;
-//             var_name = extract_var_name(str, i);
-//             if (!var_name) {
-//                 return 0; // Failed to extract variable name
-//             }
-//             value = get_env_value(var_name, global->env_list);
-//             if (!value) {
-//                 free(var_name); // Clean up before returning
-//                 return 0; // Variable not found
-//             }
-//             expanded_len += ft_strlen(value);
-//             free(value); // Free the allocated memory
-//             i += ft_strlen(var_name); // Increment i by the length of the variable name
-//             free(var_name); // Free the allocated memory for variable name
-//         } else {
-//             expanded_len++; // Count the character itself
-//             i++;
-//         }
-//     }
-//     return expanded_len;
-// }
-
-// size_t	calc_expanded_len(char *str, t_global *global)
-// {
-// 	size_t expanded_len;
-// 	int i;
-// 	char *var_name;
-// 	char *value;
-// 	char *itoa_str;
-
-// 	expanded_len = 0;
-// 	i = 0;
-// 	while (str[i])
-// 	{
-// 		if (str[i] == '~')
-// 		{
-// 			if (str[i + 1] == '\0' || str[i + 1] == '/')
-// 			{
-// 				value = get_env_value("HOME", global->env_list);
-// 				if (!value)
-// 					return (0);
-// 				expanded_len += ft_strlen(value);
-// 				i++;
-// 			}
-// 		}
-// 		if(str[i] == '$' && str[i + 1] == '?')
-// 		{
-// 			 itoa_str = ft_itoa(global->exit_status);
-//             if (!itoa_str)
-//                 return 0;
-//             expanded_len += ft_strlen(itoa_str);
-//             free(itoa_str);
-//             i += 2;
-// 		}
-// 		else
-// 		if (str[i] == '$' && (ft_isalnum(str[i + 1]) || str[i + 1] == '_'))
-// 		{
-// 			i++;
-// 			var_name = extract_var_name(str, i);
-// 			if (!var_name)
-// 				return 0;
-// 			value = get_env_value(var_name, global->env_list);
-// 			if (!value)
-// 				return 0;
-// 			expanded_len += ft_strlen(value);
-// 			i += ft_strlen(var_name);
-// 			//free(value); //TODO
-// 			free(var_name);
-// 		}
-// 		else
-// 		{
-// 			expanded_len++;
-// 			i++;
-// 		}
-// 	}
-// 	return (expanded_len);
-// }
-
-char *extract_var_name(const char *str, int i)
+char	*handle_var(t_expand_state *state, char *str, t_global *global)
 {
-	int	j;
+	char	*temp_value;
 	char	*var_name;
+	char	*value;
 
-	if (str == NULL || i < 0 || str[i] == '\0')
-		return NULL;
-	j = i;
-	while (ft_isalnum(str[i]) || str[i] == '_')
-		i++;
-	var_name = ft_substr(str, j, i - j);
-	if (var_name == NULL)
+	var_name = extract_var_name(str, (++state->i));
+	if (!var_name)
+		return (NULL);
+	value = get_env_value(var_name, global->env_list);
+	if (!value)
+		return (NULL);
+	temp_value = value;
+	while (*value)
+		state->expanded[(state->k)++] = *value++;
+	state->i += ft_strlen(var_name);
+	free(var_name);
+	free(temp_value);
+	return (state->expanded);
+}
+
+char	*process_expansion(t_expand_state *state, char *str, t_global *global)
+{
+	if (str[state->i] == '~')
+		return (handle_home(state, global));
+	else if (str[state->i] == '$' && str[state->i + 1] == '?')
+		return (handle_exit(state, global));
+	else if (str[state->i] == '$' && (ft_isalnum(str[state->i + 1])
+			|| str[state->i + 1] == '_'))
+		return (handle_var(state, str, global));
+	state->expanded[(state->k)++] = str[(state->i)++];
+	return (state->expanded);
+}
+
+char	*concat_and_free(char *s1, char *s2)
+{
+	char	*new_str;
+
+	new_str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	if (!new_str)
 	{
-		return (free(var_name), NULL);
+		free(s1);
+		free(s2);
+		return (NULL);
 	}
-	return var_name;
+	ft_strlcpy(new_str, s1, ft_strlen(s1) + 1);
+	ft_strlcat(new_str, s2, ft_strlen(s1) + ft_strlen(s2) + 1);
+	free(s1);
+	free(s2);
+	return (new_str);
 }

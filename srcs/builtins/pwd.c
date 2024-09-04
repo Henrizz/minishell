@@ -1,12 +1,22 @@
-#include "../../includes/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/04 14:50:38 by smanriqu          #+#    #+#             */
+/*   Updated: 2024/09/04 14:50:58 by smanriqu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-//char *getcwd(char *buffer, size_t size);
+#include "../../includes/minishell.h"
 
 void	pwd(t_global *global)
 {
-	char cwd[PATH_MAX];
+	char	cwd[PATH_MAX];
 
-	if(getcwd(cwd, PATH_MAX))
+	if (getcwd(cwd, PATH_MAX))
 	{
 		ft_putstr_fd(cwd, 1);
 		ft_putstr_fd("\n", 1);

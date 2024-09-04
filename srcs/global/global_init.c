@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   global_init.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/04 14:32:27 by smanriqu          #+#    #+#             */
+/*   Updated: 2024/09/04 14:32:31 by smanriqu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-char *ft_strjoin_free(char *s1, char *s2, int free_str)
+char	*ft_strjoin_free(char *s1, char *s2, int free_str)
 {
-	char *new_str;
+	char	*new_str;
 
 	new_str = ft_strjoin(s1, s2);
 	if (free_str == 1)
@@ -17,11 +29,11 @@ char *ft_strjoin_free(char *s1, char *s2, int free_str)
 	return (new_str);
 }
 
-int populate_env_array(t_env *env_list, char **env_array)
+int	populate_env_array(t_env *env_list, char **env_array)
 {
 	t_env	*current;
-	int			i;
 	char	*temp;
+	int		i;
 
 	current = env_list;
 	i = 0;
@@ -61,49 +73,44 @@ int	set_env_array(t_env *env_list, char ***env_array)
 	*env_array = malloc(sizeof(char *) * (env_count + 1));
 	if (!*env_array)
 		return (0);
-	if(populate_env_array(env_list, *env_array))
+	if (populate_env_array(env_list, *env_array))
 		return (1);
 	return (0);
 }
 
 int	create_prompt(char **prompt, t_global *global)
 {
-	char *value;
-	//char *pwd;
-	char *temp;
-	
+	char	*value;
+	char	*temp;
+
 	value = get_env_value("USER", global->env_list);
-	//pwd = get_env_value("PWD", global->env_list);
-	
+	if (!value)
+		return (1);
 	temp = ft_strjoin(value, "@");
 	if (temp == NULL)
 	{
 		free(value);
-		//free(pwd);
 		return (1);
 	}
 	*prompt = ft_strjoin(temp, "minishell$ ");
-	if(*prompt == NULL)
+	if (*prompt == NULL)
 	{
 		free(value);
-		//free(pwd);
 		free(temp);
 		return (1);
 	}
 	free(value);
-	//free(pwd);
 	free(temp);
 	return (0);
 }
 
 void	global_init(t_global **global, char **env)
 {
-	t_env *env_list;
-	char **env_array;
+	t_env	*env_list;
+	char	**env_array;
 
 	env_list = NULL;
 	env_array = NULL;
-
 	*global = malloc(sizeof(t_global));
 	(*global)->exec = malloc(sizeof(t_pipe));
 	if (!*global || !(*global)->exec)
@@ -113,12 +120,11 @@ void	global_init(t_global **global, char **env)
 	}
 	(*global)->exit_status = 0;
 	(*global)->pwd = getenv("PWD");
-	if(env_init(env, &env_list))
+	if (env_init(env, &env_list))
 		(*global)->env_list = env_list;
-	if(set_env_array((*global)->env_list, &env_array))
+	if (set_env_array((*global)->env_list, &env_array))
 		(*global)->env = env_array;
-	//print_array(env_array);
 	make_history_file(global);
-	if(create_prompt(&((*global)->prompt), *global))
+	if (create_prompt(&((*global)->prompt), *global))
 		(*global)->prompt = ft_strdup("minishell$ ");
 }

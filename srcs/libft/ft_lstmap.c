@@ -6,13 +6,13 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 23:38:15 by Henriette         #+#    #+#             */
-/*   Updated: 2024/03/08 12:16:39 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/04 16:16:44 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_list *ft_lstmap(t_list *lst, void *(*f)(void *),
+t_list	*ft_lstmap(t_list *lst, void *(*f)(void *),
 void (*del)(void *))
 {
 	t_list	*new_list;

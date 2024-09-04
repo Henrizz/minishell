@@ -6,16 +6,16 @@
 /*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 19:20:50 by Henriette         #+#    #+#             */
-/*   Updated: 2024/03/08 12:10:00 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/04 16:14:13 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void ft_lstadd_back(t_list **lst, t_list *new)
+void	ft_lstadd_back(t_list **lst, t_list *new)
 {
 	t_list	*temp;
-	
+
 	if (!*lst)
 		*lst = new;
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/03 20:21:57 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:02:02 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ typedef struct s_global
 	char	*pwd;
 	int		exit_status;
 	int		history_fd;
+	int		home_expanded;
 	char	*prompt;
 	t_env	*env_list;
 	t_pipe	*exec;
@@ -109,6 +110,13 @@ typedef struct s_heredoc
 	char		quote_type;
 	int			flag;
 }	t_heredoc;
+
+typedef struct s_expand_state
+{
+	int		i;
+	int		k;
+	char	*expanded;
+}	t_expand_state;
 
 /* main helper functions */
 void	custom_add_history(char *cmd_line, t_global *global);
@@ -161,11 +169,11 @@ void	export(char **words, t_global *global);
 void	unset(char **args, t_global *global);
 void	exit_cmd(char **command_words, t_global *global, t_input **command);
 void	error_identifier(char *str, char *command);
+void	print_error(char *path);
 
-/* global */
+/* global and signals*/
 void	global_init(t_global **global, char **env);
 void	print_array(char **array);
-//void	init_signals(void);
 void	sig_basic(void);
 void	sig_non_interactive(void);
 void	sig_interactive_heredoc(void);
@@ -192,13 +200,17 @@ int		set_env_array(t_env *env_list, char ***env_array); //?
 t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
 /*expand*/
-
 void	expand_var_words(t_input *input, t_global *global);
 char	*expanding_var(char *str, t_global *global);
 
 /*expand utils*/
 size_t	calc_expanded_len(char *str, t_global *global);
 char	*extract_var_name(const char *str, int i);
+char	*handle_home(t_expand_state *state, t_global *global);
+char	*handle_exit(t_expand_state *state, t_global *global);
+char	*handle_var(t_expand_state *state, char *str, t_global *global);
+char	*process_expansion(t_expand_state *state, char *str, t_global *global);
+char	*concat_and_free(char *s1, char *s2);
 
 /* execution */
 //void execute(t_input **command, t_env *env_list, char **env, char *pwd);
