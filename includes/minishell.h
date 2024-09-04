@@ -117,6 +117,7 @@ typedef struct s_expand_state
 	int		k;
 	char		*expanded;
 }	t_expand_state;
+
 /* main helper functions */
 void	custom_add_history(char *cmd_line, t_global *global);
 void	set_signals_and_execute(t_input **command, t_global *global);
