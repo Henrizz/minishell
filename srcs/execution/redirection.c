@@ -68,14 +68,16 @@ int	redirect_heredoc(t_input **command, t_global *global)
 int	redirect_append(char *filename, t_global *global, t_input **command)
 {
 	int	fd;
+	int	len;
 
+	len = ft_strlen((*command)->words[0]);
 	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
 		global->exit_status = 1;
 		return (error_return(filename));
 	}
-	if (ft_strncmp((*command)->words[0], "exit", 5) && dup2(fd, 1) == -1)
+	if (ft_strncmp((*command)->words[0], "exit", len) && dup2(fd, 1) == -1)
 	{
 		global->exit_status = 1;
 		close(fd);
@@ -88,14 +90,16 @@ int	redirect_append(char *filename, t_global *global, t_input **command)
 int	redirection_out(char *filename, t_global *global, t_input **command)
 {
 	int	fd;
+	int	len;
 
+	len = ft_strlen((*command)->words[0]);
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
 		global->exit_status = 1;
 		return (error_return(filename));
 	}
-	if (ft_strncmp((*command)->words[0], "exit", 5) && dup2(fd, 1) == -1)
+	if (ft_strncmp((*command)->words[0], "exit", len) && dup2(fd, 1) == -1)
 	{
 		global->exit_status = 1;
 		close(fd);
