@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/04 16:20:57 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/04 17:10:55 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,7 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 {
 	char	*cmd_file;
-	int		i;
 
-	i = 0;
 	replace_pipes(curr, exec);
 	close_all_pipes(exec);
 	if (is_builtin(&curr))
@@ -79,24 +77,28 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 		free_command(inpt);
 		cleanup_and_exit(glob);
 	}
-	while (curr->words[i][0] == '\0')
-		i++;
-	if (ft_strrchr(curr->words[i], '/'))
-		cmd_file = prepare_path_command(curr->words[i], glob, inpt);
+	if (ft_strrchr(curr->words[0], '/'))
+		cmd_file = prepare_path_command(curr->words[0], glob, inpt);
 	else
-		cmd_file = prepare_bare_cmd(curr->words, i, glob, inpt);
-	execve(cmd_file, curr->words + i, glob->env);
+		cmd_file = prepare_bare_cmd(curr->words, glob, inpt);
+	execve(cmd_file, curr->words, glob->env);
 	glob->exit_status = error_return("execve fail\n");
 	free_command(inpt);
 	cleanup_and_exit(glob);
 	return (0);
 }
 
-char	*prepare_bare_cmd(char **cmd, int i, t_global *glob, t_input **inpt)
+char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt)
 {
 	char	*cmd_file;
 
-	cmd_file = find_cmd_file(cmd + i, glob->env);
+	if (cmd[0][0] == '\0')
+	{
+		ft_putstr_fd(": command not found\n", 2);
+		cmd_file = NULL;
+	}
+	else
+		cmd_file = find_cmd_file(cmd, glob->env);
 	if (cmd_file == NULL)
 	{
 		free_command(inpt);
