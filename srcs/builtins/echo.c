@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:47:28 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/04 14:48:13 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/04 15:47:20 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	echo(char **str, t_global *global)
 {
-	int	i;
+	int		i;
 	size_t	len;
 
 	i = 1;

@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:49:24 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/04 14:50:26 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/04 15:41:53 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ void	print_exported_vars(t_env *env_list)
 	current = env_list;
 	while (current != NULL)
 	{
-		if ((current->export == 1 || current->export == 2) && !current->value[0])
+		if ((current->export == 1 || current->export == 2)
+			&& !current->value[0])
 			printf("declare -x %s\n", current->key);
 		else if (current->export == 1 || current->export == 2)
 			printf("declare -x %s=\"%s\"\n", current->key, current->value);
@@ -91,7 +92,8 @@ void	export(char **words, t_global *global)
 			set_exported_var(global->env_list, words[i]);
 			set_env_array(global->env_list, &global->env);
 			global->exit_status = 0;
-		} else
+		}
+		else
 		{
 			error_identifier(words[i], "export");
 			global->exit_status = 1;

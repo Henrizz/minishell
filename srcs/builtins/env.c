@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:48:22 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/04 14:48:47 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/04 15:40:53 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	env_cmd(char **command_words, t_global *global)
 	}
 	while (temp)
 	{
-		 if (temp->key && temp->value && temp->export == 1)
+		if (temp->key && temp->value && temp->export == 1)
 			printf("%s=%s\n", temp->key, temp->value);
 		temp = temp->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:51:05 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/04 14:51:36 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/04 15:42:44 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	unset_env(char *key, t_env *env_list)
 	prev = NULL;
 	while (current)
 	{
-		if (!ft_strncmp(current->key, key, ft_strlen(key)) && ft_strlen(current->key) == ft_strlen(key))
+		if (!ft_strncmp(current->key, key, ft_strlen(key))
+			&& ft_strlen(current->key) == ft_strlen(key))
 		{
 			if (prev)
 				prev->next = current->next;

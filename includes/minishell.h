@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/04 14:45:39 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/04 16:02:02 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ typedef struct s_expand_state
 {
 	int		i;
 	int		k;
-	char		*expanded;
+	char	*expanded;
 }	t_expand_state;
 
 /* main helper functions */
@@ -169,6 +169,7 @@ void	export(char **words, t_global *global);
 void	unset(char **args, t_global *global);
 void	exit_cmd(char **command_words, t_global *global, t_input **command);
 void	error_identifier(char *str, char *command);
+void	print_error(char *path);
 
 /* global and signals*/
 void	global_init(t_global **global, char **env);

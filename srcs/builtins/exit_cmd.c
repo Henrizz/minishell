@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:48:59 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/04 14:49:17 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/04 15:44:02 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 int	is_valid_number(char *arg)
 {
-	size_t	i = 0;
+	size_t	i;
 
+	i = 0;
 	if (arg[0] == '+' || arg[0] == '-')
-	i++;
+		i++;
 	while (arg[i])
 	{
 		if (!ft_isdigit(arg[i]))
@@ -45,8 +46,6 @@ void	handle_exit_status(char **command_words, t_global *global)
 	}
 	global->exit_status = ft_atoi(command_words[1]);
 }
-
-
 
 void	exit_cmd(char **command_words, t_global *global, t_input **command)
 {
