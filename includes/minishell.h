@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/05 13:38:21 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/05 16:55:36 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ typedef struct s_global
 	int		exit_status;
 	int		history_fd;
 	int		home_expanded;
+	int		var_expanded;
 	char	*prompt;
 	t_env	*env_list;
 	t_pipe	*exec;
