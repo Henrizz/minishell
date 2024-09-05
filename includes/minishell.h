@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/05 13:34:58 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/05 13:38:21 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,7 +228,7 @@ char	*find_cmd_file(char **cmd, char **env);
 char	*get_paths(char **env, char *name);
 void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt);
 char	*prepare_path_command(char *word, t_global *global, t_input **input);
-char	*prepare_bare_cmd(char **cmd, int i, t_global *glob, t_input **inpt);
+char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt);
 
 /* redirections */
 int		save_in_out(int	*stdin_copy, int *stdout_copy);
