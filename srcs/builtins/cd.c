@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:46:25 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/04 16:01:49 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/05 13:35:09 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,6 @@ static void	update_pwd_and_env(char *old_pwd, t_env *env_list, char ***env)
 	set_env("OLDPWD", old_pwd, env_list, 1);
 	set_env("PWD", pwd, env_list, 1);
 	set_env_array(env_list, env);
-}
-
-char	*handle_old_pwd(t_global *global)
-{
-	char	*temp_oldpwd;
-
-	temp_oldpwd = get_env_value("OLDPWD", global->env_list);
-	if (temp_oldpwd[0] == '\0')
-	{
-		ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2);
-		global->exit_status = 1;
-		free(temp_oldpwd);
-		return (NULL);
-	}
-	return (temp_oldpwd);
 }
 
 static void	change_directory(char *path, t_global *global)
@@ -67,8 +52,7 @@ static void	handle_home_cd(t_global *global)
 	temp_home = get_env_value("HOME", global->env_list);
 	if (temp_home[0] == '\0')
 	{
-		ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-		global->exit_status = 1;
+		handle_cd_error(global, "HOME not set");
 		free(temp_home);
 		return ;
 	}
@@ -76,31 +60,40 @@ static void	handle_home_cd(t_global *global)
 	free(temp_home);
 }
 
-void	cd(char **words, t_global *global)
+char	*handle_cd_input(char **words, t_global *global)
 {
 	char	*path;
 
-	path = NULL;
 	if (!words[1])
+	{
 		handle_home_cd(global);
+		return (NULL);
+	}
 	else if (words[1] && !words[2])
 	{
 		path = ft_strdup(words[1]);
 		if (path[0] == '\0' && global->home_expanded == 1)
 		{
-			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-			global->exit_status = 1;
+			handle_cd_error(global, "HOME not set");
 			free(path);
-			return ;
+			return (NULL);
 		}
+		return (path);
 	}
 	else
 	{
-		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
-		global->exit_status = 1;
-		return ;
+		handle_cd_error(global, "too many arguments");
+		return (NULL);
 	}
+}
+
+void	cd(char **words, t_global *global)
+{
+	char	*path;
+
+	path = handle_cd_input(words, global);
+	if (!path)
+		return ;
 	change_directory(path, global);
-	if (words[1] && !words[2])
-		free(path);
+	free(path);
 }

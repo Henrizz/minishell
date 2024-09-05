@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/04 17:08:21 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/05 13:38:21 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,8 @@ void	unset(char **args, t_global *global);
 void	exit_cmd(char **command_words, t_global *global, t_input **command);
 void	error_identifier(char *str, char *command);
 void	print_error(char *path);
+void	handle_cd_error(t_global *global, char *message);
+char	*handle_old_pwd(t_global *global);
 
 /* global and signals*/
 void	global_init(t_global **global, char **env);
