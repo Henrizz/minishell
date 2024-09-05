@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/03 18:13:59 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:26:20 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	**split_for_parsing(char *str, t_elements *elmts)
 	elmts->is_word = 0;
 	elmts->quote_type = '\0';
 	count_elements(str, elmts);
-	elmts->array = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
+	elmts->array = (char **)malloc((elmts->elmt_count + 2) * sizeof(char *));
 	if (!elmts->array)
 		return (NULL);
 	while (*str)
