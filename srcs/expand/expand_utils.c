@@ -63,6 +63,7 @@ char	*handle_var(t_expand_state *state, char *str, t_global *global)
 	state->i += ft_strlen(var_name);
 	free(var_name);
 	free(temp_value);
+	global->var_expanded = 1;
 	return (state->expanded);
 }
 

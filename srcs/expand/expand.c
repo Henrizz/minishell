@@ -105,6 +105,7 @@ void	expand_var_words(t_input *input, t_global *global)
 
 	temp = input;
 	global->home_expanded = 0;
+	global->var_expanded = 0;
 	while (temp)
 	{
 		i = 0;
