@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/05 13:18:06 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:17:48 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,15 @@ typedef struct s_pipe
 	int	**pipe_fd;
 }	t_pipe;
 
+typedef struct s_elements
+{
+	char		**array;
+	int			elmt_count;
+	int			char_count;
+	int			is_word;
+	char		quote_type;
+}	t_elements;
+
 typedef struct s_global
 {
 	char	**env;
@@ -87,16 +96,8 @@ typedef struct s_global
 	char	*prompt;
 	t_env	*env_list;
 	t_pipe	*exec;
+	t_elements	*elmts;
 }	t_global;
-
-typedef struct s_elements
-{
-	char		**array;
-	int			elmt_count;
-	int			char_count;
-	int			is_word;
-	char		quote_type;
-}	t_elements;
 
 typedef struct s_heredoc
 {
@@ -125,7 +126,7 @@ void	set_signals_and_execute(t_input **command, t_global *global);
 /* parsing struct */
 int		parse_line(char *cmd_line, t_input **command, t_global *global);
 char	**split_for_parsing(char *cmd_line, t_elements *elmts);
-void	count_elements(char *str, t_elements *elmts);
+int	count_elements(char *str, t_elements *elmts);
 int		count_chars(char *str, int *inside_quote);
 char	*ft_strdup_delim(char **str, int *quoted, t_elements *elmts);
 int		is_whitespace(char c);
@@ -155,7 +156,7 @@ void	transfer_string(t_input **command, char *elmt, int offset, int type);
 /* free and exit functions */
 void	shell_exit(t_global *global);
 void	free_array(char **str);
-void	free_command(t_input **command);
+void	free_command(t_input **command, t_elements *elmts);
 int		error_return(char *message);
 void	cleanup_and_exit(t_global *global);
 

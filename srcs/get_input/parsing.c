@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/05 14:06:50 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:21:06 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,24 @@
 
 int	parse_line(char *cmd_line, t_input **command, t_global *global)
 {
-	t_elements	elmts;
+	//t_elements	elmts;
 
 	if (!*cmd_line)
 		return (1);
-	if (!split_for_parsing(cmd_line, &elmts))
+	if (split_for_parsing(cmd_line, global->elmts) == NULL)
 		return (1);
-	if (syntax_check(&elmts) == 1)
+	/*if (syntax_check(global->elmts) == 1)
 	{
 		global->exit_status = 2;
 		return (1);
-	}
-	if (divi_up_command(command, &elmts))
+	}*/
+	if (divi_up_command(command, global->elmts) == 1)
 	{
-		free_array(elmts.array);
+		//free_array(elmts.array);
 		global->exit_status = 1;
 		return (1);
 	}
-	free_array(elmts.array);
+	//free_array(elmts.array);
 	expand_var_words(*command, global);
 	//print_arrays_testing(command);
 	return (0);

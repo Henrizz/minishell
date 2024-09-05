@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/05 13:54:31 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:23:02 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ char	**split_for_parsing(char *str, t_elements *elmts)
 	quoted = 0;
 	elmts->is_word = 0;
 	elmts->quote_type = '\0';
-	count_elements(str, elmts);
-	elmts->array = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
+	elmts->elmt_count = count_elements(str, elmts);
+	elmts->array = (char **)malloc((elmts->elmt_count + 2) * sizeof(char *));
 	//printf("elmt count: %d\n", elmts->elmt_count);
 	if (!elmts->array)
 		return (NULL);
@@ -37,7 +37,8 @@ char	**split_for_parsing(char *str, t_elements *elmts)
 	if (quoted == 1)
 	{
 		ft_putstr_fd("minishell: syntax error: unexpected end of file\n", 2);
-		return (free_array(elmts->array), NULL);
+		//return (free_array(elmts->array), NULL);
+		return (NULL);
 	}
 	return (elmts->array);
 }
@@ -101,7 +102,7 @@ int	count_chars(char *str, int *inside_quote)
 	return (count);
 }
 
-void	count_elements(char *str, t_elements *elmts)
+int	count_elements(char *str, t_elements *elmts)
 {
 	int	i;
 	int	quoted;
@@ -117,4 +118,5 @@ void	count_elements(char *str, t_elements *elmts)
 	}
 	if (elmts->is_word == 1)
 		elmts->elmt_count++;
+	return (elmts->elmt_count);
 }

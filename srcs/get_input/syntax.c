@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 13:12:16 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/05 14:14:38 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/05 14:48:00 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ int	syntax_check(t_elements *elm)
 				|| !ft_strncmp(elm->array[i], ">>", 3)) && !elm->array[i + 1])
 		{
 			printf("minishell: syntax error near unexpected token 'newline'\n");
-			return (free_array(elm->array), 1);
+			//return (free_array(elm->array), 1);
+			return (1);
 		}
 		i++;
 	}

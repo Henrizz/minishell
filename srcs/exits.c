@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/03 20:17:40 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:20:09 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,16 @@ void	shell_exit(t_global *global)
 	cleanup_and_exit(global);
 }
 
-void	free_command(t_input **command)
+void	free_command(t_input **command, t_elements *elmts)
 {
 	t_input	*temp;
 
+	if (elmts)
+	{
+		free_array(elmts->array);
+		free(elmts);
+		
+	}
 	temp = *command;
 	while (*command != NULL)
 	{

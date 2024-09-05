@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/03 20:27:12 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/05 15:19:45 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	main(int argc, char **argv, char **env)
 		if (parse_line(cmd_line, &command, global) != 1)
 			set_signals_and_execute(&command, global);
 		free(cmd_line);
-		free_command(&command);
+		free_command(&command, global->elmts);
 	}
 	cleanup_and_exit(global);
 	return (0);
