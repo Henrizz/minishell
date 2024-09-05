@@ -113,7 +113,7 @@ void	expand_var_words(t_input *input, t_global *global)
 		while (temp->words[i])
 		{
 			temp->words[i] = handle_quoting(temp->words[i], global);
-			if(i = 0 && global->var_expanded)
+			if(i == 0 && global->var_expanded)
 				temp->expand = 1;
 			i++;
 		}
