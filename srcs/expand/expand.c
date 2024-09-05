@@ -127,3 +127,4 @@ void	expand_var_words(t_input *input, t_global *global)
 		temp = temp->next;
 	}
 }
+
