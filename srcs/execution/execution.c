@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/04 17:10:55 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/05 13:22:28 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	if (ft_strrchr(curr->words[0], '/'))
 		cmd_file = prepare_path_command(curr->words[0], glob, inpt);
 	else
-		cmd_file = prepare_bare_cmd(curr->words, glob, inpt);
+		cmd_file = prepare_bare_cmd(curr->words, glob);//, inpt);
 	execve(cmd_file, curr->words, glob->env);
 	glob->exit_status = error_return("execve fail\n");
 	free_command(inpt);
@@ -88,7 +88,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	return (0);
 }
 
-char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt)
+char	*prepare_bare_cmd(char **cmd, t_global *glob)//, t_input **inpt)
 {
 	char	*cmd_file;
 
@@ -101,7 +101,7 @@ char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt)
 		cmd_file = find_cmd_file(cmd, glob->env);
 	if (cmd_file == NULL)
 	{
-		free_command(inpt);
+		//free_command(inpt);
 		glob->exit_status = 127;
 		cleanup_and_exit(glob);
 	}

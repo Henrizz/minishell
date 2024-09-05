@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 09:58:49 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/03 18:13:59 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/05 13:54:31 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ char	**split_for_parsing(char *str, t_elements *elmts)
 	elmts->quote_type = '\0';
 	count_elements(str, elmts);
 	elmts->array = (char **)malloc((elmts->elmt_count + 1) * sizeof(char *));
+	//printf("elmt count: %d\n", elmts->elmt_count);
 	if (!elmts->array)
 		return (NULL);
 	while (*str)
@@ -48,7 +49,10 @@ char	*ft_strdup_delim(char **str, int *quoted, t_elements *elmts)
 
 	i = 0;
 	elmts->quote_type = '\0';
-	dup = (char *)malloc((count_chars(*str, quoted) + 1) * sizeof(char));
+	elmts->char_count = count_chars(*str, quoted);
+	//dup = (char *)malloc((count_chars(*str, quoted) + 1) * sizeof(char));
+	dup = (char *)malloc((elmts->char_count + 1) * sizeof(char));
+	printf("char count: %d\n", elmts->char_count);
 	if (!dup)
 		return (NULL);
 	if (*quoted == 0 && **str == '|')
