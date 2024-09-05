@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/04 17:02:59 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/05 17:01:28 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 int	parse_line(char *cmd_line, t_input **command, t_global *global)
 {
 	t_elements	elmts;
+	int	i;
 
+	i = 0;
+	while (is_whitespace(cmd_line[i]))
+		i++;
 	if (!*cmd_line)
 		return (1);
 	if (!split_for_parsing(cmd_line, &elmts))

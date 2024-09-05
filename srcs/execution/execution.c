@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/04 17:10:55 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/05 17:30:30 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,12 @@ char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt)
 
 	if (cmd[0][0] == '\0')
 	{
+		if ((*inpt)->expand == 1)
+		{
+		free_command(inpt);
+		glob->exit_status = 127;
+		cleanup_and_exit(glob);
+		}
 		ft_putstr_fd(": command not found\n", 2);
 		cmd_file = NULL;
 	}

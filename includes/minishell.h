@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/05 16:55:36 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/05 17:11:06 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct s_input
 	char			**redirections;
 	int				*types;
 	int				cmd_ind;
+	int 			expand;
 	int				j;
 	int				h;
 	int				pid;
