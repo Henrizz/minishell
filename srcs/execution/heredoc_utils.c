@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 18:46:14 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/02 15:55:51 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/06 17:00:46 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,15 @@ char	*make_heredoc_filename(t_input **command, int i, t_global *global)
 {
 	char	*filepath;
 	char	*directory;
+	char	*num;
 
+	//printf("i: %d\n", i);
+	num = ft_strjoin(ft_itoa(i), ft_itoa((*command)->cmd_ind));
+	//printf("num i: %s\n", num);
 	if (make_heredoc_directory(global) == 1)
 		return (NULL);
-	directory = ft_strjoin(global->pwd, "/.heredocs/.");
-	filepath = ft_strjoin(directory, (*command)->heredoc[i]);
+	directory = ft_strjoin(global->pwd, "/.heredocs/.here_");
+	filepath = ft_strjoin(directory, num);
 	if (!filepath)
 	{
 		perror("minishell: ");
