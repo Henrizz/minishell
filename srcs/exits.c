@@ -24,8 +24,21 @@ void	cleanup_and_exit(t_global *global)
 	free_array(global->env);
 	free(global->prompt);
 	free(global->exec);
+	//close(global->stdin_copy);
+	//close(global->stdout_copy);
 	free(global);
 	exit(exit_status);
+}
+
+void	cleanup(t_global *global)
+{
+	
+	close(global->history_fd);
+	free_env_list(&global->env_list);
+	free(global->prompt);
+	free(global->exec);
+	//close(global->stdin_copy);
+	//close(global->stdout_copy);
 }
 
 void	shell_exit(t_global *global)

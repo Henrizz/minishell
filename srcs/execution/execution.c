@@ -29,14 +29,17 @@ void	execute(t_input **command, t_global *global)
 			return ;
 		}
 		else 
+		{
 			what_builtin((*command)->words, global, command);
+			restore_in_out(&stdin_copy, &stdout_copy);
+		}
 	}
 	else
-		setup_and_run(command, global->exec, global);
-	restore_in_out(&stdin_copy, &stdout_copy);
+		setup_and_run(command, global->exec, global, &stdin_copy, &stdout_copy);
+	//restore_in_out(&stdin_copy, &stdout_copy);
 }
 
-int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
+int	setup_and_run(t_input **command, t_pipe *exec, t_global *global, int *stdin_copy, int *stdout_copy)
 {
 	t_input	*curr;
 
@@ -51,9 +54,10 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 		if (curr->pid == 0)
 		{
 			if (make_redirection(&curr, global) != 1 && curr->words[0])
-				child_exec(curr, exec, global, command);
+				child_exec(curr, exec, global, command, stdin_copy, stdout_copy);
 			else
 			{
+				restore_in_out(stdin_copy, stdout_copy);
 				close_all_pipes(exec);
 				cleanup_and_exit(global);
 			}
@@ -65,7 +69,7 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 	return (0);
 }
 
-int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
+int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt, int *stdin_copy, int *stdout_copy)
 {
 	char	*cmd_file;
 
@@ -80,7 +84,8 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	if (ft_strrchr(curr->words[0], '/'))
 		cmd_file = prepare_path_command(curr->words[0], glob, inpt);
 	else
-		cmd_file = prepare_bare_cmd(curr->words, glob, inpt);
+		cmd_file = prepare_bare_cmd(curr->words, glob, inpt, stdin_copy, stdout_copy);
+	cleanup(glob);
 	execve(cmd_file, curr->words, glob->env);
 	glob->exit_status = error_return("execve fail\n");
 	free_command(inpt);
@@ -88,19 +93,14 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	return (0);
 }
 
-char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt)
+char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int *stdin_copy, int *stdout_copy)
 {
 	char	*cmd_file;
 
 	if (cmd[0][0] == '\0')
 	{
-		if ((*inpt)->expand == 1)
-		{
-		free_command(inpt);
-		glob->exit_status = 127;
-		cleanup_and_exit(glob);
-		}
-		ft_putstr_fd(": command not found\n", 2);
+		if ((*inpt)->expand == 0)
+			ft_putstr_fd(": command not found\n", 2);
 		cmd_file = NULL;
 	}
 	else
@@ -108,6 +108,9 @@ char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt)
 	if (cmd_file == NULL)
 	{
 		free_command(inpt);
+		//restore_in_out(stdin_copy, stdout_copy);
+		close(*stdin_copy);
+		close(*stdout_copy);
 		glob->exit_status = 127;
 		cleanup_and_exit(glob);
 	}

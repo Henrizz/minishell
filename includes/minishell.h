@@ -87,6 +87,8 @@ typedef struct s_global
 	int		home_expanded;
 	int		var_expanded;
 	char	*prompt;
+	//int		stdin_copy;
+	//int		stdout_copy;
 	t_env	*env_list;
 	t_pipe	*exec;
 }	t_global;
@@ -230,7 +232,7 @@ char	*find_cmd_file(char **cmd, char **env);
 char	*get_paths(char **env, char *name);
 void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt);
 char	*prepare_path_command(char *word, t_global *global, t_input **input);
-char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt);
+char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int *stdin_copy, int *stdout_copy);
 
 /* redirections */
 int		save_in_out(int	*stdin_copy, int *stdout_copy);
@@ -257,10 +259,12 @@ int		create_pipes(t_pipe *exec);
 int		replace_pipes(t_input *command, t_pipe *exec);
 void	close_all_pipes(t_pipe *exec);
 void	wait_loop(t_input **command, t_global *global);
-int		child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt);
-int		setup_and_run(t_input **command, t_pipe *exec, t_global *global);
+int		child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt, int *stdin_copy, int *stdout_copy);
+int		setup_and_run(t_input **command, t_pipe *exec, t_global *global, int *stdin_copy, int *stdout_copy);
 
 /* utils - to be deleted later */
 void	print_arrays_testing(t_input **command);
+void	cleanup(t_global *global);
+char	*make_num(int i, int cmd_ind);
 
 #endif

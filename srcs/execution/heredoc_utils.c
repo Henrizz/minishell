@@ -18,9 +18,9 @@ char	*make_heredoc_filename(t_input **command, int i, t_global *global)
 	char	*directory;
 	char	*num;
 
-	//printf("i: %d\n", i);
-	num = ft_strjoin(ft_itoa(i), ft_itoa((*command)->cmd_ind));
-	//printf("num i: %s\n", num);
+	num = make_num(i, (*command)->cmd_ind);
+	if (!num)
+		return (NULL);
 	if (make_heredoc_directory(global) == 1)
 		return (NULL);
 	directory = ft_strjoin(global->pwd, "/.heredocs/.here_");
@@ -29,11 +29,36 @@ char	*make_heredoc_filename(t_input **command, int i, t_global *global)
 	{
 		perror("minishell: ");
 		global->exit_status = 1;
-		return (NULL);
+		return (free(num), NULL);
 	}
 	i++;
+	free(num);
 	free(directory);
 	return (filepath);
+}
+
+char	*make_num(int i, int cmd_ind)
+{
+	char	*num1;
+	char	*num2;
+	char	*num;
+
+	num1 = ft_itoa(i);
+	if (!num1)
+		return (NULL);
+	num2 = ft_itoa(cmd_ind);
+	if (!num2)
+		return (NULL);
+	num = ft_strjoin(num1, num2);
+	if (!num)
+	{
+		free(num1);
+		free(num2);
+		return (NULL);
+	}
+	free(num1);
+	free(num2);
+	return (num);
 }
 
 int	make_heredoc_directory(t_global *global)
