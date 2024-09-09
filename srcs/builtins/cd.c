@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:46:25 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/05 13:35:09 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:57:08 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	handle_home_cd(t_global *global)
 {
 	char	*temp_home;
 
-	temp_home = get_env_value("HOME", global->env_list);
+	temp_home = get_env_value("HOME", global->env_list, 0);
 	if (temp_home[0] == '\0')
 	{
 		handle_cd_error(global, "HOME not set");
