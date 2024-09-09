@@ -36,6 +36,7 @@ static size_t	handle_exit_status(int *i, t_global *global)
 		return (0);
 	len = ft_strlen(itoa_str);
 	free(itoa_str);
+	itoa_str = NULL;
 	(*i) += 2;
 	return (len);
 }
@@ -50,13 +51,15 @@ static size_t	handle_env_var(int *i, char *str, t_global *global)
 	var_name = extract_var_name(str, *i);
 	if (!var_name)
 		return (0);
-	value = get_env_value(var_name, global->env_list, 0);
+	value = get_env_value(var_name, global->env_list, global->is_redir);
 	if (!value)
 		return (0);
 	len = ft_strlen(value);
 	*i += ft_strlen(var_name);
 	free(var_name);
 	free(value);
+	var_name = NULL;
+	value = NULL;
 	return (len);
 }
 
