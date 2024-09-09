@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 13:35:28 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:02:19 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	execute(t_input **command, t_global *global)
 	sig_execution();
 	while ((*command)->words[i] && (*command)->words[i][0] == '\0' && (*command)->expand == 1)
 		i++;
+	if (!(*command)->words[i] && !(*command)->next)
+		return ;
 	if (!(*command)->next && is_builtin((*command)->words + i))
 	{
 		if (make_redirection(command, global) == 1)
@@ -83,6 +85,11 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt, int 
 	close_all_pipes(exec);
 	while (curr->words[i] && curr->words[i][0] == '\0' && curr->expand == 1)
 		i++;
+	if (!curr->words[i])
+	{
+		free_command(inpt);
+		cleanup_and_exit(glob);
+	}	
 	if (is_builtin(curr->words + i))
 	{
 		what_builtin(curr->words + i, glob, &curr);
