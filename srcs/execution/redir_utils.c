@@ -18,12 +18,20 @@ int	save_in_out(int	*stdin_copy, int *stdout_copy)
 	*stdout_copy = dup(STDOUT_FILENO);
 	if (*stdin_copy == -1 || *stdout_copy == -1)
 		return (error_return("dup"));
+	//close(STDIN_FILENO);
+	//close(STDOUT_FILENO);
 	return (0);
 }
 
 int	restore_in_out(int	*stdin_copy, int *stdout_copy)
 {
-	if (dup2(*stdin_copy, 0) == -1 || dup2(*stdout_copy, 1) == -1)
+	int	hold1;
+	int	hold2;
+
+	hold1 = dup2(*stdin_copy, 0);
+	hold2 = dup2(*stdout_copy, 1);
+	//if (dup2(*stdin_copy, 0) == -1 || dup2(*stdout_copy, 1) == -1)
+	if (hold1 == -1 || hold2 == -1)
 	{
 		close(*stdin_copy);
 		close(*stdout_copy);
@@ -31,6 +39,8 @@ int	restore_in_out(int	*stdin_copy, int *stdout_copy)
 	}
 	close(*stdin_copy);
 	close(*stdout_copy);
+	close(hold1);
+	close(hold2);
 	return (0);
 }
 
