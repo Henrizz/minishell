@@ -12,12 +12,12 @@
 
 #include "../../includes/minishell.h"
 
-char	*handle_home(t_expand_state *state, t_global *global)
+char	*handle_home(t_exp_state *state, t_global *global)
 {
 	char	*temp_value;
 	char	*value;
 
-	value = get_env_value("HOME", global->env_list);
+	value = get_env_value("HOME", global->env_list, global->is_redir);
 	if (!value)
 		return (NULL);
 	temp_value = value;
@@ -29,7 +29,7 @@ char	*handle_home(t_expand_state *state, t_global *global)
 	return (state->expanded);
 }
 
-char	*handle_exit(t_expand_state *state, t_global *global)
+char	*handle_exit(t_exp_state *state, t_global *global)
 {
 	char	*temp_value;
 	char	*value;
@@ -45,16 +45,16 @@ char	*handle_exit(t_expand_state *state, t_global *global)
 	return (state->expanded);
 }
 
-char	*handle_var(t_expand_state *state, char *str, t_global *global)
+char	*handle_var(t_exp_state *state, char *s, t_global *glob, int *flag)
 {
 	char	*temp_value;
 	char	*var_name;
 	char	*value;
 
-	var_name = extract_var_name(str, (++state->i));
+	var_name = extract_var_name(s, (++state->i));
 	if (!var_name)
 		return (NULL);
-	value = get_env_value(var_name, global->env_list);
+	value = get_env_value(var_name, glob->env_list, glob->is_redir);
 	if (!value)
 		return (NULL);
 	temp_value = value;
@@ -63,20 +63,20 @@ char	*handle_var(t_expand_state *state, char *str, t_global *global)
 	state->i += ft_strlen(var_name);
 	free(var_name);
 	free(temp_value);
-	global->var_expanded = 1;
+	*flag = 1;
 	return (state->expanded);
 }
 
-char	*process_expansion(t_expand_state *state, char *str, t_global *global)
+char	*proc_expan(t_exp_state *state, char *s, t_global *glob, int *flag)
 {
-	if (str[state->i] == '~')
-		return (handle_home(state, global));
-	else if (str[state->i] == '$' && str[state->i + 1] == '?')
-		return (handle_exit(state, global));
-	else if (str[state->i] == '$' && (ft_isalnum(str[state->i + 1])
-			|| str[state->i + 1] == '_'))
-		return (handle_var(state, str, global));
-	state->expanded[(state->k)++] = str[(state->i)++];
+	if (s[state->i] == '~')
+		return (handle_home(state, glob));
+	else if (s[state->i] == '$' && s[state->i + 1] == '?')
+		return (handle_exit(state, glob));
+	else if (s[state->i] == '$' && (ft_isalnum(s[state->i + 1])
+			|| s[state->i + 1] == '_'))
+		return (handle_var(state, s, glob, flag));
+	state->expanded[(state->k)++] = s[(state->i)++];
 	return (state->expanded);
 }
 

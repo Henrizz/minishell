@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/03 20:17:40 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 19:24:55 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ void	cleanup_and_exit(t_global *global)
 	free_array(global->env);
 	free(global->prompt);
 	free(global->exec);
+	if (global->stdin_cp != -1)
+	{
+		close(global->stdin_cp);
+		global->stdin_cp = -1;
+	}
+	if (global->stdout_cp != -1)
+	{
+		close(global->stdout_cp);
+		global->stdout_cp = -1;
+	}
 	free(global);
 	exit(exit_status);
 }
@@ -46,6 +56,8 @@ void	free_command(t_input **command)
 		free_array(temp->words);
 		free_array(temp->redirections);
 		free_array(temp->heredoc);
+		free(temp->exp_word);
+		free(temp->exp_redir);
 		free(temp->types);
 		free(temp);
 	}

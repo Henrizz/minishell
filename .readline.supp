@@ -11,3 +11,37 @@
 	fun:add_history
 }
 
+{
+	ls_malloc_suppression
+	Memcheck:Leak
+	...
+	fun:malloc
+	obj:/usr/bin/ls
+}
+{
+	ls_some_other_function_suppression
+	Memcheck:Leak
+	...
+	fun:some_other_function_from_ls
+	obj:/usr/bin/ls
+}
+
+{
+	grep_malloc_suppression
+	Memcheck:Leak
+	...
+	fun:malloc
+	obj:/usr/bin/grep
+}
+{
+	grep_function_1274EC_suppression
+	Memcheck:Leak
+	...
+	obj:/usr/bin/grep
+}
+{
+	grep_function_10E42F_suppression
+	Memcheck:Leak
+	...
+	obj:/usr/bin/grep
+}

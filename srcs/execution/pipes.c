@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 22:38:51 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/03 16:08:05 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:04:09 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	replace_pipes(t_input *command, t_pipe *exec)
 			&& dup2(exec->pipe_fd[command->cmd_ind][1], 1) == -1)
 			error_return("dup2 pipe[current][1]");
 	}
+	close_all_pipes(exec);
 	return (0);
 }
 

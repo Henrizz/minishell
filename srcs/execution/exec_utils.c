@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/04 17:12:38 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/09 13:11:55 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,20 +59,20 @@ int	get_cmd_index(t_input **command, t_pipe *exec)
 	return (i);
 }
 
-int	is_builtin(t_input **command)
+int	is_builtin(char **command_words)
 {
 	int	len;
 
-	if (!(*command)->words[0])
+	if (!command_words[0])
 		return (0);
-	len = ft_strlen((*command)->words[0]) + 1;
-	if (!ft_strncmp((*command)->words[0], "echo", len) 
-		|| !ft_strncmp((*command)->words[0], "cd", len) 
-		|| !ft_strncmp((*command)->words[0], "pwd", len) 
-		|| !ft_strncmp((*command)->words[0], "export", len)
-		|| !ft_strncmp((*command)->words[0], "unset", len) 
-		|| !ft_strncmp((*command)->words[0], "env", len)
-		|| !ft_strncmp((*command)->words[0], "exit", len))
+	len = ft_strlen(command_words[0]) + 1;
+	if (!ft_strncmp(command_words[0], "echo", len) 
+		|| !ft_strncmp(command_words[0], "cd", len) 
+		|| !ft_strncmp(command_words[0], "pwd", len) 
+		|| !ft_strncmp(command_words[0], "export", len)
+		|| !ft_strncmp(command_words[0], "unset", len) 
+		|| !ft_strncmp(command_words[0], "env", len)
+		|| !ft_strncmp(command_words[0], "exit", len))
 		return (1);
 	return (0);
 }

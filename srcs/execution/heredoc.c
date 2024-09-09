@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/02 19:03:07 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:14:30 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 		if (g_global_signum == SIGINT)
 			return (free(here->line), free(here->exp), 1);
 		if (here->flag == 0)
-			here->temp = expanding_var(here->line, global);
+			here->temp = expanding_var(here->line, global, &here->none);
 		else
 			here->temp = ft_strdup(here->line);
 		if (!here->temp)
@@ -64,6 +64,7 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 		here->count++;
 	}
 	signal(SIGINT, reset_line);
+	close(here->fd);
 	return (0);
 }
 

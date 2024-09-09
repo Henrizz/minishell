@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/05 17:11:06 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/09 21:12:21 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@
 # ifndef EKEYREVOKED
 #  define EKEYREVOKED 128
 # endif
-// to compile in my personal laptop EKEYREVOKEDˆˆ
+
 extern volatile sig_atomic_t	g_global_signum;
 
 typedef struct s_input
@@ -57,10 +57,11 @@ typedef struct s_input
 	char			**redirections;
 	int				*types;
 	int				cmd_ind;
-	int 			expand;
 	int				j;
 	int				h;
 	int				pid;
+	int				*exp_word;
+	int				*exp_redir;
 	struct s_input	*next;
 }	t_input;
 
@@ -85,8 +86,10 @@ typedef struct s_global
 	int		exit_status;
 	int		history_fd;
 	int		home_expanded;
-	int		var_expanded;
+	int		is_redir;
 	char	*prompt;
+	int		stdin_cp;
+	int		stdout_cp;
 	t_env	*env_list;
 	t_pipe	*exec;
 }	t_global;
@@ -111,14 +114,15 @@ typedef struct s_heredoc
 	int			quoted;
 	char		quote_type;
 	int			flag;
+	int			none;
 }	t_heredoc;
 
-typedef struct s_expand_state
+typedef struct s_exp_state
 {
 	int		i;
 	int		k;
 	char	*expanded;
-}	t_expand_state;
+}	t_exp_state;
 
 /* main helper functions */
 void	custom_add_history(char *cmd_line, t_global *global);
@@ -199,38 +203,41 @@ t_env	*allocate_env_var(void);
 void	free_env_list(t_env **env_list);
 void	free_env_var(t_env *env_var);
 void	print_env_list(t_env *env_list); //
-char	*get_env_value(char *var_name, t_env *env_list);
+char	*get_env_value(char *var_name, t_env *env_list, int is_redir);
 int		set_env_array(t_env *env_list, char ***env_array); //?
 t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
 /*expand*/
 void	expand_var_words(t_input *input, t_global *global);
-char	*expanding_var(char *str, t_global *global);
+char	*expanding_var(char *str, t_global *global, int *exp_flag);
+char	*handle_quote_redir(char *str, t_global *global, int *exp_flag);
 
 /*expand utils*/
 size_t	calc_expanded_len(char *str, t_global *global);
 char	*extract_var_name(const char *str, int i);
-char	*handle_home(t_expand_state *state, t_global *global);
-char	*handle_exit(t_expand_state *state, t_global *global);
-char	*handle_var(t_expand_state *state, char *str, t_global *global);
-char	*process_expansion(t_expand_state *state, char *str, t_global *global);
+char	*handle_home(t_exp_state *state, t_global *global);
+char	*handle_exit(t_exp_state *state, t_global *global);
+char	*handle_var(t_exp_state *state, char *str, t_global *global, int *flag);
+char	*proc_expan(t_exp_state *state, char *str, t_global *global, int *flag);
 char	*concat_and_free(char *s1, char *s2);
+int		contains_dollar_sign(const char *str);
+char	*extract_segment(char **curr, char quote);
 
 /* execution */
-//void execute(t_input **command, t_env *env_list, char **env, char *pwd);
-void	execute(t_input **command, t_global *global);
+int		execute(t_input **command, t_global *global);
 int		set_up_pipes_redirections(t_input **command, t_pipe *exec);
 int		set_up_and_run_processes(t_input **command, t_global *global);
 int		is_directory(char *name);
 
 /* execution utils */
 int		get_cmd_index(t_input **command, t_pipe *exec);
-int		is_builtin(t_input **command);
+//int		is_builtin(t_input **command);
+int		is_builtin(char **command_words);
 char	*find_cmd_file(char **cmd, char **env);
 char	*get_paths(char **env, char *name);
 void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt);
-char	*prepare_path_command(char *word, t_global *global, t_input **input);
-char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt);
+char	*prep_path_command(char *word, t_global *global, t_input **input);
+char	*prep_bare_cmd(t_input **curr, t_global *glob, t_input **inpt, int i);
 
 /* redirections */
 int		save_in_out(int	*stdin_copy, int *stdout_copy);
@@ -241,6 +248,7 @@ int		redirection_out(char *filename, t_global *global, t_input **command);
 int		redirect_heredoc(t_input **command, t_global *global);
 int		redirect_append(char *filename, t_global *global, t_input **command);
 int		no_redirect(t_input *command, int flag);
+int		process_redir(char *redir, int type, t_global *global, t_input **cmd);
 
 /* heredocs */
 int		get_input_heredoc(t_input **command, t_global *global);
@@ -262,5 +270,7 @@ int		setup_and_run(t_input **command, t_pipe *exec, t_global *global);
 
 /* utils - to be deleted later */
 void	print_arrays_testing(t_input **command);
+void	cleanup(t_global *global);
+char	*make_num(int i, int cmd_ind);
 
 #endif

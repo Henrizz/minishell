@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:04:14 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/05 13:35:32 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:57:55 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*handle_old_pwd(t_global *global)
 {
 	char	*temp_oldpwd;
 
-	temp_oldpwd = get_env_value("OLDPWD", global->env_list);
+	temp_oldpwd = get_env_value("OLDPWD", global->env_list, 0);
 	if (temp_oldpwd[0] == '\0')
 	{
 		handle_cd_error(global, "OLDPWD not set");

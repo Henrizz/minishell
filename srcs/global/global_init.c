@@ -83,7 +83,7 @@ int	create_prompt(char **prompt, t_global *global)
 	char	*value;
 	char	*temp;
 
-	value = get_env_value("USER", global->env_list);
+	value = get_env_value("USER", global->env_list, 0);
 	if (!value)
 		return (1);
 	temp = ft_strjoin(value, "@");
@@ -125,6 +125,8 @@ void	global_init(t_global **global, char **env)
 	if (set_env_array((*global)->env_list, &env_array))
 		(*global)->env = env_array;
 	make_history_file(global);
+	(*global)->stdin_cp = -1;
+	(*global)->stdout_cp = -1;
 	if (create_prompt(&((*global)->prompt), *global))
 		(*global)->prompt = ft_strdup("minishell$ ");
 }

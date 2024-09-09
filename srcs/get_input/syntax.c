@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 13:12:16 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/03 20:16:11 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/06 17:07:10 by Henriette        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int	check_doubles(char **array, int i)
 
 	value = 0;
 	message = "minishell: syntax error near unexpected token";
+	if (!ft_strncmp(array[0], "|", 2))
+		value = printf("%s '%c'\n", message, array[0][0]);
 	if (!ft_strncmp(array[i], ">>>", 3) || !ft_strncmp(array[i], "<<<", 3))
 		value = printf("%s '%c'\n", message, array[i][0]);
 	else if ((!ft_strncmp(array[i], ">>", 2) || !ft_strncmp(array[i], "<<", 2))
