@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 18:46:14 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/06 17:00:46 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/09 17:25:59 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,6 @@ int	here_expand(t_heredoc *here, char *name)
 	here->exp = malloc((ft_strlen(name) + 1) * sizeof(char));
 	if (!here->exp)
 		return (1);
-	if (name[0] == '"' || name[0] == '\'')
-		here->flag = 1;
 	while (name[i])
 	{
 		transfer_char(name, here, &j, &i);
@@ -120,6 +118,7 @@ void	transfer_char(char *name, t_heredoc *here, int *j, int *i)
 	if ((name[*i] == '"' || name[*i] == '\'') && here->quoted == 0)
 	{
 		here->quoted = 1;
+		here->flag = 1;
 		here->quote_type = name[(*i)++];
 	}
 	if (here->quoted == 1 || (here->quoted == 0 
