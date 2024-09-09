@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 16:55:54 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/06 16:59:41 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/09 20:03:39 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,14 @@ int	redirect_append(char *filename, t_global *global, t_input **command)
 	int	len;
 
 	len = ft_strlen((*command)->words[0]);
+	if (filename[0] == '$')
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(filename, 2);
+		ft_putstr_fd(": ambiguous redirect\n", 2);
+		global->exit_status = 1;
+		return (1);
+	}
 	fd = open(filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
@@ -83,8 +91,7 @@ int	redirect_append(char *filename, t_global *global, t_input **command)
 		close(fd);
 		return (error_return("dup2"));
 	}
-	close(fd);
-	return (0);
+	return (close(fd), 0);
 }
 
 int	redirection_out(char *filename, t_global *global, t_input **command)
@@ -93,6 +100,14 @@ int	redirection_out(char *filename, t_global *global, t_input **command)
 	int	len;
 
 	len = ft_strlen((*command)->words[0]);
+	if (filename[0] == '$')
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(filename, 2);
+		ft_putstr_fd(": ambiguous redirect\n", 2);
+		global->exit_status = 1;
+		return (1);
+	}
 	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
@@ -105,8 +120,7 @@ int	redirection_out(char *filename, t_global *global, t_input **command)
 		close(fd);
 		return (error_return("dup2"));
 	}
-	close(fd);
-	return (0);
+	return (close(fd), 0);
 }
 
 int	redirection_in(char *filename, t_global *global)

@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 19:26:46 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 19:29:25 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,8 +217,8 @@ size_t	calc_expanded_len(char *str, t_global *global);
 char	*extract_var_name(const char *str, int i);
 char	*handle_home(t_exp_state *state, t_global *global);
 char	*handle_exit(t_exp_state *state, t_global *global);
-char	*handle_var(t_exp_state *state, char *str, t_global *global, int *exp_flag);
-char	*process_expan(t_exp_state *state, char *str, t_global *global, int *exp_flag);
+char	*handle_var(t_exp_state *state, char *str, t_global *global, int *flag);
+char	*proc_expan(t_exp_state *state, char *str, t_global *global, int *flag);
 char	*concat_and_free(char *s1, char *s2);
 int		contains_dollar_sign(const char *str);
 char	*extract_segment(char **curr, char quote);

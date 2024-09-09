@@ -25,7 +25,7 @@ char	*expanding_var(char *str, t_global *global, int *exp_flag)
 		return (NULL);
 	while (str[state.i])
 	{
-		state.expanded = process_expan(&state, str, global, exp_flag);
+		state.expanded = proc_expan(&state, str, global, exp_flag);
 		if (!state.expanded)
 		{
 			free(state.expanded);

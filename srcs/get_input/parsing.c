@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 19:27:05 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 20:03:50 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	parse_line(char *cmd_line, t_input **command, t_global *global)
 	}
 	free_array(elmts.array);
 	expand_var_words(*command, global);
+	//print_arrays_testing(command);
 	return (0);
 }
 

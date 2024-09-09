@@ -67,7 +67,7 @@ char	*handle_var(t_exp_state *state, char *s, t_global *glob, int *flag)
 	return (state->expanded);
 }
 
-char	*process_expan(t_exp_state *state, char *s, t_global *glob, int *flag)
+char	*proc_expan(t_exp_state *state, char *s, t_global *glob, int *flag)
 {
 	if (s[state->i] == '~')
 		return (handle_home(state, glob));
