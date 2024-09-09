@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exits.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/06 16:29:13 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/09 14:45:33 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void	free_command(t_input **command)
 		free_array(temp->words);
 		free_array(temp->redirections);
 		free_array(temp->heredoc);
+		free(temp->exp_word);
+		free(temp->exp_redir);
 		free(temp->types);
 		free(temp);
 	}

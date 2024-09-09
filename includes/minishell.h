@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 14:38:01 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:05:18 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@
 # ifndef EKEYREVOKED
 #  define EKEYREVOKED 128
 # endif
-// to compile in my personal laptop EKEYREVOKEDˆˆ
+
 extern volatile sig_atomic_t	g_global_signum;
 
 typedef struct s_input
@@ -57,7 +57,6 @@ typedef struct s_input
 	char			**redirections;
 	int				*types;
 	int				cmd_ind;
-	//int 			expand;
 	int				j;
 	int				h;
 	int				pid;
@@ -87,7 +86,6 @@ typedef struct s_global
 	int		exit_status;
 	int		history_fd;
 	int		home_expanded;
-	//int		var_expanded;
 	char	*prompt;
 	//int		stdin_copy;
 	//int		stdout_copy;
@@ -117,12 +115,12 @@ typedef struct s_heredoc
 	int			flag;
 }	t_heredoc;
 
-typedef struct s_expand_state
+typedef struct s_exp_state
 {
 	int		i;
 	int		k;
 	char	*expanded;
-}	t_expand_state;
+}	t_exp_state;
 
 /* main helper functions */
 void	custom_add_history(char *cmd_line, t_global *global);
@@ -214,10 +212,10 @@ char	*expanding_var(char *str, t_global *global, int *exp_flag);
 /*expand utils*/
 size_t	calc_expanded_len(char *str, t_global *global);
 char	*extract_var_name(const char *str, int i);
-char	*handle_home(t_expand_state *state, t_global *global);
-char	*handle_exit(t_expand_state *state, t_global *global);
-char	*handle_var(t_expand_state *state, char *str, t_global *global, int *exp_flag);
-char	*process_expansion(t_expand_state *state, char *str, t_global *global, int *exp_flag);
+char	*handle_home(t_exp_state *state, t_global *global);
+char	*handle_exit(t_exp_state *state, t_global *global);
+char	*handle_var(t_exp_state *state, char *str, t_global *global, int *exp_flag);
+char	*process_expan(t_exp_state *state, char *str, t_global *global, int *exp_flag);
 char	*concat_and_free(char *s1, char *s2);
 
 /* execution */

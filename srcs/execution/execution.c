@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 14:32:51 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:57:01 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int *stdin_co
 		cmd_file = NULL;
 	}
 	else
-		cmd_file = find_cmd_file(cmd, glob->env);
+		cmd_file = find_cmd_file(cmd + i, glob->env);
 	if (cmd_file == NULL)
 	{
 		free_command(inpt);
