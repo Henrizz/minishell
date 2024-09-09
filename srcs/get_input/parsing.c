@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 18:44:41 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/09 19:05:20 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ int	parse_line(char *cmd_line, t_input **command, t_global *global)
 	}
 	free_array(elmts.array);
 	expand_var_words(*command, global);
-	//print_arrays_testing(command);
 	return (0);
 }
 

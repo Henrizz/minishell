@@ -6,112 +6,59 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:29:50 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/09 18:31:11 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/09 19:08:58 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// Helper function to extract the content inside quotes
-char	*extract_segment(char **curr, char quote)
-{
-	char	*start;
 
-	start = *curr;
-	while (**curr != quote && **curr != '\0')
-		(*curr)++;
-	return (ft_substr(start, 0, *curr - start));
-}
 
-// Function to check if a string contains a '$'
-int	contains_dollar_sign(const char *str)
-{
-	return (ft_strchr(str, '$') != NULL);
-}
-
-// Handle the content inside single quotes
-char *handle_single_quotes(char **curr)
+char	*handle_single_quotes(char **curr)
 {
 	char	*segment;
 	char	*result;
 	char	*quoted_segment;
 
-	(*curr)++; // Move past the opening single quote
-	segment = extract_segment(curr, '\''); // Extract the segment inside quotes
+	(*curr)++;
+	segment = extract_segment(curr, '\'');
 	if (contains_dollar_sign(segment))
-	{// Preserve quotes if '$' is found anywhere in the segment
-		result = ft_strjoin("'", segment);  // Add opening single quote
-		quoted_segment = ft_strjoin(result, "'"); // Add closing single quote
+	{
+		result = ft_strjoin("'", segment);
+		quoted_segment = ft_strjoin(result, "'");
 		free(result);
 		free(segment);
 		segment = quoted_segment;
-    }
-    if (**curr == '\'')
-		(*curr)++; // Move past the closing single quote
-	return (segment); // Return the segment (with quotes if necessary)
+	}
+	if (**curr == '\'')
+		(*curr)++;
+	return (segment);
 }
 
-// Handle the content inside double quotes and expand variables
 char	*handle_double_quotes(char **curr, t_global *glob, int *flag)
 {
 	char	*segment;
 	char	*expanded;
 
-	(*curr)++; // Move past the opening double quote
-	segment = extract_segment(curr, '"'); // Extract the segment inside quotes
-
+	(*curr)++;
+	segment = extract_segment(curr, '"');
 	if (**curr == '"')
-		(*curr)++; // Move past the closing double quote
-	expanded = expanding_var(segment, glob, flag); // Expand variables
+		(*curr)++;
+	expanded = expanding_var(segment, glob, flag);
 	free(segment);
 	return (expanded);
 }
 
-// Main function to process the quoted segment based on quote type
-char	*process_quoted_seg_redir(char **curr, char quote, t_global *glob, int *flag)
+char	*quoted_seg_redir(char **curr, char quote, t_global *glob, int *flag)
 {
 	if (quote == '"')
 		return (handle_double_quotes(curr, glob, flag));
 	else if (quote == '\'')
 		return (handle_single_quotes(curr));
-	return (NULL); // Fallback in case of error
+	return (NULL);
 }
 
-/*char	*process_quoted_seg_redir(char **curr, char quote, t_global *glob, int *flag)
-{
-	char	*start;
-	char	*segment;
-	char	*expanded;
-
-	if (quote == '"')
-		start = ++(*curr);
-	else if (quote == '\'')
-	{
-		start = *curr;
-		(*curr)++;
-		while (**curr != quote && **curr != '\0')
-			(*curr)++;
-		segment = ft_substr(start, 0, (*curr - start) + 1);
-
-		if (**curr == quote)
-			(*curr)++;
-		return (segment);
-	}
-	while (**curr != quote && **curr != '\0')
-		(*curr)++;
-	segment = ft_substr(start, 0, *curr - start);
-	if (quote == '"')
-	{
-		expanded = expanding_var(segment, glob, flag);
-		free(segment);
-		segment = expanded;
-	}
-	if (**curr == quote)
-		(*curr)++;
-	return (segment);
-}*/
-
-char	*process_non_quoted_seg_redir(char **current, t_global *global, int *exp_flag)
+char	*non_quoted_seg_redir(char **current, t_global *global, int *exp_flag)
 {
 	char	*start;
 	char	*segment;
@@ -132,6 +79,7 @@ char	*handle_quote_redir(char *str, t_global *global, int *exp_flag)
 	char	*current;
 	char	*segment;
 
+	global->is_redir = 1;
 	result = ft_strdup("");
 	if (!result)
 		return (NULL);
@@ -140,12 +88,11 @@ char	*handle_quote_redir(char *str, t_global *global, int *exp_flag)
 	{
 		segment = NULL;
 		if (*current == '\'' || *current == '"')
-			segment = process_quoted_seg_redir(&current, *current, global, exp_flag);
+			segment = quoted_seg_redir(&current, *current, global, exp_flag);
 		else
-			segment = process_non_quoted_seg_redir(&current, global, exp_flag);
+			segment = non_quoted_seg_redir(&current, global, exp_flag);
 		if (!segment)
 			return (free(result), NULL);
-
 		result = concat_and_free(result, segment);
 		if (!result)
 			return (NULL);

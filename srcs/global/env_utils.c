@@ -51,7 +51,7 @@ t_env	*allocate_env_var(void)
 	return (new_var);
 }
 
-char	*get_env_value(char *var_name, t_env *env_list)
+char	*get_env_value(char *var_name, t_env *env_list, int is_redir)
 {
 	t_env	*current;
 	char	*value;
@@ -68,6 +68,11 @@ char	*get_env_value(char *var_name, t_env *env_list)
 			return (value);
 		}
 		current = current->next;
+	}
+	if (is_redir)
+	{
+		value = ft_strjoin("$", var_name);
+		return (value);
 	}
 	value = ft_strdup("");
 	return (value);

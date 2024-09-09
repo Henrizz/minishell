@@ -83,7 +83,7 @@ int	create_prompt(char **prompt, t_global *global)
 	char	*value;
 	char	*temp;
 
-	value = get_env_value("USER", global->env_list);
+	value = get_env_value("USER", global->env_list, 0);
 	if (!value)
 		return (1);
 	temp = ft_strjoin(value, "@");

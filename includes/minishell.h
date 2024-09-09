@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 17:12:01 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/09 19:09:37 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ typedef struct s_global
 	int		exit_status;
 	int		history_fd;
 	int		home_expanded;
+	int		is_redir;
 	char	*prompt;
 	//int		stdin_copy;
 	//int		stdout_copy;
@@ -201,7 +202,7 @@ t_env	*allocate_env_var(void);
 void	free_env_list(t_env **env_list);
 void	free_env_var(t_env *env_var);
 void	print_env_list(t_env *env_list); //
-char	*get_env_value(char *var_name, t_env *env_list);
+char	*get_env_value(char *var_name, t_env *env_list, int is_redir);
 int		set_env_array(t_env *env_list, char ***env_array); //?
 t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
@@ -218,6 +219,8 @@ char	*handle_exit(t_exp_state *state, t_global *global);
 char	*handle_var(t_exp_state *state, char *str, t_global *global, int *exp_flag);
 char	*process_expan(t_exp_state *state, char *str, t_global *global, int *exp_flag);
 char	*concat_and_free(char *s1, char *s2);
+int		contains_dollar_sign(const char *str);
+char	*extract_segment(char **curr, char quote);
 
 /* execution */
 //void execute(t_input **command, t_env *env_list, char **env, char *pwd);

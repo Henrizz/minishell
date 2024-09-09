@@ -17,7 +17,7 @@ static size_t	handle_tilde(int *i, t_global *global)
 	char	*value;
 	size_t	len;
 
-	value = get_env_value("HOME", global->env_list);
+	value = get_env_value("HOME", global->env_list, 0);
 	if (!value)
 		return (0);
 	len = ft_strlen(value);
@@ -50,7 +50,7 @@ static size_t	handle_env_var(int *i, char *str, t_global *global)
 	var_name = extract_var_name(str, *i);
 	if (!var_name)
 		return (0);
-	value = get_env_value(var_name, global->env_list);
+	value = get_env_value(var_name, global->env_list, 0);
 	if (!value)
 		return (0);
 	len = ft_strlen(value);

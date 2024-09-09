@@ -17,7 +17,7 @@ char	*handle_home(t_exp_state *state, t_global *global)
 	char	*temp_value;
 	char	*value;
 
-	value = get_env_value("HOME", global->env_list);
+	value = get_env_value("HOME", global->env_list, global->is_redir);
 	if (!value)
 		return (NULL);
 	temp_value = value;
@@ -54,7 +54,7 @@ char	*handle_var(t_exp_state *state, char *s, t_global *glob, int *flag)
 	var_name = extract_var_name(s, (++state->i));
 	if (!var_name)
 		return (NULL);
-	value = get_env_value(var_name, glob->env_list);
+	value = get_env_value(var_name, glob->env_list, glob->is_redir);
 	if (!value)
 		return (NULL);
 	temp_value = value;

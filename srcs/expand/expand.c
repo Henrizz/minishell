@@ -78,6 +78,7 @@ char	*handle_quote(char *str, t_global *global, int *exp_flag)
 	char	*current;
 	char	*segment;
 
+	global->is_redir = 0;
 	result = ft_strdup("");
 	if (!result)
 		return (NULL);
