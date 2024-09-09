@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 15:05:58 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:17:29 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	execute(t_input **command, t_global *global)
 		|| get_input_heredoc(command, global) == 1)
 		return ;
 	sig_execution();
-	while ((*command)->words[i] && (*command)->words[i][0] == '\0' && (*command)->expand == 1)
+	while ((*command)->words[i] && (*command)->words[i][0] == '\0' && (*command)->exp_word[i] == 1)
 		i++;
 	if (!(*command)->words[i] && !(*command)->next)
 		return ;
@@ -84,7 +84,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	i = 0;
 	replace_pipes(curr, exec);
 	close_all_pipes(exec);
-	while (curr->words[i] && curr->words[i][0] == '\0' && curr->expand == 1)
+	while (curr->words[i] && curr->words[i][0] == '\0' && curr->exp_word[i] == 1)
 		i++;
 	if (!curr->words[i])
 	{
@@ -100,7 +100,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	if (ft_strrchr(curr->words[i], '/'))
 		cmd_file = prepare_path_command(curr->words[i], glob, inpt);
 	else
-		cmd_file = prepare_bare_cmd(curr->words + i, glob, inpt);
+		cmd_file = prepare_bare_cmd(curr->words, glob, inpt, i);
 	cleanup(glob);
 	execve(cmd_file, curr->words + i, glob->env);
 	glob->exit_status = error_return("execve fail\n");
@@ -109,17 +109,17 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	return (0);
 }
 
-char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt)
+char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int i)
 {
 	char	*cmd_file;
-	
-	if (cmd[0][0] == '\0' && (*inpt)->expand == 0)
+
+	if (cmd[i][0] == '\0' && (*inpt)->exp_word[i] == 0)
 	{
 		ft_putstr_fd(": command not found\n", 2);
 		cmd_file = NULL;
 	}
 	else
-		cmd_file = find_cmd_file(cmd, glob->env);
+		cmd_file = find_cmd_file(cmd + i, glob->env);
 	if (cmd_file == NULL)
 	{
 		free_command(inpt);

@@ -12,10 +12,10 @@
 
 #include "../../includes/minishell.h"
 
-char	*expanding_var(char *str, t_global *global)
+char	*expanding_var(char *str, t_global *global, int *exp_flag)
 {
 	size_t			expanded_len;
-	t_expand_state	state;
+	t_exp_state		state;
 
 	state.i = 0;
 	state.k = 0;
@@ -25,7 +25,7 @@ char	*expanding_var(char *str, t_global *global)
 		return (NULL);
 	while (str[state.i])
 	{
-		state.expanded = process_expansion(&state, str, global);
+		state.expanded = process_expan(&state, str, global, exp_flag);
 		if (!state.expanded)
 		{
 			free(state.expanded);
@@ -36,28 +36,28 @@ char	*expanding_var(char *str, t_global *global)
 	return (state.expanded);
 }
 
-char	*process_quoted_segment(char **current, char quote, t_global *global)
+char	*process_quoted_seg(char **curr, char quote, t_global *glob, int *flag)
 {
 	char	*start;
 	char	*segment;
 	char	*expanded;
 
-	start = ++(*current);
-	while (**current != quote && **current != '\0')
-		(*current)++;
-	segment = ft_substr(start, 0, *current - start);
+	start = ++(*curr);
+	while (**curr != quote && **curr != '\0')
+		(*curr)++;
+	segment = ft_substr(start, 0, *curr - start);
 	if (quote == '"')
 	{
-		expanded = expanding_var(segment, global);
+		expanded = expanding_var(segment, glob, flag);
 		free(segment);
 		segment = expanded;
 	}
-	if (**current == quote)
-		(*current)++;
+	if (**curr == quote)
+		(*curr)++;
 	return (segment);
 }
 
-char	*process_non_quoted_segment(char **current, t_global *global)
+char	*process_non_quoted_seg(char **current, t_global *global, int *exp_flag)
 {
 	char	*start;
 	char	*segment;
@@ -67,12 +67,12 @@ char	*process_non_quoted_segment(char **current, t_global *global)
 	while (**current != '\'' && **current != '"' && **current != '\0')
 		(*current)++;
 	segment = ft_substr(start, 0, *current - start);
-	expanded = expanding_var(segment, global);
+	expanded = expanding_var(segment, global, exp_flag);
 	free(segment);
 	return (expanded);
 }
 
-char	*handle_quoting(char *str, t_global *global)
+char	*handle_quote(char *str, t_global *global, int *exp_flag)
 {
 	char	*result;
 	char	*current;
@@ -86,9 +86,9 @@ char	*handle_quoting(char *str, t_global *global)
 	{
 		segment = NULL;
 		if (*current == '\'' || *current == '"')
-			segment = process_quoted_segment(&current, *current, global);
+			segment = process_quoted_seg(&current, *current, global, exp_flag);
 		else
-			segment = process_non_quoted_segment(&current, global);
+			segment = process_non_quoted_seg(&current, global, exp_flag);
 		if (!segment)
 			return (free(result), NULL);
 		result = concat_and_free(result, segment);
@@ -98,33 +98,31 @@ char	*handle_quoting(char *str, t_global *global)
 	return (free(str), result);
 }
 
-void	expand_var_words(t_input *input, t_global *global)
+void	expand_var_words(t_input *input, t_global *glob)
 {
 	int		i;
 	t_input	*temp;
 
 	temp = input;
-	global->home_expanded = 0;
-	global->var_expanded = 0;
+	glob->home_expanded = 0;
 	while (temp)
 	{
 		i = 0;
-		temp->expand = 0;
 		while (temp->words[i])
 		{
-			temp->words[i] = handle_quoting(temp->words[i], global);
-			if(i == 0 && global->var_expanded)
-				temp->expand = 1;
+			temp->exp_word[i] = 0;
+			temp->words[i] = handle_quote(temp->words[i],
+					glob, &temp->exp_word[i]);
 			i++;
 		}
 		i = 0;
 		while (temp->redirections[i])
 		{
-			temp->redirections[i]
-				= handle_quoting(temp->redirections[i], global);
+			temp->exp_redir[i] = 0;
+			temp->redirections[i] = handle_quote(temp->redirections[i],
+					glob, &temp->exp_redir[i]);
 			i++;
 		}
 		temp = temp->next;
 	}
 }
-

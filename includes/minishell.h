@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 15:05:34 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:17:55 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@
 # ifndef EKEYREVOKED
 #  define EKEYREVOKED 128
 # endif
-// to compile in my personal laptop EKEYREVOKEDˆˆ
+
 extern volatile sig_atomic_t	g_global_signum;
 
 typedef struct s_input
@@ -57,10 +57,11 @@ typedef struct s_input
 	char			**redirections;
 	int				*types;
 	int				cmd_ind;
-	int 			expand;
 	int				j;
 	int				h;
 	int				pid;
+	int				*exp_word;
+	int				*exp_redir;
 	struct s_input	*next;
 }	t_input;
 
@@ -85,7 +86,6 @@ typedef struct s_global
 	int		exit_status;
 	int		history_fd;
 	int		home_expanded;
-	int		var_expanded;
 	char	*prompt;
 	int		stdin_copy;
 	int		stdout_copy;
@@ -115,12 +115,12 @@ typedef struct s_heredoc
 	int			flag;
 }	t_heredoc;
 
-typedef struct s_expand_state
+typedef struct s_exp_state
 {
 	int		i;
 	int		k;
 	char	*expanded;
-}	t_expand_state;
+}	t_exp_state;
 
 /* main helper functions */
 void	custom_add_history(char *cmd_line, t_global *global);
@@ -207,15 +207,15 @@ t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
 /*expand*/
 void	expand_var_words(t_input *input, t_global *global);
-char	*expanding_var(char *str, t_global *global);
+char	*expanding_var(char *str, t_global *global, int *exp_flag);
 
 /*expand utils*/
 size_t	calc_expanded_len(char *str, t_global *global);
 char	*extract_var_name(const char *str, int i);
-char	*handle_home(t_expand_state *state, t_global *global);
-char	*handle_exit(t_expand_state *state, t_global *global);
-char	*handle_var(t_expand_state *state, char *str, t_global *global);
-char	*process_expansion(t_expand_state *state, char *str, t_global *global);
+char	*handle_home(t_exp_state *state, t_global *global);
+char	*handle_exit(t_exp_state *state, t_global *global);
+char	*handle_var(t_exp_state *state, char *str, t_global *global, int *exp_flag);
+char	*process_expan(t_exp_state *state, char *str, t_global *global, int *exp_flag);
 char	*concat_and_free(char *s1, char *s2);
 
 /* execution */
@@ -233,7 +233,7 @@ char	*find_cmd_file(char **cmd, char **env);
 char	*get_paths(char **env, char *name);
 void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt);
 char	*prepare_path_command(char *word, t_global *global, t_input **input);
-char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt);
+char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int i);
 
 /* redirections */
 int		save_in_out(int	*stdin_copy, int *stdout_copy);

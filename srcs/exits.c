@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 15:09:01 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:18:02 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ void	free_command(t_input **command)
 		free_array(temp->words);
 		free_array(temp->redirections);
 		free_array(temp->heredoc);
+		free(temp->exp_word);
+		free(temp->exp_redir);
 		free(temp->types);
 		free(temp);
 	}
