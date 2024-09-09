@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 15:17:29 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:25:50 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	if (ft_strrchr(curr->words[i], '/'))
 		cmd_file = prepare_path_command(curr->words[i], glob, inpt);
 	else
-		cmd_file = prepare_bare_cmd(curr->words, glob, inpt, i);
+		cmd_file = prepare_bare_cmd(&curr, glob, inpt, i);
 	cleanup(glob);
 	execve(cmd_file, curr->words + i, glob->env);
 	glob->exit_status = error_return("execve fail\n");
@@ -109,17 +109,17 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	return (0);
 }
 
-char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int i)
+char	*prepare_bare_cmd(t_input **curr, t_global *glob, t_input **inpt, int i)
 {
 	char	*cmd_file;
 
-	if (cmd[i][0] == '\0' && (*inpt)->exp_word[i] == 0)
+	if ((*curr)->words[i][0] == '\0' && (*curr)->exp_word[i] == 0)
 	{
 		ft_putstr_fd(": command not found\n", 2);
 		cmd_file = NULL;
 	}
 	else
-		cmd_file = find_cmd_file(cmd + i, glob->env);
+		cmd_file = find_cmd_file((*curr)->words + i, glob->env);
 	if (cmd_file == NULL)
 	{
 		free_command(inpt);
