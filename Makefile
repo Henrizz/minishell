@@ -37,7 +37,7 @@ SRCS = srcs/main.c srcs/exits.c srcs/get_input/parsing.c srcs/get_input/split_li
        srcs/global/init_utils.c srcs/get_input/split_utils.c srcs/execution/heredoc_utils.c \
        srcs/builtins/exit_cmd.c srcs/global/signals.c srcs/get_input/parsing_utils.c \
        srcs/expand/expand_len.c srcs/builtins/builtins_utils.c srcs/expand/expand_redir.c \
-       srcs/expand/expand_redir_utils.c
+       srcs/expand/expand_redir_utils.c srcs/execution/redir_utils2.c
 OBJS = $(SRCS:.c=.o)
 RM = rm -rf
 CC = cc

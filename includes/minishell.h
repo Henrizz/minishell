@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 19:29:25 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 21:12:21 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,6 +248,7 @@ int		redirection_out(char *filename, t_global *global, t_input **command);
 int		redirect_heredoc(t_input **command, t_global *global);
 int		redirect_append(char *filename, t_global *global, t_input **command);
 int		no_redirect(t_input *command, int flag);
+int		process_redir(char *redir, int type, t_global *global, t_input **cmd);
 
 /* heredocs */
 int		get_input_heredoc(t_input **command, t_global *global);

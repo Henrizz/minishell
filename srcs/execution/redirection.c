@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 16:55:54 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 20:03:39 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 21:17:22 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,8 @@ int	make_redirection(t_input **command, t_global *global)
 	i = 0;
 	while ((*command)->redirections[i])
 	{
-		if ((*command)->types[i] == RED_IN)
-			redirection_in((*command)->redirections[i], global);
-		if ((*command)->types[i] == RED_OUT)
-			redirection_out((*command)->redirections[i], global, command);
-		if ((*command)->types[i] == APP_OUT)
-			redirect_append((*command)->redirections[i], global, command);
-		if (global->exit_status == 1)
+		if (process_redir((*command)->redirections[i], 
+				(*command)->types[i], global, command))
 			return (1);
 		i++;
 	}
@@ -33,6 +28,26 @@ int	make_redirection(t_input **command, t_global *global)
 	{
 		global->exit_status = 1;
 		return (1);
+	}
+	return (0);
+}
+
+int	process_redir(char *redir, int type, t_global *global, t_input **cmd)
+{
+	if (type == RED_IN)
+	{
+		if (redirection_in(redir, global))
+			return (1);
+	}
+	if (type == RED_OUT)
+	{
+		if (redirection_out(redir, global, cmd))
+			return (1);
+	}
+	if (type == APP_OUT)
+	{
+		if (redirect_append(redir, global, cmd))
+			return (1);
 	}
 	return (0);
 }
@@ -121,29 +136,4 @@ int	redirection_out(char *filename, t_global *global, t_input **command)
 		return (error_return("dup2"));
 	}
 	return (close(fd), 0);
-}
-
-int	redirection_in(char *filename, t_global *global)
-{
-	int	fd;
-
-	if (access(filename, R_OK) == -1)
-	{
-		global->exit_status = 1;
-		return (error_return(filename));
-	}
-	fd = open(filename, O_RDONLY);
-	if (fd == -1)
-	{
-		global->exit_status = 1;
-		return (error_return("open"));
-	}
-	if (dup2(fd, 0) == -1)
-	{
-		close(fd);
-		global->exit_status = 1;
-		return (error_return("dup2"));
-	}
-	close(fd);
-	return (0);
 }
