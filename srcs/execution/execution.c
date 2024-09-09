@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 14:02:19 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:05:58 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 void	execute(t_input **command, t_global *global)
 {
-	int		stdin_copy;
-	int		stdout_copy;
+	
+	//int		stdin_copy;
+	//int		stdout_copy;
 	int	i;
 
 	i = 0;
-	if (save_in_out(&stdin_copy, &stdout_copy) == -1 
+	if (save_in_out(&(global->stdin_copy), &(global->stdout_copy)) == -1 
 		|| get_input_heredoc(command, global) == 1)
 		return ;
 	sig_execution();
@@ -31,21 +32,21 @@ void	execute(t_input **command, t_global *global)
 	{
 		if (make_redirection(command, global) == 1)
 		{
-			restore_in_out(&stdin_copy, &stdout_copy);
+			restore_in_out(&(global->stdin_copy), &(global->stdout_copy));
 			return ;
 		}
 		else 
 		{
 			what_builtin((*command)->words + i, global, command);
-			restore_in_out(&stdin_copy, &stdout_copy);
+			restore_in_out(&(global->stdin_copy), &(global->stdout_copy));
 		}
 	}
 	else
-		setup_and_run(command, global->exec, global, &stdin_copy, &stdout_copy);
+		setup_and_run(command, global->exec, global);
 	//restore_in_out(&stdin_copy, &stdout_copy);
 }
 
-int	setup_and_run(t_input **command, t_pipe *exec, t_global *global, int *stdin_copy, int *stdout_copy)
+int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 {
 	t_input	*curr;
 
@@ -60,10 +61,10 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global, int *stdin_
 		if (curr->pid == 0)
 		{
 			if (make_redirection(&curr, global) != 1 && curr->words[0])
-				child_exec(curr, exec, global, command, stdin_copy, stdout_copy);
+				child_exec(curr, exec, global, command);
 			else
 			{
-				restore_in_out(stdin_copy, stdout_copy);
+				restore_in_out(&(global->stdin_copy), &(global->stdout_copy));
 				close_all_pipes(exec);
 				cleanup_and_exit(global);
 			}
@@ -75,7 +76,7 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global, int *stdin_
 	return (0);
 }
 
-int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt, int *stdin_copy, int *stdout_copy)
+int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 {
 	char	*cmd_file;
 	int	i;
@@ -99,7 +100,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt, int 
 	if (ft_strrchr(curr->words[i], '/'))
 		cmd_file = prepare_path_command(curr->words[i], glob, inpt);
 	else
-		cmd_file = prepare_bare_cmd(curr->words + i, glob, inpt, stdin_copy, stdout_copy);
+		cmd_file = prepare_bare_cmd(curr->words + i, glob, inpt);
 	cleanup(glob);
 	execve(cmd_file, curr->words + i, glob->env);
 	glob->exit_status = error_return("execve fail\n");
@@ -108,10 +109,10 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt, int 
 	return (0);
 }
 
-char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int *stdin_copy, int *stdout_copy)
+char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt)
 {
 	char	*cmd_file;
-
+	
 	if (cmd[0][0] == '\0' && (*inpt)->expand == 0)
 	{
 		ft_putstr_fd(": command not found\n", 2);
@@ -123,8 +124,8 @@ char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int *stdin_co
 	{
 		free_command(inpt);
 		//restore_in_out(stdin_copy, stdout_copy);
-		close(*stdin_copy);
-		close(*stdout_copy);
+		//close(*stdin_copy);
+		//close(*stdout_copy);
 		glob->exit_status = 127;
 		cleanup_and_exit(glob);
 	}
