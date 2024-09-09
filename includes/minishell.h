@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/06 16:56:49 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/09 13:32:14 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,8 @@ int		is_directory(char *name);
 
 /* execution utils */
 int		get_cmd_index(t_input **command, t_pipe *exec);
-int		is_builtin(t_input **command);
+//int		is_builtin(t_input **command);
+int		is_builtin(char **command_words);
 char	*find_cmd_file(char **cmd, char **env);
 char	*get_paths(char **env, char *name);
 void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt);

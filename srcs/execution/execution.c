@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/06 16:27:31 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/09 13:35:28 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,16 @@ void	execute(t_input **command, t_global *global)
 {
 	int		stdin_copy;
 	int		stdout_copy;
+	int	i;
 
+	i = 0;
 	if (save_in_out(&stdin_copy, &stdout_copy) == -1 
 		|| get_input_heredoc(command, global) == 1)
 		return ;
 	sig_execution();
-	if (!(*command)->next && is_builtin(command))
+	while ((*command)->words[i] && (*command)->words[i][0] == '\0' && (*command)->expand == 1)
+		i++;
+	if (!(*command)->next && is_builtin((*command)->words + i))
 	{
 		if (make_redirection(command, global) == 1)
 		{
@@ -30,7 +34,7 @@ void	execute(t_input **command, t_global *global)
 		}
 		else 
 		{
-			what_builtin((*command)->words, global, command);
+			what_builtin((*command)->words + i, global, command);
 			restore_in_out(&stdin_copy, &stdout_copy);
 		}
 	}
@@ -72,21 +76,25 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global, int *stdin_
 int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt, int *stdin_copy, int *stdout_copy)
 {
 	char	*cmd_file;
+	int	i;
 
+	i = 0;
 	replace_pipes(curr, exec);
 	close_all_pipes(exec);
-	if (is_builtin(&curr))
+	while (curr->words[i] && curr->words[i][0] == '\0' && curr->expand == 1)
+		i++;
+	if (is_builtin(curr->words + i))
 	{
-		what_builtin(curr->words, glob, &curr);
+		what_builtin(curr->words + i, glob, &curr);
 		free_command(inpt);
 		cleanup_and_exit(glob);
 	}
-	if (ft_strrchr(curr->words[0], '/'))
-		cmd_file = prepare_path_command(curr->words[0], glob, inpt);
+	if (ft_strrchr(curr->words[i], '/'))
+		cmd_file = prepare_path_command(curr->words[i], glob, inpt);
 	else
-		cmd_file = prepare_bare_cmd(curr->words, glob, inpt, stdin_copy, stdout_copy);
+		cmd_file = prepare_bare_cmd(curr->words + i, glob, inpt, stdin_copy, stdout_copy);
 	cleanup(glob);
-	execve(cmd_file, curr->words, glob->env);
+	execve(cmd_file, curr->words + i, glob->env);
 	glob->exit_status = error_return("execve fail\n");
 	free_command(inpt);
 	cleanup_and_exit(glob);
@@ -97,10 +105,9 @@ char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int *stdin_co
 {
 	char	*cmd_file;
 
-	if (cmd[0][0] == '\0')
+	if (cmd[0][0] == '\0' && (*inpt)->expand == 0)
 	{
-		if ((*inpt)->expand == 0)
-			ft_putstr_fd(": command not found\n", 2);
+		ft_putstr_fd(": command not found\n", 2);
 		cmd_file = NULL;
 	}
 	else
