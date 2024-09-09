@@ -119,7 +119,7 @@ void	expand_var_words(t_input *input, t_global *glob)
 		while (temp->redirections[i])
 		{
 			temp->exp_redir[i] = 0;
-			temp->redirections[i] = handle_quote(temp->redirections[i],
+			temp->redirections[i] = handle_quote_redir(temp->redirections[i],
 					glob, &temp->exp_redir[i]);
 			i++;
 		}

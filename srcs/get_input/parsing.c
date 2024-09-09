@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 11:49:53 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/06 16:34:56 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/09 18:44:41 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	parse_line(char *cmd_line, t_input **command, t_global *global)
 	}
 	free_array(elmts.array);
 	expand_var_words(*command, global);
+	//print_arrays_testing(command);
 	return (0);
 }
 

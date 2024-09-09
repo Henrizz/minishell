@@ -6,7 +6,7 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 15:05:18 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:12:01 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,6 +208,7 @@ t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 /*expand*/
 void	expand_var_words(t_input *input, t_global *global);
 char	*expanding_var(char *str, t_global *global, int *exp_flag);
+char	*handle_quote_redir(char *str, t_global *global, int *exp_flag);
 
 /*expand utils*/
 size_t	calc_expanded_len(char *str, t_global *global);
