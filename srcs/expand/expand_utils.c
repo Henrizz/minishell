@@ -45,7 +45,7 @@ char	*handle_exit(t_expand_state *state, t_global *global)
 	return (state->expanded);
 }
 
-char	*handle_var(t_expand_state *state, char *str, t_global *global)
+char	*handle_var(t_expand_state *state, char *str, t_global *global, int *exp_flag)
 {
 	char	*temp_value;
 	char	*var_name;
@@ -63,11 +63,12 @@ char	*handle_var(t_expand_state *state, char *str, t_global *global)
 	state->i += ft_strlen(var_name);
 	free(var_name);
 	free(temp_value);
-	global->var_expanded = 1;
+	*exp_flag = 1;
+	//global->var_expanded = 1;
 	return (state->expanded);
 }
 
-char	*process_expansion(t_expand_state *state, char *str, t_global *global)
+char	*process_expansion(t_expand_state *state, char *str, t_global *global, int *exp_flag)
 {
 	if (str[state->i] == '~')
 		return (handle_home(state, global));
@@ -75,7 +76,7 @@ char	*process_expansion(t_expand_state *state, char *str, t_global *global)
 		return (handle_exit(state, global));
 	else if (str[state->i] == '$' && (ft_isalnum(str[state->i + 1])
 			|| str[state->i + 1] == '_'))
-		return (handle_var(state, str, global));
+		return (handle_var(state, str, global, exp_flag));
 	state->expanded[(state->k)++] = str[(state->i)++];
 	return (state->expanded);
 }

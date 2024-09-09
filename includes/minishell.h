@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 13:32:14 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:38:01 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,12 @@ typedef struct s_input
 	char			**redirections;
 	int				*types;
 	int				cmd_ind;
-	int 			expand;
+	//int 			expand;
 	int				j;
 	int				h;
 	int				pid;
+	int				*exp_word;
+	int				*exp_redir;
 	struct s_input	*next;
 }	t_input;
 
@@ -85,7 +87,7 @@ typedef struct s_global
 	int		exit_status;
 	int		history_fd;
 	int		home_expanded;
-	int		var_expanded;
+	//int		var_expanded;
 	char	*prompt;
 	//int		stdin_copy;
 	//int		stdout_copy;
@@ -207,15 +209,15 @@ t_env	*find_existing_env(t_env *env_list, char *key, size_t key_len);
 
 /*expand*/
 void	expand_var_words(t_input *input, t_global *global);
-char	*expanding_var(char *str, t_global *global);
+char	*expanding_var(char *str, t_global *global, int *exp_flag);
 
 /*expand utils*/
 size_t	calc_expanded_len(char *str, t_global *global);
 char	*extract_var_name(const char *str, int i);
 char	*handle_home(t_expand_state *state, t_global *global);
 char	*handle_exit(t_expand_state *state, t_global *global);
-char	*handle_var(t_expand_state *state, char *str, t_global *global);
-char	*process_expansion(t_expand_state *state, char *str, t_global *global);
+char	*handle_var(t_expand_state *state, char *str, t_global *global, int *exp_flag);
+char	*process_expansion(t_expand_state *state, char *str, t_global *global, int *exp_flag);
 char	*concat_and_free(char *s1, char *s2);
 
 /* execution */
@@ -233,7 +235,7 @@ char	*find_cmd_file(char **cmd, char **env);
 char	*get_paths(char **env, char *name);
 void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt);
 char	*prepare_path_command(char *word, t_global *global, t_input **input);
-char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int *stdin_copy, int *stdout_copy);
+char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int *stdin_copy, int *stdout_copy, int i);
 
 /* redirections */
 int		save_in_out(int	*stdin_copy, int *stdout_copy);

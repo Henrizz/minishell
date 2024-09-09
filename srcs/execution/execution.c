@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 14:02:19 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 14:32:51 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	execute(t_input **command, t_global *global)
 		|| get_input_heredoc(command, global) == 1)
 		return ;
 	sig_execution();
-	while ((*command)->words[i] && (*command)->words[i][0] == '\0' && (*command)->expand == 1)
+	while ((*command)->words[i] && (*command)->words[i][0] == '\0' && (*command)->exp_word[i] == 1)
 		i++;
 	if (!(*command)->words[i] && !(*command)->next)
 		return ;
@@ -83,7 +83,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt, int 
 	i = 0;
 	replace_pipes(curr, exec);
 	close_all_pipes(exec);
-	while (curr->words[i] && curr->words[i][0] == '\0' && curr->expand == 1)
+	while (curr->words[i] && curr->words[i][0] == '\0' && curr->exp_word[i] == 1)
 		i++;
 	if (!curr->words[i])
 	{
@@ -99,7 +99,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt, int 
 	if (ft_strrchr(curr->words[i], '/'))
 		cmd_file = prepare_path_command(curr->words[i], glob, inpt);
 	else
-		cmd_file = prepare_bare_cmd(curr->words + i, glob, inpt, stdin_copy, stdout_copy);
+		cmd_file = prepare_bare_cmd(curr->words, glob, inpt, stdin_copy, stdout_copy, i);
 	cleanup(glob);
 	execve(cmd_file, curr->words + i, glob->env);
 	glob->exit_status = error_return("execve fail\n");
@@ -108,11 +108,11 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt, int 
 	return (0);
 }
 
-char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int *stdin_copy, int *stdout_copy)
+char	*prepare_bare_cmd(char **cmd, t_global *glob, t_input **inpt, int *stdin_copy, int *stdout_copy, int i)
 {
 	char	*cmd_file;
 
-	if (cmd[0][0] == '\0' && (*inpt)->expand == 0)
+	if (cmd[i][0] == '\0' && (*inpt)->exp_word[i] == 0)
 	{
 		ft_putstr_fd(": command not found\n", 2);
 		cmd_file = NULL;

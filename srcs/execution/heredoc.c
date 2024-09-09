@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/06 16:56:34 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/09 14:33:28 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 		if (g_global_signum == SIGINT)
 			return (free(here->line), free(here->exp), 1);
 		if (here->flag == 0)
-			here->temp = expanding_var(here->line, global);
+			here->temp = expanding_var(here->line, global, 0);
 		else
 			here->temp = ft_strdup(here->line);
 		if (!here->temp)
