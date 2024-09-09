@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 18:11:18 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 14:28:06 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/09 17:33:09 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ int	init_struct(t_input **command, t_elements *elmts)
 	(*command)->exp_redir = malloc((elmts->elmt_count + 1) * sizeof(int));
 	(*command)->next = NULL;
 	if (!(*command)->words || !(*command)->redirections || !(*command)->heredoc 
-		|| !(*command)->types || !(*command)->exp_word || !(*command)->exp_redir)
+		|| !(*command)->types || !(*command)->exp_word 
+		|| !(*command)->exp_redir)
 		return (error_return("memory allocation failure"));
 	(*command)->words[0] = NULL;
 	(*command)->heredoc[0] = NULL;

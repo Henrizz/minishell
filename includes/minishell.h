@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 15:25:27 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:14:15 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,8 @@ typedef struct s_global
 	int		history_fd;
 	int		home_expanded;
 	char	*prompt;
-	int		stdin_copy;
-	int		stdout_copy;
+	int		stdin_cp;
+	int		stdout_cp;
 	t_env	*env_list;
 	t_pipe	*exec;
 }	t_global;
@@ -113,6 +113,7 @@ typedef struct s_heredoc
 	int			quoted;
 	char		quote_type;
 	int			flag;
+	int			none;
 }	t_heredoc;
 
 typedef struct s_exp_state
@@ -219,8 +220,7 @@ char	*process_expan(t_exp_state *state, char *str, t_global *global, int *exp_fl
 char	*concat_and_free(char *s1, char *s2);
 
 /* execution */
-//void execute(t_input **command, t_env *env_list, char **env, char *pwd);
-void	execute(t_input **command, t_global *global);
+int		execute(t_input **command, t_global *global);
 int		set_up_pipes_redirections(t_input **command, t_pipe *exec);
 int		set_up_and_run_processes(t_input **command, t_global *global);
 int		is_directory(char *name);
@@ -232,8 +232,8 @@ int		is_builtin(char **command_words);
 char	*find_cmd_file(char **cmd, char **env);
 char	*get_paths(char **env, char *name);
 void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt);
-char	*prepare_path_command(char *word, t_global *global, t_input **input);
-char	*prepare_bare_cmd(t_input **curr, t_global *glob, t_input **inpt, int i);
+char	*prep_path_command(char *word, t_global *global, t_input **input);
+char	*prep_bare_cmd(t_input **curr, t_global *glob, t_input **inpt, int i);
 
 /* redirections */
 int		save_in_out(int	*stdin_copy, int *stdout_copy);

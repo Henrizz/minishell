@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 15:18:02 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 18:02:57 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,29 +24,18 @@ void	cleanup_and_exit(t_global *global)
 	free_array(global->env);
 	free(global->prompt);
 	free(global->exec);
-	if (global->stdin_copy != -1)
+	if (global->stdin_cp != -1)
 	{
-		close(global->stdin_copy);
-		global->stdin_copy = -1;
+		close(global->stdin_cp);
+		global->stdin_cp = -1;
 	}
-	if (global->stdout_copy != -1)
+	if (global->stdout_cp != -1)
 	{
-		close(global->stdout_copy);
-		global->stdout_copy = -1;
+		close(global->stdout_cp);
+		global->stdout_cp = -1;
 	}
 	free(global);
 	exit(exit_status);
-}
-
-void	cleanup(t_global *global)
-{
-	
-	close(global->history_fd);
-	free_env_list(&global->env_list);
-	free(global->prompt);
-	free(global->exec);
-	//close(global->stdin_copy);
-	//close(global->stdout_copy);
 }
 
 void	shell_exit(t_global *global)
@@ -72,7 +61,6 @@ void	free_command(t_input **command)
 		free(temp->types);
 		free(temp);
 	}
-	
 	*command = NULL;
 }
 
