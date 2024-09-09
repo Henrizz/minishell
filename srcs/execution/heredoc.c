@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/06 16:56:34 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/09 14:27:23 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 			return (free(here->line), free(here->exp), 1);
 		ft_putstr_fd(here->temp, here->fd);
 		ft_putstr_fd("\n", here->fd);
+		close(here->fd);
 		free(here->line);
 		free(here->temp);
 		here->count++;
