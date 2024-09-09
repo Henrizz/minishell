@@ -78,7 +78,6 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt, int 
 	if (is_builtin(&curr))
 	{
 		what_builtin(curr->words, glob, &curr);
-		restore_in_out(stdin_copy, stdout_copy);
 		free_command(inpt);
 		cleanup_and_exit(glob);
 	}
