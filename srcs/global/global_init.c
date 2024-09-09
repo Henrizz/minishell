@@ -125,6 +125,8 @@ void	global_init(t_global **global, char **env)
 	if (set_env_array((*global)->env_list, &env_array))
 		(*global)->env = env_array;
 	make_history_file(global);
+	(*global)->stdin_cp = -1;
+	(*global)->stdout_cp = -1;
 	if (create_prompt(&((*global)->prompt), *global))
 		(*global)->prompt = ft_strdup("minishell$ ");
 }

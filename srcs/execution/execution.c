@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 18:12:27 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 19:21:33 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 				child_exec(curr, exec, global, command);
 			else
 			{
-				restore_in_out(&(global->stdin_cp), &(global->stdout_cp));
 				close_all_pipes(exec);
 				cleanup_and_exit(global);
 			}
@@ -67,7 +66,8 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 		curr = curr->next;
 	}
 	close_all_pipes(exec);
-	return (wait_loop(command, global), 0);
+	wait_loop(command, global);
+	return (0);
 }
 
 int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)

@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:13:42 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 15:08:12 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/09 19:11:40 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	save_in_out(int	*stdin_copy, int *stdout_copy)
 	return (0);
 }
 
-int	restore_in_out(int	*stdin_copy, int *stdout_copy)
+int	restore_in_out(int *stdin_copy, int *stdout_copy)
 {
 	if (dup2(*stdin_copy, 0) == -1 || dup2(*stdout_copy, 1) == -1)
 	{
