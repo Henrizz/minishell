@@ -6,33 +6,51 @@
 /*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:46:25 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/09 18:57:08 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/10 14:38:31 by smanriqu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	update_pwd_and_env(char *old_pwd, t_env *env_list, char ***env)
+static char	*handle_special_cases(char *path, t_global *global)
 {
-	char	pwd[PATH_MAX];
-
-	getcwd(pwd, PATH_MAX);
-	set_env("OLDPWD", old_pwd, env_list, 1);
-	set_env("PWD", pwd, env_list, 1);
-	set_env_array(env_list, env);
+	if (ft_strncmp(path, "-", 1) == 0)
+	{
+		if (path[1] == '\0')
+		{
+			path = handle_old_pwd(global);
+			if (path != NULL)
+				printf("%s\n", path);
+		}
+		else if (path[1] == '-' && path[2] == '\0')
+			path = handle_old_pwd(global);
+		else if ((path[1] == '-' && path[2] != '\0') || (path[1] != '-'))
+		{
+			ft_putstr_fd("minishell: cd: -", 2);
+			ft_putchar_fd(path[1], 2);
+			ft_putstr_fd(": invalid option\n", 2);
+			global->exit_status = 2;
+			return (NULL);
+		}
+	}
+	return (path);
 }
 
 static void	change_directory(char *path, t_global *global)
 {
 	char	old_pwd[PATH_MAX];
 
-	getcwd(old_pwd, PATH_MAX);
-	if (ft_strncmp(path, "-", 1) == 0)
+	if (getcwd(old_pwd, PATH_MAX) == NULL)
 	{
-		path = handle_old_pwd(global);
-		if (path == NULL)
-			return ;
+		ft_putstr_fd("cd: ", 2);
+		ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("\n", 2);
+		global->exit_status = 1;
+		return ;
 	}
+	path = handle_special_cases(path, global);
+	if (path == NULL)
+		return ;
 	if (!chdir(path))
 	{
 		update_pwd_and_env(old_pwd, global->env_list, &global->env);
@@ -54,10 +72,12 @@ static void	handle_home_cd(t_global *global)
 	{
 		handle_cd_error(global, "HOME not set");
 		free(temp_home);
+		temp_home = NULL;
 		return ;
 	}
 	change_directory(temp_home, global);
 	free(temp_home);
+	temp_home = NULL;
 }
 
 char	*handle_cd_input(char **words, t_global *global)
@@ -76,6 +96,7 @@ char	*handle_cd_input(char **words, t_global *global)
 		{
 			handle_cd_error(global, "HOME not set");
 			free(path);
+			path = NULL;
 			return (NULL);
 		}
 		return (path);
@@ -96,4 +117,5 @@ void	cd(char **words, t_global *global)
 		return ;
 	change_directory(path, global);
 	free(path);
+	path = NULL;
 }
