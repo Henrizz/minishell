@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/10 13:27:26 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:30:44 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ int	get_input_heredoc(t_input **command, t_global *global)
 		while (current->heredoc[i])
 		{
 			here.filepath = make_heredoc_filename(&current, i, global);
+			if (!here.filepath)
+				return (error_return("error making here_doc directory"));
 			here.fd = open(here.filepath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (here.fd == -1 || !here.filepath)
-				return (error_return("error making here_doc"));
 			free(here.filepath);
-			here_expand(&here, current->heredoc[i]);
-			if (terminal_loop(&here, current->heredoc[i], global) == 1)
+			if (here.fd == -1)
+				return (error_return("error making here_doc"));
+			if (terminal_loop(&here, current->heredoc[i++], global) == 1)
 				return (1);
-			i++;
 			free(here.exp);
 			close(here.fd);
 		}
@@ -43,6 +43,7 @@ int	get_input_heredoc(t_input **command, t_global *global)
 
 int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 {
+	here_expand(here, filename);
 	while (1)
 	{
 		here->line = readline("> ");
@@ -65,7 +66,6 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 		here->count++;
 	}
 	signal(SIGINT, reset_line);
-	//close(here->fd);
 	return (0);
 }
 
@@ -79,31 +79,30 @@ void	print_eof_warning(int count, char *here_exp)
 	printf("%s%d%s%s')\n", mssg1, count, mssg2, here_exp);
 }
 
-int	remove_heredoc(char **env, char *pwd, int exit_status)
+int	remove_heredocs(t_input **command, t_global *global)
 {
-	int		pid;
-	char	*cmd[4];
-	char	*cmd_file;
+	int		i;
+	char	*filepath;
+	t_input	*current;
 
-	cmd_file = NULL;
-	cmd[0] = "rm";
-	cmd[1] = "-rf";
-	cmd[2] = ft_strjoin(pwd, "/.heredocs");
-	if (!cmd[2])
-		return (error_return("error allocating heredoc path"));
-	cmd[3] = NULL;
-	if (access(cmd[2], F_OK) == 0)
+	current = (*command);
+	while (current)
 	{
-		pid = fork();
-		if (pid == -1)
-			return (free(cmd[2]), error_return("fork error"));
-		if (pid == 0)
+		i = 0;
+		while (current->heredoc[i])
 		{
-			cmd_file = find_cmd_file(cmd, env);
-			execve(cmd_file, cmd, env);
-			exit(error_return("execve fail\n"));
+			filepath = make_heredoc_filename(&current, i, global);
+			if (!filepath)
+				return (error_return("error making here_doc directory"));
+			if (unlink(filepath) != 0)
+			{
+				free(filepath);
+				return (error_return("error deleting here_doc"));
+			}
+			free(filepath);
+			i++;
 		}
-		waitpid(pid, &exit_status, 0);
+		current = current->next;
 	}
-	return (free(cmd[2]), 0);
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/06 16:35:10 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/10 14:56:32 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	main(int argc, char **argv, char **env)
 		sig_basic();
 		cmd_line = readline(global->prompt);
 		if (!cmd_line)
-			shell_exit(global);
+			shell_exit(&command, global);
 		set_signum_and_exit_status(global);
 		if (*cmd_line)
 			custom_add_history(cmd_line, global);
@@ -39,7 +39,7 @@ int	main(int argc, char **argv, char **env)
 		free(cmd_line);
 		free_command(&command);
 	}
-	cleanup_and_exit(global);
+	cleanup_and_exit(&command, global);
 	return (0);
 }
 
@@ -54,5 +54,5 @@ void	set_signals_and_execute(t_input **command, t_global *global)
 {
 	sig_interactive_heredoc();
 	execute(command, global);
-	remove_heredoc(global->env, global->pwd, global->exit_status);
+	remove_heredocs(command, global);
 }

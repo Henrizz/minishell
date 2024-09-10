@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 18:13:42 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 19:11:40 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:31:45 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,5 +100,5 @@ void	file_error(char *file, char *mssg, t_global *glob, t_input **inpt)
 		glob->exit_status = 126;
 	else if (!ft_strncmp(mssg, ": No such file or directory\n", 29))
 		glob->exit_status = 127;
-	cleanup_and_exit(glob);
+	cleanup_and_exit(inpt, glob);
 }

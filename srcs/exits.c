@@ -6,19 +6,19 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/10 13:31:27 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:32:44 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	cleanup_and_exit(t_global *global)
+void	cleanup_and_exit(t_input **command, t_global *global)
 {
 	int	exit_status;
 
 	exit_status = global->exit_status;
 	close(global->history_fd);
-	remove_heredoc(global->env, global->pwd, global->exit_status);
+	remove_heredocs(command, global);
 	rl_clear_history();
 	free_env_list(&global->env_list);
 	free_array(global->env);
@@ -38,10 +38,10 @@ void	cleanup_and_exit(t_global *global)
 	exit(exit_status);
 }
 
-void	shell_exit(t_global *global)
+void	shell_exit(t_input **command, t_global *global)
 {
 	ft_putstr_fd("exit\n", 1);
-	cleanup_and_exit(global);
+	cleanup_and_exit(command, global);
 }
 
 void	free_command(t_input **command)

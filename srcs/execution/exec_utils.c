@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 13:11:55 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:27:00 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	get_cmd_index(t_input **command, t_pipe *exec)
 	exec->pipe_qty = i;
 	if (i != 0)
 		exec->pipe_fd = malloc((exec->pipe_qty) * sizeof(int *));
+	create_pipes(exec);
 	return (i);
 }
 
