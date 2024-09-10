@@ -28,6 +28,7 @@ LDFLAGS += -lreadline -lhistory
 ADDRFLAG = -fsanitize=address
 LIBFT = srcs/libft/libft.a
 LIB = srcs/libft
+SRCS_DIR = srcs
 SRCS = srcs/main.c srcs/exits.c srcs/get_input/parsing.c srcs/get_input/split_line.c srcs/builtins/pwd.c \
        srcs/builtins/what_builtin.c srcs/builtins/cd.c srcs/builtins/echo.c srcs/expand/expand.c \
        srcs/builtins/env.c srcs/global/env_init.c srcs/execution/execution.c srcs/execution/exec_utils.c \
@@ -42,24 +43,59 @@ OBJS = $(SRCS:.c=.o)
 RM = rm -rf
 CC = cc
 
+SRC_NUM = 0
+TOTAL_SRCS = $(words $(SRCS))
+
+GREEN_LIGHT = \033[38;5;120m
+GREEN_PASTEL = \033[38;5;72m
+LIGHT_BLUE = \033[38;5;81m
+YELLOW = \033[33m
+DARK_GREEN = \033[38;5;22m
+PINK = \033[38;5;206m
+RESET = \033[0m
+BOLD = \033[1m
+PARTY_POPPER = 🎉
+
+# Progress bar function (corrected to handle .c -> .o)
+define progress_bar
+    @total=$$(($(words $(SRCS)))); \
+    count=1; \
+    while [ $$count -le $$total ]; do \
+        src=$$(echo $(SRCS) | cut -d' ' -f$$count); \
+        percentage=$$((count * 100 / total)); \
+        bar=""; \
+        n=0; \
+        while [ $$n -lt $$((percentage / 5)) ]; do \
+            bar=$${bar}#; \
+            n=$$((n + 1)); \
+        done; \
+        printf "\r$(BOLD)$(GREEN_PASTEL)[%-20s] %d%%$(RESET)" "$$bar" "$$percentage"; \
+        obj=$${src%.c}.o; \
+        $(CC) $(CFLAGS) -c $$src -o $$obj; \
+        count=$$((count + 1)); \
+    done; \
+    echo ""
+endef
+
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
-	chmod +x $(NAME)
-
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(LDFLAGS) -o $(NAME)
+	@chmod +x $(NAME)
+	@echo "\n $(PARTY_POPPER) $(PARTY_POPPER) $(PARTY_POPPER) $(PARTY_POPPER) $(PARTY_POPPER) \
+	$(PARTY_POPPER) $(PARTY_POPPER) $(PARTY_POPPER) $(PARTY_POPPER) $(PARTY_POPPER) $(PARTY_POPPER) \
+	$(PARTY_POPPER) $(PARTY_POPPER) $(PARTY_POPPER) $(PARTY_POPPER) $(PARTY_POPPER)\n"
+	@echo "$(BOLD)$(YELLOW)\n ----------------- $(PINK)MINISHELL $(YELLOW)-------------------\n ------------\
+	$(PINK) BY STEPH AND HENRI $(YELLOW)--------------- \n$(RESET)"
+	@echo "$(LIGHT_BLUE)\n you can start the program by typing ./minishell \n$(RESET)"
 $(LIBFT):
-	make -C $(LIB)
-
+	@make -C $(LIB) > /dev/null
+# Override default rule with progress bar
 %.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
+	$(progress_bar)
 clean:
-	$(RM) $(OBJS) $(LIB)/*.o
-
+	@$(RM) $(OBJS) $(LIB)/*.o
 fclean: clean
-	$(RM) $(NAME) $(LIBFT) .history.txt
-
+	@$(RM) $(NAME) $(LIBFT) .history.txt
 re: fclean all
-
 .PHONY: all clean fclean re
