@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:04:14 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/10 14:39:01 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/10 19:25:00 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,26 +38,7 @@ char	*handle_old_pwd(t_global *global)
 	{
 		handle_cd_error(global, "OLDPWD not set");
 		free(temp_oldpwd);
-		temp_oldpwd = NULL;
 		return (NULL);
 	}
 	return (temp_oldpwd);
-}
-
-void	update_pwd_and_env(char *old_pwd, t_env *env_list, char ***env)
-{
-	char	pwd[PATH_MAX];
-
-	if (getcwd(pwd, PATH_MAX))
-	{
-		set_env("OLDPWD", old_pwd, env_list, 1);
-		set_env("PWD", pwd, env_list, 1);
-		set_env_array(env_list, env);
-	}
-	else
-	{
-		ft_putstr_fd("cd: ", 2);
-		ft_putstr_fd(strerror(errno), 2);
-		ft_putstr_fd("\n", 2);
-	}
 }
