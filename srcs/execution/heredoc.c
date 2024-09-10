@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 18:14:30 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 13:27:26 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	get_input_heredoc(t_input **command, t_global *global)
 				return (1);
 			i++;
 			free(here.exp);
+			close(here.fd);
 		}
 		current = current->next;
 	}
@@ -64,7 +65,7 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 		here->count++;
 	}
 	signal(SIGINT, reset_line);
-	close(here->fd);
+	//close(here->fd);
 	return (0);
 }
 

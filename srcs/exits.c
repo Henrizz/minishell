@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 19:24:55 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 13:31:27 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,13 @@ void	free_command(t_input **command)
 		free_array(temp->redirections);
 		free_array(temp->heredoc);
 		free(temp->exp_word);
+		temp->exp_word = NULL;
 		free(temp->exp_redir);
+		temp->exp_redir = NULL;
 		free(temp->types);
+		temp->types = NULL;
 		free(temp);
+		temp = NULL;
 	}
 	*command = NULL;
 }
@@ -77,6 +81,7 @@ void	free_array(char **str)
 		i++;
 	}
 	free(str);
+	str = NULL;
 }
 
 int	error_return(char *message)
