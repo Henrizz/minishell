@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 18:46:14 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/10 15:25:42 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:48:01 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,4 +99,27 @@ void	transfer_char(char *name, t_heredoc *here, int *j, int *i)
 		else
 			here->exp[(*j)++] = name[*i];
 	}
+}
+
+int	remove_heredocs(t_global *global)
+{
+	int		j;
+
+	j = 0;
+	while (global->filenames[j])
+	{
+		if (access(global->filenames[j], F_OK) == 0)
+		{
+			if (unlink(global->filenames[j]) != 0)
+			{
+				free_array(global->filenames);
+				global->filenames = NULL;
+				return (error_return("error deleting here_doc"));
+			}
+		}
+		j++;
+	}
+	free_array(global->filenames);
+	global->filenames = NULL;
+	return (0);
 }

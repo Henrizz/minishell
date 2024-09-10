@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/10 17:30:45 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:47:50 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,42 @@
 
 int	get_input_heredoc(t_input **command, t_global *global)
 {
-	int			i;
-	int			j;
 	t_heredoc	here;
 	t_input		*current;
 
-	j = 0;
 	count_heredocs(command, global);
 	current = (*command);
+	if (process_heredocs(current, &here, global) == 1)
+		return (1);
+	return (0);
+}
+
+int	process_heredocs(t_input *current, t_heredoc *he, t_global *gl)
+{
+	int			i;
+	int			j;
+
+	j = 0;
 	while (current)
 	{
 		i = 0;
 		while (current->heredoc[i])
 		{
-			global->filenames[j] = make_heredoc_filename(&current, i, global);
-			if (!global->filenames[j])
+			gl->filenames[j] = make_heredoc_filename(&current, i, gl);
+			if (!gl->filenames[j])
 				return (error_return("error making here_doc directory"));
-			here.fd = open(global->filenames[j], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (here.fd == -1)
+			he->fd = open(gl->filenames[j], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (he->fd == -1)
 				return (error_return("error making here_doc"));
-			if (terminal_loop(&here, current->heredoc[i++], global) == 1)
+			if (terminal_loop(he, current->heredoc[i++], gl) == 1)
 				return (1);
-			free(here.exp);
-			close(here.fd);
+			free(he->exp);
+			close(he->fd);
 			j++;
 		}
 		current = current->next;
 	}
-	global->filenames[j] = NULL;
+	gl->filenames[j] = NULL;
 	return (0);
 }
 
@@ -105,27 +113,4 @@ void	print_eof_warning(int count, char *here_exp)
 	mssg1 = "minishell: warning: here-document delimited at line ";
 	mssg2 = " by end-of-file (wanted `";
 	printf("%s%d%s%s')\n", mssg1, count, mssg2, here_exp);
-}
-
-int	remove_heredocs(t_global *global)
-{
-	int		j;
-
-	j = 0;
-	while (global->filenames[j])
-	{
-		if (access(global->filenames[j], F_OK) == 0)
-		{
-			if (unlink(global->filenames[j]) != 0)
-			{
-				free_array(global->filenames);
-				global->filenames = NULL;
-				return (error_return("error deleting here_doc"));
-			}
-		}
-		j++;
-	}
-	free_array(global->filenames);
-	global->filenames = NULL;
-	return (0);
 }

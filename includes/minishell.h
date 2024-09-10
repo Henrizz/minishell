@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/10 16:13:16 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:47:19 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -262,6 +262,7 @@ int		terminal_loop(t_heredoc *here, char *filename, t_global *global);
 void	transfer_char(char *name, t_heredoc *here, int *j, int *i);
 void	print_eof_warning(int count, char *here_exp);
 int		remove_heredocs(t_global *global);
+int		process_heredocs(t_input *current, t_heredoc *he, t_global *gl);
 
 /* pipes + processes */
 int		create_pipes(t_pipe *exec);
