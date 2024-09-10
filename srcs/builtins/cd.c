@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:46:25 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/10 19:38:37 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 20:04:29 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,7 @@ char	*change_directory(char *path, t_global *global)
 	char	*temp;
 
 	getcwd(old_pwd, PATH_MAX);
-	if (ft_strncmp(path, "-", 1) == 0)
-		temp = handle_old_pwd(global);
-	else
-		temp = ft_strdup(path);
+	temp = check_dashes(global, path);
 	if (temp == NULL)
 		return (NULL);
 	if (!chdir(temp))
