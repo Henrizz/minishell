@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 15:46:13 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 13:11:55 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:04:08 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ char	*find_cmd_file(char **cmd, char **env)
 			i++;
 		}
 		free_array(paths);
+		paths = NULL;
 	}
 	ft_putstr_fd(cmd[0], 2);
 	ft_putstr_fd(": command not found\n", 2);
@@ -56,6 +57,7 @@ int	get_cmd_index(t_input **command, t_pipe *exec)
 	exec->pipe_qty = i;
 	if (i != 0)
 		exec->pipe_fd = malloc((exec->pipe_qty) * sizeof(int *));
+	create_pipes(exec);
 	return (i);
 }
 

@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 18:46:14 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 17:25:59 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:48:01 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,12 @@
 char	*make_heredoc_filename(t_input **command, int i, t_global *global)
 {
 	char	*filepath;
-	char	*directory;
 	char	*num;
 
-	num = make_num(i, (*command)->cmd_ind);
+	num = make_num((*command)->cmd_ind, i);
 	if (!num)
 		return (NULL);
-	if (make_heredoc_directory(global) == 1)
-		return (NULL);
-	directory = ft_strjoin(global->pwd, "/.heredocs/.here_");
-	filepath = ft_strjoin(directory, num);
+	filepath = ft_strjoin(".here_", num);
 	if (!filepath)
 	{
 		perror("minishell: ");
@@ -33,7 +29,6 @@ char	*make_heredoc_filename(t_input **command, int i, t_global *global)
 	}
 	i++;
 	free(num);
-	free(directory);
 	return (filepath);
 }
 
@@ -59,35 +54,6 @@ char	*make_num(int i, int cmd_ind)
 	free(num1);
 	free(num2);
 	return (num);
-}
-
-int	make_heredoc_directory(t_global *global)
-{
-	int		pid;
-	char	*cmd_file;
-	char	*cmd[3];
-	int		status;
-
-	cmd[0] = "mkdir";
-	cmd[1] = ft_strjoin(global->pwd, "/.heredocs");
-	if (!cmd[1])
-		return (error_return("error allocating heredoc path"));
-	cmd[2] = NULL;
-	if (access(cmd[1], R_OK | W_OK | X_OK) == 0)
-		return (free(cmd[1]), 0);
-	pid = fork();
-	if (pid == -1)
-		return (error_return("fork error"));
-	if (pid == 0)
-	{
-		cmd_file = find_cmd_file(cmd, global->env);
-		execve(cmd_file, cmd, global->env);
-		exit(error_return("execve fail\n"));
-	}
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status))
-		global->exit_status = WEXITSTATUS(status);
-	return (free(cmd[1]), 0);
 }
 
 int	here_expand(t_heredoc *here, char *name)
@@ -133,4 +99,27 @@ void	transfer_char(char *name, t_heredoc *here, int *j, int *i)
 		else
 			here->exp[(*j)++] = name[*i];
 	}
+}
+
+int	remove_heredocs(t_global *global)
+{
+	int		j;
+
+	j = 0;
+	while (global->filenames[j])
+	{
+		if (access(global->filenames[j], F_OK) == 0)
+		{
+			if (unlink(global->filenames[j]) != 0)
+			{
+				free_array(global->filenames);
+				global->filenames = NULL;
+				return (error_return("error deleting here_doc"));
+			}
+		}
+		j++;
+	}
+	free_array(global->filenames);
+	global->filenames = NULL;
+	return (0);
 }

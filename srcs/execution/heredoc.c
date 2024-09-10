@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 18:14:30 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:47:50 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,34 +14,72 @@
 
 int	get_input_heredoc(t_input **command, t_global *global)
 {
-	int			i;
 	t_heredoc	here;
 	t_input		*current;
 
+	count_heredocs(command, global);
+	current = (*command);
+	if (process_heredocs(current, &here, global) == 1)
+		return (1);
+	return (0);
+}
+
+int	process_heredocs(t_input *current, t_heredoc *he, t_global *gl)
+{
+	int			i;
+	int			j;
+
+	j = 0;
+	while (current)
+	{
+		i = 0;
+		while (current->heredoc[i])
+		{
+			gl->filenames[j] = make_heredoc_filename(&current, i, gl);
+			if (!gl->filenames[j])
+				return (error_return("error making here_doc directory"));
+			he->fd = open(gl->filenames[j], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			if (he->fd == -1)
+				return (error_return("error making here_doc"));
+			if (terminal_loop(he, current->heredoc[i++], gl) == 1)
+				return (1);
+			free(he->exp);
+			close(he->fd);
+			j++;
+		}
+		current = current->next;
+	}
+	gl->filenames[j] = NULL;
+	return (0);
+}
+
+void	count_heredocs(t_input **command, t_global *global)
+{
+	int			i;
+	int			count;
+	t_input		*current;
+
+	count = 0;
 	current = (*command);
 	while (current)
 	{
 		i = 0;
 		while (current->heredoc[i])
 		{
-			here.filepath = make_heredoc_filename(&current, i, global);
-			here.fd = open(here.filepath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (here.fd == -1 || !here.filepath)
-				return (error_return("error making here_doc"));
-			free(here.filepath);
-			here_expand(&here, current->heredoc[i]);
-			if (terminal_loop(&here, current->heredoc[i], global) == 1)
-				return (1);
 			i++;
-			free(here.exp);
+			count++;
 		}
 		current = current->next;
 	}
-	return (0);
+	global->filenames = malloc((count + 1) * sizeof(char *));
+	if (!global->filenames)
+		return ;
+	global->filenames[0] = NULL;
 }
 
 int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 {
+	here_expand(here, filename);
 	while (1)
 	{
 		here->line = readline("> ");
@@ -64,7 +102,6 @@ int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
 		here->count++;
 	}
 	signal(SIGINT, reset_line);
-	close(here->fd);
 	return (0);
 }
 
@@ -76,33 +113,4 @@ void	print_eof_warning(int count, char *here_exp)
 	mssg1 = "minishell: warning: here-document delimited at line ";
 	mssg2 = " by end-of-file (wanted `";
 	printf("%s%d%s%s')\n", mssg1, count, mssg2, here_exp);
-}
-
-int	remove_heredoc(char **env, char *pwd, int exit_status)
-{
-	int		pid;
-	char	*cmd[4];
-	char	*cmd_file;
-
-	cmd_file = NULL;
-	cmd[0] = "rm";
-	cmd[1] = "-rf";
-	cmd[2] = ft_strjoin(pwd, "/.heredocs");
-	if (!cmd[2])
-		return (error_return("error allocating heredoc path"));
-	cmd[3] = NULL;
-	if (access(cmd[2], F_OK) == 0)
-	{
-		pid = fork();
-		if (pid == -1)
-			return (free(cmd[2]), error_return("fork error"));
-		if (pid == 0)
-		{
-			cmd_file = find_cmd_file(cmd, env);
-			execve(cmd_file, cmd, env);
-			exit(error_return("execve fail\n"));
-		}
-		waitpid(pid, &exit_status, 0);
-	}
-	return (free(cmd[2]), 0);
 }

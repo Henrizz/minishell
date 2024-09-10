@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:46:25 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/09 18:57:08 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/10 20:04:29 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,32 +22,32 @@ static void	update_pwd_and_env(char *old_pwd, t_env *env_list, char ***env)
 	set_env_array(env_list, env);
 }
 
-static void	change_directory(char *path, t_global *global)
+char	*change_directory(char *path, t_global *global)
 {
 	char	old_pwd[PATH_MAX];
+	char	*temp;
 
 	getcwd(old_pwd, PATH_MAX);
-	if (ft_strncmp(path, "-", 1) == 0)
-	{
-		path = handle_old_pwd(global);
-		if (path == NULL)
-			return ;
-	}
-	if (!chdir(path))
+	temp = check_dashes(global, path);
+	if (temp == NULL)
+		return (NULL);
+	if (!chdir(temp))
 	{
 		update_pwd_and_env(old_pwd, global->env_list, &global->env);
 		global->exit_status = 0;
 	}
 	else
 	{
-		print_error(path);
+		print_error(temp);
 		global->exit_status = 1;
 	}
+	return (temp);
 }
 
 static void	handle_home_cd(t_global *global)
 {
 	char	*temp_home;
+	char	*home;
 
 	temp_home = get_env_value("HOME", global->env_list, 0);
 	if (temp_home[0] == '\0')
@@ -56,7 +56,8 @@ static void	handle_home_cd(t_global *global)
 		free(temp_home);
 		return ;
 	}
-	change_directory(temp_home, global);
+	home = change_directory(temp_home, global);
+	free(home);
 	free(temp_home);
 }
 
@@ -90,10 +91,14 @@ char	*handle_cd_input(char **words, t_global *global)
 void	cd(char **words, t_global *global)
 {
 	char	*path;
+	char	*new;
 
 	path = handle_cd_input(words, global);
 	if (!path)
 		return ;
-	change_directory(path, global);
+	new = change_directory(path, global);
 	free(path);
+	if (!new)
+		return ;
+	free(new);
 }

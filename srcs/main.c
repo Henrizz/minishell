@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Henriette <Henriette@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 14:51:25 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/06 16:35:10 by Henriette        ###   ########.fr       */
+/*   Updated: 2024/09/10 17:30:12 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ int	main(int argc, char **argv, char **env)
 		free(cmd_line);
 		free_command(&command);
 	}
-	cleanup_and_exit(global);
 	return (0);
 }
 
@@ -54,5 +53,5 @@ void	set_signals_and_execute(t_input **command, t_global *global)
 {
 	sig_interactive_heredoc();
 	execute(command, global);
-	remove_heredoc(global->env, global->pwd, global->exit_status);
+	remove_heredocs(global);
 }

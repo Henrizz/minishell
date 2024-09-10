@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: smanriqu <smanriqu@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 16:04:14 by smanriqu          #+#    #+#             */
-/*   Updated: 2024/09/09 18:57:55 by smanriqu         ###   ########.fr       */
+/*   Updated: 2024/09/10 20:04:37 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,29 @@ char	*handle_old_pwd(t_global *global)
 		return (NULL);
 	}
 	return (temp_oldpwd);
+}
+
+char	*check_dashes(t_global *global, char *path)
+{
+	char	*temp;
+
+	if (path[0] == '-' && path[1] == '\0')
+	{
+		temp = handle_old_pwd(global);
+		printf("%s\n", temp);
+	}
+	else if (path[0] == '-' && path[1] == '-' && path[2] == '\0')
+		temp = handle_old_pwd(global);
+	else if ((path[0] == '-' && path[1] == '-' && path[2] != '\0') 
+		|| (path[0] == '-' && path[1] != '-'))
+	{
+		ft_putstr_fd("minishell: cd: -", 2);
+		ft_putchar_fd(path[1], 2);
+		ft_putstr_fd(": invalid option\n", 2);
+		global->exit_status = 2;
+		return (NULL);
+	}
+	else
+		temp = ft_strdup(path);
+	return (temp);
 }

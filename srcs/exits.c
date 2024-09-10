@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 19:24:55 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:10:30 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@ void	cleanup_and_exit(t_global *global)
 
 	exit_status = global->exit_status;
 	close(global->history_fd);
-	remove_heredoc(global->env, global->pwd, global->exit_status);
+	if (global->filenames)
+		remove_heredocs(global);
 	rl_clear_history();
 	free_env_list(&global->env_list);
 	free_array(global->env);
+	global->env = NULL;
 	free(global->prompt);
 	free(global->exec);
 	if (global->stdin_cp != -1)
@@ -54,16 +56,50 @@ void	free_command(t_input **command)
 		temp = *command;
 		*command = (*command)->next;
 		free_array(temp->words);
+		temp->words = NULL;
 		free_array(temp->redirections);
+		temp->redirections = NULL;
 		free_array(temp->heredoc);
+		temp->heredoc = NULL;
 		free(temp->exp_word);
+		temp->exp_word = NULL;
 		free(temp->exp_redir);
+		temp->exp_redir = NULL;
 		free(temp->types);
+		temp->types = NULL;
 		free(temp);
+		temp = NULL;
 	}
 	*command = NULL;
 }
 
+/*void	free_command(t_input **command)
+{
+	t_input	*temp;
+
+	temp = *command;
+	while (*command != NULL)
+	{
+		temp = *command;
+		*command = (*command)->next;
+		free_array(temp->words);
+		free_array(temp->redirections);
+		free_array(temp->heredoc);
+		if (temp->exp_word)
+			free(temp->exp_word);
+		if (temp->exp_redir)
+			free(temp->exp_redir);
+		if (temp->types)
+			free(temp->types);
+		if (temp)
+			free(temp);
+		temp->exp_word = NULL;
+		temp->exp_redir = NULL;
+		temp->types = NULL;
+		temp = NULL;
+	}
+	*command = NULL;
+}*/
 void	free_array(char **str)
 {
 	int	i;
@@ -77,6 +113,7 @@ void	free_array(char **str)
 		i++;
 	}
 	free(str);
+	str = NULL;
 }
 
 int	error_return(char *message)

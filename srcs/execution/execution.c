@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/09 21:02:57 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:29:41 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,7 @@ int	execute(t_input **command, t_global *global)
 	int	i;
 
 	i = 0;
-	if (save_in_out(&(global->stdin_cp), &(global->stdout_cp)) == -1 
-		|| get_input_heredoc(command, global) == 1)
+	if (get_input_heredoc(command, global) == 1)
 		return (1);
 	sig_execution();
 	while ((*command)->words[i] && (*command)->words[i][0] == '\0' 
@@ -28,7 +27,8 @@ int	execute(t_input **command, t_global *global)
 		return (0);
 	if (!(*command)->next && is_builtin((*command)->words + i))
 	{
-		if (make_redirection(command, global) == 1)
+		if (save_in_out(&(global->stdin_cp), &(global->stdout_cp)) == -1 
+			|| make_redirection(command, global) == 1)
 			return (restore_in_out(&(global->stdin_cp), &(global->stdout_cp)));
 		else 
 		{
@@ -47,7 +47,6 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 
 	curr = *command;
 	get_cmd_index(command, exec);
-	create_pipes(exec);
 	while (curr)
 	{
 		curr->pid = fork();
@@ -59,6 +58,7 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 				child_exec(curr, exec, global, command);
 			else
 			{
+				free_command(command);
 				close_all_pipes(exec);
 				cleanup_and_exit(global);
 			}
@@ -86,7 +86,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	}
 	if (is_builtin(curr->words + i))
 	{
-		what_builtin(curr->words + i, glob, &curr);
+		what_builtin(curr->words + i, glob, inpt);
 		free_command(inpt);
 		cleanup_and_exit(glob);
 	}

@@ -94,6 +94,8 @@ char	*concat_and_free(char *s1, char *s2)
 	ft_strlcpy(new_str, s1, ft_strlen(s1) + 1);
 	ft_strlcat(new_str, s2, ft_strlen(s1) + ft_strlen(s2) + 1);
 	free(s1);
+	s1 = NULL;
 	free(s2);
+	s2 = NULL;
 	return (new_str);
 }

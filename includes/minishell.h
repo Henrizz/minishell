@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/09 21:12:21 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 20:03:41 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ typedef struct s_global
 	char	*prompt;
 	int		stdin_cp;
 	int		stdout_cp;
+	char	**filenames;
 	t_env	*env_list;
 	t_pipe	*exec;
 }	t_global;
@@ -178,6 +179,9 @@ void	error_identifier(char *str, char *command);
 void	print_error(char *path);
 void	handle_cd_error(t_global *global, char *message);
 char	*handle_old_pwd(t_global *global);
+void	print_and_free(char *old_pwd);
+char	*change_directory(char *path, t_global *global);
+char	*check_dashes(t_global *global, char *path);
 
 /* global and signals*/
 void	global_init(t_global **global, char **env);
@@ -259,6 +263,8 @@ int		here_expand(t_heredoc *here, char *name);
 int		terminal_loop(t_heredoc *here, char *filename, t_global *global);
 void	transfer_char(char *name, t_heredoc *here, int *j, int *i);
 void	print_eof_warning(int count, char *here_exp);
+int		remove_heredocs(t_global *global);
+int		process_heredocs(t_input *current, t_heredoc *he, t_global *gl);
 
 /* pipes + processes */
 int		create_pipes(t_pipe *exec);
@@ -272,5 +278,6 @@ int		setup_and_run(t_input **command, t_pipe *exec, t_global *global);
 void	print_arrays_testing(t_input **command);
 void	cleanup(t_global *global);
 char	*make_num(int i, int cmd_ind);
+void	count_heredocs(t_input **command, t_global *global);
 
 #endif
