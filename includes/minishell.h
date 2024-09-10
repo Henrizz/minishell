@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/10 15:35:32 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:13:16 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ typedef struct s_global
 	char	*prompt;
 	int		stdin_cp;
 	int		stdout_cp;
+	char	**filenames;
 	t_env	*env_list;
 	t_pipe	*exec;
 }	t_global;
@@ -159,11 +160,11 @@ int		divi_redirect(t_input **command, t_elements *elmts, int *i, int r_type);
 void	transfer_string(t_input **command, char *elmt, int offset, int type);
 
 /* free and exit functions */
-void	shell_exit(t_input **command, t_global *global);
+void	shell_exit(t_global *global);
 void	free_array(char **str);
 void	free_command(t_input **command);
 int		error_return(char *message);
-void	cleanup_and_exit(t_input **command, t_global *global);
+void	cleanup_and_exit(t_global *global);
 
 /*Builtin commands*/
 int		what_builtin(char **command_words, t_global *global, t_input **command);
@@ -260,7 +261,7 @@ int		here_expand(t_heredoc *here, char *name);
 int		terminal_loop(t_heredoc *here, char *filename, t_global *global);
 void	transfer_char(char *name, t_heredoc *here, int *j, int *i);
 void	print_eof_warning(int count, char *here_exp);
-int		remove_heredocs(t_input **command, t_global *global);
+int		remove_heredocs(t_global *global);
 
 /* pipes + processes */
 int		create_pipes(t_pipe *exec);
@@ -274,5 +275,6 @@ int		setup_and_run(t_input **command, t_pipe *exec, t_global *global);
 void	print_arrays_testing(t_input **command);
 void	cleanup(t_global *global);
 char	*make_num(int i, int cmd_ind);
+void	count_heredocs(t_input **command, t_global *global);
 
 #endif

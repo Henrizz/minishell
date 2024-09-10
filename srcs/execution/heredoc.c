@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/10 15:30:44 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:30:45 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,30 +15,58 @@
 int	get_input_heredoc(t_input **command, t_global *global)
 {
 	int			i;
+	int			j;
 	t_heredoc	here;
 	t_input		*current;
 
+	j = 0;
+	count_heredocs(command, global);
 	current = (*command);
 	while (current)
 	{
 		i = 0;
 		while (current->heredoc[i])
 		{
-			here.filepath = make_heredoc_filename(&current, i, global);
-			if (!here.filepath)
+			global->filenames[j] = make_heredoc_filename(&current, i, global);
+			if (!global->filenames[j])
 				return (error_return("error making here_doc directory"));
-			here.fd = open(here.filepath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			free(here.filepath);
+			here.fd = open(global->filenames[j], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 			if (here.fd == -1)
 				return (error_return("error making here_doc"));
 			if (terminal_loop(&here, current->heredoc[i++], global) == 1)
 				return (1);
 			free(here.exp);
 			close(here.fd);
+			j++;
 		}
 		current = current->next;
 	}
+	global->filenames[j] = NULL;
 	return (0);
+}
+
+void	count_heredocs(t_input **command, t_global *global)
+{
+	int			i;
+	int			count;
+	t_input		*current;
+
+	count = 0;
+	current = (*command);
+	while (current)
+	{
+		i = 0;
+		while (current->heredoc[i])
+		{
+			i++;
+			count++;
+		}
+		current = current->next;
+	}
+	global->filenames = malloc((count + 1) * sizeof(char *));
+	if (!global->filenames)
+		return ;
+	global->filenames[0] = NULL;
 }
 
 int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
@@ -79,30 +107,25 @@ void	print_eof_warning(int count, char *here_exp)
 	printf("%s%d%s%s')\n", mssg1, count, mssg2, here_exp);
 }
 
-int	remove_heredocs(t_input **command, t_global *global)
+int	remove_heredocs(t_global *global)
 {
-	int		i;
-	char	*filepath;
-	t_input	*current;
+	int		j;
 
-	current = (*command);
-	while (current)
+	j = 0;
+	while (global->filenames[j])
 	{
-		i = 0;
-		while (current->heredoc[i])
+		if (access(global->filenames[j], F_OK) == 0)
 		{
-			filepath = make_heredoc_filename(&current, i, global);
-			if (!filepath)
-				return (error_return("error making here_doc directory"));
-			if (unlink(filepath) != 0)
+			if (unlink(global->filenames[j]) != 0)
 			{
-				free(filepath);
+				free_array(global->filenames);
+				global->filenames = NULL;
 				return (error_return("error deleting here_doc"));
 			}
-			free(filepath);
-			i++;
 		}
-		current = current->next;
+		j++;
 	}
+	free_array(global->filenames);
+	global->filenames = NULL;
 	return (0);
 }

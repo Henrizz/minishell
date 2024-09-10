@@ -6,22 +6,24 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 15:13:31 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/10 15:32:44 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:10:30 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	cleanup_and_exit(t_input **command, t_global *global)
+void	cleanup_and_exit(t_global *global)
 {
 	int	exit_status;
 
 	exit_status = global->exit_status;
 	close(global->history_fd);
-	remove_heredocs(command, global);
+	if (global->filenames)
+		remove_heredocs(global);
 	rl_clear_history();
 	free_env_list(&global->env_list);
 	free_array(global->env);
+	global->env = NULL;
 	free(global->prompt);
 	free(global->exec);
 	if (global->stdin_cp != -1)
@@ -38,10 +40,10 @@ void	cleanup_and_exit(t_input **command, t_global *global)
 	exit(exit_status);
 }
 
-void	shell_exit(t_input **command, t_global *global)
+void	shell_exit(t_global *global)
 {
 	ft_putstr_fd("exit\n", 1);
-	cleanup_and_exit(command, global);
+	cleanup_and_exit(global);
 }
 
 void	free_command(t_input **command)
@@ -54,8 +56,11 @@ void	free_command(t_input **command)
 		temp = *command;
 		*command = (*command)->next;
 		free_array(temp->words);
+		temp->words = NULL;
 		free_array(temp->redirections);
+		temp->redirections = NULL;
 		free_array(temp->heredoc);
+		temp->heredoc = NULL;
 		free(temp->exp_word);
 		temp->exp_word = NULL;
 		free(temp->exp_redir);
@@ -68,6 +73,33 @@ void	free_command(t_input **command)
 	*command = NULL;
 }
 
+/*void	free_command(t_input **command)
+{
+	t_input	*temp;
+
+	temp = *command;
+	while (*command != NULL)
+	{
+		temp = *command;
+		*command = (*command)->next;
+		free_array(temp->words);
+		free_array(temp->redirections);
+		free_array(temp->heredoc);
+		if (temp->exp_word)
+			free(temp->exp_word);
+		if (temp->exp_redir)
+			free(temp->exp_redir);
+		if (temp->types)
+			free(temp->types);
+		if (temp)
+			free(temp);
+		temp->exp_word = NULL;
+		temp->exp_redir = NULL;
+		temp->types = NULL;
+		temp = NULL;
+	}
+	*command = NULL;
+}*/
 void	free_array(char **str)
 {
 	int	i;

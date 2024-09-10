@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/10 15:26:49 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 17:29:41 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	setup_and_run(t_input **command, t_pipe *exec, t_global *global)
 			{
 				free_command(command);
 				close_all_pipes(exec);
-				cleanup_and_exit(command, global);
+				cleanup_and_exit(global);
 			}
 		}
 		curr = curr->next;
@@ -82,13 +82,13 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 	if (!curr->words[i])
 	{
 		free_command(inpt);
-		cleanup_and_exit(inpt, glob);
+		cleanup_and_exit(glob);
 	}
 	if (is_builtin(curr->words + i))
 	{
-		what_builtin(curr->words + i, glob, &curr);
+		what_builtin(curr->words + i, glob, inpt);
 		free_command(inpt);
-		cleanup_and_exit(inpt, glob);
+		cleanup_and_exit(glob);
 	}
 	if (ft_strrchr(curr->words[i], '/'))
 		cmd_file = prep_path_command(curr->words[i], glob, inpt);
@@ -96,7 +96,7 @@ int	child_exec(t_input *curr, t_pipe *exec, t_global *glob, t_input **inpt)
 		cmd_file = prep_bare_cmd(&curr, glob, inpt, i);
 	execve(cmd_file, curr->words + i, glob->env);
 	glob->exit_status = error_return("execve fail\n");
-	return (free_command(inpt), cleanup_and_exit(inpt, glob), 0);
+	return (free_command(inpt), cleanup_and_exit(glob), 0);
 }
 
 char	*prep_bare_cmd(t_input **curr, t_global *glob, t_input **inpt, int i)
@@ -114,7 +114,7 @@ char	*prep_bare_cmd(t_input **curr, t_global *glob, t_input **inpt, int i)
 	{
 		free_command(inpt);
 		glob->exit_status = 127;
-		cleanup_and_exit(inpt, glob);
+		cleanup_and_exit(glob);
 	}
 	return (cmd_file);
 }
