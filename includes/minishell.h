@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 16:00:50 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/10 14:54:36 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/10 15:35:32 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,6 +178,7 @@ void	error_identifier(char *str, char *command);
 void	print_error(char *path);
 void	handle_cd_error(t_global *global, char *message);
 char	*handle_old_pwd(t_global *global);
+void	update_pwd_and_env(char *old_pwd, t_env *env_list, char ***env);
 
 /* global and signals*/
 void	global_init(t_global **global, char **env);
