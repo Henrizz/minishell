@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 18:46:14 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/10 17:48:01 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/14 13:59:00 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,20 +106,23 @@ int	remove_heredocs(t_global *global)
 	int		j;
 
 	j = 0;
-	while (global->filenames[j])
+	if (global->filenames && global->filenames[j])
 	{
-		if (access(global->filenames[j], F_OK) == 0)
+		while (global->filenames[j])
 		{
-			if (unlink(global->filenames[j]) != 0)
+			if (access(global->filenames[j], F_OK) == 0)
 			{
-				free_array(global->filenames);
-				global->filenames = NULL;
-				return (error_return("error deleting here_doc"));
+				if (unlink(global->filenames[j]) != 0)
+				{
+					free_array(global->filenames);
+					global->filenames = NULL;
+					return (error_return("error deleting here_doc"));
+				}
 			}
+			j++;
 		}
-		j++;
+		free_array(global->filenames);
+		global->filenames = NULL;
 	}
-	free_array(global->filenames);
-	global->filenames = NULL;
 	return (0);
 }

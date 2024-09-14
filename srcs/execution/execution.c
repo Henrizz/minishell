@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 10:57:44 by Henriette         #+#    #+#             */
-/*   Updated: 2024/09/10 17:29:41 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/14 18:12:00 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	execute(t_input **command, t_global *global)
 	while ((*command)->words[i] && (*command)->words[i][0] == '\0' 
 		&& (*command)->exp_word[i] == 1)
 		i++;
-	if (!(*command)->words[i] && !(*command)->next)
+	if (!(*command)->words[i] && !(*command)->redirections[0] && !(*command)->next)
 		return (0);
 	if (!(*command)->next && is_builtin((*command)->words + i))
 	{

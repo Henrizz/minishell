@@ -6,7 +6,7 @@
 /*   By: hzimmerm <hzimmerm@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/09 15:45:39 by hzimmerm          #+#    #+#             */
-/*   Updated: 2024/09/10 17:47:50 by hzimmerm         ###   ########.fr       */
+/*   Updated: 2024/09/14 14:17:48 by hzimmerm         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,15 @@ void	count_heredocs(t_input **command, t_global *global)
 		}
 		current = current->next;
 	}
-	global->filenames = malloc((count + 1) * sizeof(char *));
+	global->filenames = malloc((count + 2) * sizeof(char *));
 	if (!global->filenames)
 		return ;
-	global->filenames[0] = NULL;
+	i = 0;
+	while (i <= count + 1)
+	{
+		global->filenames[i] = NULL;
+		i++;
+	}
 }
 
 int	terminal_loop(t_heredoc *here, char *filename, t_global *global)
