@@ -5,7 +5,6 @@ It is our submission to the 42 Berlin school project MINISHELL, about creating o
 <br>
 Run the program by typing make and then ./minishell<br>
 You will be able to execute the following cases, among others:<br>
-<br>
 - run system commands with path or without path and any possible flags (e.g. /usr/bin/ls or ls)<br>
 <br>
 - run the following builtin commands:<br>
