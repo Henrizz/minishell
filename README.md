@@ -19,4 +19,8 @@ You will be able to execute the following cases, among others:<br>
 - run piped commands<br>
 - expand variables in the commands, filenames and heredoc input<br>
 <br>
+
+Part of the bonus was the thorough expansion of nested quotes of types " and '<br>
+Our shell does not support && or ||<br>
+<br>
 ENJOY !
