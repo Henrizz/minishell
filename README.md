@@ -1,23 +1,26 @@
-This program is a collaboration between Stephanie @StephVibes and Henriette @Henrizz.
-It is our submission to the 42 Berlin school project called MINISHELL, which is about creating our own shell, with bash as behavioural reference.
+## MINISHELL (with part of bonus)
 
-When running our minishell by starting ./minishell, you will be able to execute the following cases, among others: 
-
-- run system commands with path or without path (e.g. /usr/bin/ls or ls)
-
-- run the following builtin commands:
-◦ echo with option -n
-◦ cd with a relative or absolute path, and with - and --
-◦ pwd (without options)
-◦ export (without options)
-◦ unset (without options)
-◦ env (without options or arguments)
-◦ exit (without options)
-
-- redirect input or output with <, >, <<, >> over one or several files or heredocs
-
-- run piped commands
-
-- expand variables in the commands, filenames and heredoc input
-
+This program is a collaboration between Stephanie @StephVibes and Henriette @Henrizz.<br>
+It is our submission to the 42 Berlin school project MINISHELL, about creating our own shell, with bash as behavioural reference.<br>
+<br>
+Run the program by typing make and then ./minishell<br>
+You will be able to execute the following cases, among others:<br>
+<br>
+- run system commands with path or without path and any possible flags (e.g. /usr/bin/ls or ls)<br>
+<br>
+- run the following builtin commands:<br>
+◦ echo with option -n<br>
+◦ cd with a relative or absolute path, and with - and --<br>
+◦ pwd (without options)<br>
+◦ export (without options)<br>
+◦ unset (without options)<br>
+◦ env (without options or arguments)<br>
+◦ exit (without options)<br>
+<br>
+- redirect input or output with <, >, <<, >> over one or several files or heredocs (heredocs being closed by the delimiter or CTRL+D or CTRL+C)<br>
+<br>
+- run piped commands<br>
+<br>
+- expand variables in the commands, filenames and heredoc input<br>
+<br>
 ENJOY !
